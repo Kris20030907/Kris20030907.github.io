@@ -4,13 +4,19 @@
   
     
     <entry>
-      <title>hello</title>
+      <title>图片测试</title>
       <link href="/2023/09/10/hello/"/>
       <url>/2023/09/10/hello/</url>
       
         <content type="html"><![CDATA[<p><img src="/images/t.png"></p>]]></content>
       
       
+      
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+        </tags>
       
     </entry>
     
