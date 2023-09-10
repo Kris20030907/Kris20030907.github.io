@@ -4,6 +4,32 @@
   
     
     <entry>
+      <title>hello</title>
+      <link href="/2023/09/10/hello/"/>
+      <url>/2023/09/10/hello/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/t.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/2023/09/10/tuo-bu-xu-lie/"/>
+      <url>/2023/09/10/tuo-bu-xu-lie/</url>
+      
+        <content type="html"><![CDATA[<h2 id="拓扑序列"><a href="#拓扑序列" class="headerlink" title="拓扑序列"></a>拓扑序列</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>给定一个 n 个点 m 条边的有向图，点的编号是 1 到 n，图中可能存在重边和自环。</p><p>若一个由图中所有点构成的序列 A 满足：对于图中的每条边 (x,y)，x 在 A 中都出现在 y 之前，则称 A 是该图的一个拓扑序列。</p><h3 id="拓扑排序过程"><a href="#拓扑排序过程" class="headerlink" title="拓扑排序过程"></a>拓扑排序过程</h3><ol><li><p>将所有入度为0的点入队</p></li><li><p>取出队头节点，输出该点并删去该点，同时将与其相连的边删去，且将与其相连的点的入度减去 1</p></li><li><p>重复此过程，直到所有的点都输出完成</p></li></ol><p>首先我们要明确一个<strong>有向无环图必定存在至少一个入度为0的点</strong>，所以以此为突破口，进行拓扑排序。</p><h4 id="参考例题"><a href="#参考例题" class="headerlink" title="参考例题"></a>参考例题</h4><blockquote><p>链接：[有向图的拓扑排序](<a href="https://www.acwing.com/problem/content/850/">848. 有向图的拓扑序列 - AcWing题库</a>) </p></blockquote><p><img src="/images/t.png"></p><h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><blockquote><p>题外话：之前一遇到要用邻接表的题就畏惧了，从来没好好理解过，今天终于能体会到一丝感悟，拓扑排序是个开始！</p></blockquote><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;bits&#x2F;stdc++.h&gt;using namespace std;#define IOS ios::sync_with_stdio(0),cin.tie(0),cout.tie(0)const int N &#x3D; 100010;int e[N], ne[N], h[N], idx;  &#x2F;&#x2F;邻接表相关int d[N];   &#x2F;&#x2F;存序号i的入度int q[N];  &#x2F;&#x2F;队列int n,m;void add(int a, int b)&#123;    e[idx] &#x3D; b, ne[idx] &#x3D; h[a], h[a] &#x3D; idx++;&#125;bool topsort()&#123;    int hh &#x3D; 0, tt &#x3D; -1;    &#x2F;&#x2F;将所有入度为0的点入队    for(int i &#x3D; 1; i &lt;&#x3D; n;i++)&#123;        if(!d[i]) q[++tt] &#x3D; i;    &#125;    while(hh &lt;&#x3D; tt)&#123;        auto t &#x3D; q[hh++];  &#x2F;&#x2F;取队头:这里可以看出出队时的顺序就是拓扑排序的顺序，且hh只是++，不是覆盖,所以最终直接输出n个元素即可得到拓扑序列        &#x2F;&#x2F;遍历与t相连的边:判断入度以及删边        for(int i &#x3D; h[t]; i !&#x3D; -1; i &#x3D; ne[i])&#123;            int j &#x3D; e[i];            d[j]--;              if(!d[j]) q[++tt] &#x3D; j;   &#x2F;&#x2F;入度为0入队        &#125;    &#125;    return tt &#x3D;&#x3D; n-1;   &#x2F;&#x2F;若最终恰好输出了n个元素，则说明是拓扑序列&#125;int main()&#123;    IOS;    cin&gt;&gt;n&gt;&gt;m;    memset(h, -1, sizeof h);  &#x2F;&#x2F;初始化头节点    int a,b;    for(int i &#x3D; 0; i &lt; m;i++)&#123;        cin&gt;&gt;a&gt;&gt;b;        add(a,b);   &#x2F;&#x2F;加边a-&gt;b        d[b]++;  &#x2F;&#x2F;入度++    &#125;    &#x2F;&#x2F;判断是否为拓扑排序    if(topsort())&#123;        &#x2F;&#x2F;根据上述分析可知，队列的前n个元素即为拓扑序列        for(int i &#x3D; 0; i &lt; n;i++)&#123;            cout&lt;&lt;q[i]&lt;&lt;&quot; &quot;;        &#125;        cout&lt;&lt;endl;    &#125;else cout&lt;&lt;-1&lt;&lt;endl;    return 0;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title></title>
       <link href="/2023/07/08/shu-ju-jie-gou/"/>
       <url>/2023/07/08/shu-ju-jie-gou/</url>
