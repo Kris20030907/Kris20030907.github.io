@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>test for ob</title>
+      <link href="/2023/09/28/test-for-ob/"/>
+      <url>/2023/09/28/test-for-ob/</url>
+      
+        <content type="html"><![CDATA[<h3 id="TEST"><a href="#TEST" class="headerlink" title="TEST"></a>TEST</h3><p>hello</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LRU缓存</title>
       <link href="/2023/09/24/lru-huan-cun/"/>
       <url>/2023/09/24/lru-huan-cun/</url>
