@@ -400,7 +400,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    353
+                    349
                 </div>
                 
 
@@ -429,18 +429,18 @@
 <p>本文主要说明双写一致性，保证数据一致性<br>Keyword： <strong>延迟双删</strong><br>注意：延迟双删不能保证数据的强一致性，延迟删除时可能也会导致脏数据出现</p>
 </blockquote>
 <p>先上概念<br><strong>双写一致性</strong>： 如果修改了数据库的数据，同时也要更新缓存中的数据，保证缓存和数据库的数据一致性。<br><br/></p>
-<h3 id="一般请求时的查询数据过程"><a href="#一般请求时的查询数据过程" class="headerlink" title="一般请求时的查询数据过程"></a>一般请求时的查询数据过程</h3><p><img src="/%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B.png" alt="|700"> </p>
+<h3 id="一般请求时的查询数据过程"><a href="#一般请求时的查询数据过程" class="headerlink" title="一般请求时的查询数据过程"></a>一般请求时的查询数据过程</h3><p><img src="/images/%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B.png"></p>
 <blockquote>
 <p>简单来说就是，查询数据时，如果缓存存在该数据则直接返回，否则会去数据库中查询，查询后再将该数据存入缓存中, 并且会设置过期时间。</p>
 </blockquote>
 <h3 id="读写操作"><a href="#读写操作" class="headerlink" title="读写操作"></a>读写操作</h3><h4 id="读操作"><a href="#读操作" class="headerlink" title="读操作"></a>读操作</h4><p>就是上图所述</p>
 <h4 id="写操作"><a href="#写操作" class="headerlink" title="写操作"></a>写操作</h4><p><strong>延迟双删</strong>即修改数据库时，需要删除缓存-&gt;修改数据库-&gt;删除缓存</p>
 <blockquote>
-<p><img src="/%E5%BB%B6%E8%BF%9F%E5%8F%8C%E5%88%A0.png"></p>
+<p><img src="/images/%E5%BB%B6%E8%BF%9F%E5%8F%8C%E5%88%A0.png"></p>
 </blockquote>
 <ol>
 <li>是先删缓存，再修改数据库，还是反过来？ 为什么这两种方式都不能保证数据一致性？<blockquote>
-<p><strong>先删缓存，再修改数据库</strong><br><img src="/%E5%85%88%E5%88%A0%E7%BC%93%E5%AD%98.png" alt="|450"><br>先修改数据库，再删缓存<br>正常情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5.png" alt="|450"><br>不一致情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8D%E4%B8%80%E8%87%B4.png" alt="|475"></p>
+<p><strong>先删缓存，再修改数据库</strong><br><img src="/images/%E5%85%88%E5%88%A0%E7%BC%93%E5%AD%98.png" alt="|450"><br>先修改数据库，再删缓存<br>正常情况<br><img src="/images/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5.png" alt="|450"><br>不一致情况<br><img src="/images/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8D%E4%B8%80%E8%87%B4.png" alt="|475"></p>
 </blockquote>
 </li>
 <li>为什么需要延迟删除?<blockquote>
@@ -449,12 +449,11 @@
 </li>
 </ol>
 <h3 id="强一致性（加锁）"><a href="#强一致性（加锁）" class="headerlink" title="强一致性（加锁）"></a>强一致性（加锁）</h3><blockquote>
-<p>这种会导致性能下降，只适用于<strong>读多写少</strong>的场景<br><img src="/%E5%BC%BA%E4%B8%80%E8%87%B4%E6%80%A7.png" alt="|450"></p>
+<p>这种会导致性能下降，只适用于<strong>读多写少</strong>的场景<br><img src="/images/%E5%BC%BA%E4%B8%80%E8%87%B4%E6%80%A7.png" alt="|450"></p>
 </blockquote>
 <h3 id="使用异步通信（MQ）"><a href="#使用异步通信（MQ）" class="headerlink" title="使用异步通信（MQ）"></a>使用异步通信（MQ）</h3><blockquote>
-<p>缺点：太过依赖于 MQ 的可靠性<br><img src="/%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"></p>
+<p>缺点：太过依赖于 MQ 的可靠性<br><img src="/images/%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"></p>
 </blockquote>
-<h3 id="面试问题"><a href="#面试问题" class="headerlink" title="面试问题"></a>面试问题</h3><p><img src="/redis%E5%92%8Cmysql%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"> </p>
 
                 
             </div>

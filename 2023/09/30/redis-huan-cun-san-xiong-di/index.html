@@ -412,7 +412,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    826
+                    820
                 </div>
                 
 
@@ -464,7 +464,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
 </blockquote>
 </li>
 </ol>
-<p><img src="/%E4%BA%92%E6%96%A5%E9%94%81.png"></p>
+<p><img src="/images/%E4%BA%92%E6%96%A5%E9%94%81.png"></p>
 <ol start="2">
 <li><p>逻辑过期</p>
 <blockquote>
@@ -472,7 +472,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
 </blockquote>
 </li>
 </ol>
-<p>![[逻辑过期.png|625]]<br>如图，线程 1 在查询时发现缓存过期后会先获取锁，然后新建一个子线程进行<strong>数据库查询</strong>和<strong>缓存更新</strong> 等子线程完成后就释放锁，在得到锁的过程中其他线程如果要查询该缓存，发现过期后，也想进行更新，但是发现被锁了，就直接返回过期的缓存数据。只有当锁释放后，其他线程才能获得最新数据。</p>
+<p><img src="/images/%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F.png"><br>如图，线程 1 在查询时发现缓存过期后会先获取锁，然后新建一个子线程进行<strong>数据库查询</strong>和<strong>缓存更新</strong> 等子线程完成后就释放锁，在得到锁的过程中其他线程如果要查询该缓存，发现过期后，也想进行更新，但是发现被锁了，就直接返回过期的缓存数据。只有当锁释放后，其他线程才能获得最新数据。</p>
 <blockquote>
 <p>由此可见，不会阻塞其他线程的查询，所以效率高，但会导致查询的数据不一定是最新的，即非时效性。</p>
 </blockquote>
