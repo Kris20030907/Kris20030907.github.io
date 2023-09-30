@@ -4,11 +4,63 @@
   
     
     <entry>
+      <title>双写一致</title>
+      <link href="/2023/09/30/shuang-xie-yi-zhi/"/>
+      <url>/2023/09/30/shuang-xie-yi-zhi/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>本文主要说明双写一致性，保证数据一致性<br>Keyword： <strong>延迟双删</strong><br>注意：延迟双删不能保证数据的强一致性，延迟删除时可能也会导致脏数据出现</p></blockquote><p>先上概念<br><strong>双写一致性</strong>： 如果修改了数据库的数据，同时也要更新缓存中的数据，保证缓存和数据库的数据一致性。<br><br/></p><h3 id="一般请求时的查询数据过程"><a href="#一般请求时的查询数据过程" class="headerlink" title="一般请求时的查询数据过程"></a>一般请求时的查询数据过程</h3><p><img src="/%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B.png" alt="|700"> </p><blockquote><p>简单来说就是，查询数据时，如果缓存存在该数据则直接返回，否则会去数据库中查询，查询后再将该数据存入缓存中, 并且会设置过期时间。</p></blockquote><h3 id="读写操作"><a href="#读写操作" class="headerlink" title="读写操作"></a>读写操作</h3><h4 id="读操作"><a href="#读操作" class="headerlink" title="读操作"></a>读操作</h4><p>就是上图所述</p><h4 id="写操作"><a href="#写操作" class="headerlink" title="写操作"></a>写操作</h4><p><strong>延迟双删</strong>即修改数据库时，需要删除缓存-&gt;修改数据库-&gt;删除缓存</p><blockquote><p><img src="/%E5%BB%B6%E8%BF%9F%E5%8F%8C%E5%88%A0.png"></p></blockquote><ol><li>是先删缓存，再修改数据库，还是反过来？ 为什么这两种方式都不能保证数据一致性？<blockquote><p><strong>先删缓存，再修改数据库</strong><br><img src="/%E5%85%88%E5%88%A0%E7%BC%93%E5%AD%98.png" alt="|450"><br>先修改数据库，再删缓存<br>正常情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5.png" alt="|450"><br>不一致情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8D%E4%B8%80%E8%87%B4.png" alt="|475"></p></blockquote></li><li>为什么需要延迟删除?<blockquote><p>数据库主从复制需要时间进行同步数据</p></blockquote></li></ol><h3 id="强一致性（加锁）"><a href="#强一致性（加锁）" class="headerlink" title="强一致性（加锁）"></a>强一致性（加锁）</h3><blockquote><p>这种会导致性能下降，只适用于<strong>读多写少</strong>的场景<br><img src="/%E5%BC%BA%E4%B8%80%E8%87%B4%E6%80%A7.png" alt="|450"></p></blockquote><h3 id="使用异步通信（MQ）"><a href="#使用异步通信（MQ）" class="headerlink" title="使用异步通信（MQ）"></a>使用异步通信（MQ）</h3><blockquote><p>缺点：太过依赖于 MQ 的可靠性<br><img src="/%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"></p></blockquote><h3 id="面试问题"><a href="#面试问题" class="headerlink" title="面试问题"></a>面试问题</h3><p><img src="/redis%E5%92%8Cmysql%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"> </p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 框架/中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Redis缓存三兄弟</title>
+      <link href="/2023/09/30/redis-huan-cun-san-xiong-di/"/>
+      <url>/2023/09/30/redis-huan-cun-san-xiong-di/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>Date: 2023&#x2F;9&#x2F;29</p></blockquote><blockquote><p>本文目的是记录三种 redis 缓存出错的场景</p><ul><li>缓存击穿</li><li>缓存穿透</li><li>缓存雪崩</li></ul></blockquote><h2 id="一-缓存击穿"><a href="#一-缓存击穿" class="headerlink" title="一 . 缓存击穿"></a>一 . 缓存击穿</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h3><p>如果用户请求一个数据库中永远不存在的数据，比如查询 id 为 0 或负数时，服务端会先查 redis，发现没有，就会去转发到数据库查询，数据库中一定不会查询到该数据（id 自增），但是也会对数据库造成压力，如果有人知道了请求路径，就可以通过大量请求这样的 id，可能会导致数据库崩溃。</p><h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法:"></a>解决方法:</h3><p>如果 redis 中不存在，转发到数据库中查询，如果查询不到，就把需要查询的 <code>id</code> (id &lt;&#x3D; 0)作为 key，value 设为 NULL，存到 redis 中，这样再次有一样的请求，就会直接返回 redis 中对应的空值；</p><blockquote><p>当然，这里的 key 需要设置一个过期时间，否则会造成内存压力过大。</p></blockquote><h2 id="二-缓存击穿"><a href="#二-缓存击穿" class="headerlink" title="二 . 缓存击穿"></a>二 . 缓存击穿</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义:"></a>定义:</h3><p>当一个 redis 中某个 key 刚好失效的瞬间，大量请求该数据的请求就会被转发到数据库进行查询，只要数据量够大，也会导致数据库压力大甚至崩溃。</p><blockquote><p>还有一种想法是：这个 key 长时间处于高并发状态，这时如果 key 突然失效，就会导致上述结果。</p></blockquote><h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><ol><li><p>互斥锁<br>给线程添加互斥锁，当前线程 1 如果查询 redis 缓存查询不到就会获取互斥锁，此时其他线程 2 的查询就会被堵塞，随后该线程 1 就进行查询数据库和缓存更新，更新完成后释放锁，线程 2 也可以查询到数据了。</p><blockquote><p><strong>能保持 redis 和 mysql 的强一致性，但是性能差（阻塞其他线程）</strong></p></blockquote></li></ol><p><img src="/%E4%BA%92%E6%96%A5%E9%94%81.png"></p><ol start="2"><li><p>逻辑过期</p><blockquote><p>高可用，性能优，但是不能保证数据强一致性</p></blockquote></li></ol><p>![[逻辑过期.png|625]]<br>如图，线程 1 在查询时发现缓存过期后会先获取锁，然后新建一个子线程进行<strong>数据库查询</strong>和<strong>缓存更新</strong> 等子线程完成后就释放锁，在得到锁的过程中其他线程如果要查询该缓存，发现过期后，也想进行更新，但是发现被锁了，就直接返回过期的缓存数据。只有当锁释放后，其他线程才能获得最新数据。</p><blockquote><p>由此可见，不会阻塞其他线程的查询，所以效率高，但会导致查询的数据不一定是最新的，即非时效性。</p></blockquote><h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义:"></a>定义:</h3><p>当一段时间内 (同一时刻)有大量 key 同时失效，就会导致大量数据查询请求抓发到数据库进行查询，可能会导致数据库崩溃。</p><h3 id="解决方法-："><a href="#解决方法-：" class="headerlink" title="解决方法 ："></a>解决方法 ：</h3><ol><li><p>给每个 key 设置不同的过期时间，防止大量 key 同时失效。</p><blockquote><p>如：给每个 key 的过期时间 TTL 加上一个随机值</p></blockquote></li><li><p>搭建 Redis 集群，提高服务可用性 (涉及到[[集群模式]] 和[[哨兵]])</p></li></ol><ul><li><input disabled="" type="checkbox"> #todo 写 Redis 集群和哨兵</li></ul><ol start="4"><li><p>给缓存业务添加限流策略</p><blockquote><p>Spring cloud gateway 或 nginx 等</p></blockquote></li><li><p>添加多级缓存</p><blockquote><p>一级缓存用 Caffeine 或 Guava</p></blockquote></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 框架/中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> redis </tag>
+            
+            <tag> 中间件 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>test for ob</title>
       <link href="/2023/09/28/test-for-ob/"/>
       <url>/2023/09/28/test-for-ob/</url>
       
-        <content type="html"><![CDATA[<h3 id="TEST"><a href="#TEST" class="headerlink" title="TEST"></a>TEST</h3><p>hello</p>]]></content>
+        <content type="html"><![CDATA[<h3 id="TEST"><a href="#TEST" class="headerlink" title="TEST"></a>TEST</h3><p>hello<br><img src="/../images/test%20for%20ob.png"></p>]]></content>
       
       
       

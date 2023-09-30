@@ -4,9 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="test for ob, KTnoobStation">
-    <meta name="description" content="TESThello
-">
+    <meta name="keywords" content="双写一致, KTnoobStation">
+    <meta name="description" content="
+本文主要说明双写一致性，保证数据一致性Keyword： 延迟双删注意：延迟双删不能保证数据的强一致性，延迟删除时可能也会导致脏数据出现
+
+先上概念双写一致性： 如果修改了数据库的数据，同时也要更新缓存中的数据，保证缓存和数据库的数据一致性">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>test for ob | KTnoobStation</title>
+    <title>双写一致 | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -335,12 +337,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">test for ob</h1>
+                    <h1 class="description center-align post-title">双写一致</h1>
                 </div>
             </div>
         </div>
@@ -364,18 +366,23 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                                <span class="chip bg-color">测试</span>
-                            </a>
-                        
-                            <a href="/tags/%E7%AE%97%E6%B3%95/">
-                                <span class="chip bg-color">算法</span>
+                            <a href="/tags/redis/">
+                                <span class="chip bg-color">redis</span>
                             </a>
                         
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                框架/中间件
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -384,7 +391,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-09-28
+                    2023-09-30
                 </div>
                 
 
@@ -393,7 +400,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1
+                    353
                 </div>
                 
 
@@ -418,7 +425,36 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="TEST"><a href="#TEST" class="headerlink" title="TEST"></a>TEST</h3><p>hello<br><img src="/../images/test%20for%20ob.png"></p>
+                <blockquote>
+<p>本文主要说明双写一致性，保证数据一致性<br>Keyword： <strong>延迟双删</strong><br>注意：延迟双删不能保证数据的强一致性，延迟删除时可能也会导致脏数据出现</p>
+</blockquote>
+<p>先上概念<br><strong>双写一致性</strong>： 如果修改了数据库的数据，同时也要更新缓存中的数据，保证缓存和数据库的数据一致性。<br><br/></p>
+<h3 id="一般请求时的查询数据过程"><a href="#一般请求时的查询数据过程" class="headerlink" title="一般请求时的查询数据过程"></a>一般请求时的查询数据过程</h3><p><img src="/%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B.png" alt="|700"> </p>
+<blockquote>
+<p>简单来说就是，查询数据时，如果缓存存在该数据则直接返回，否则会去数据库中查询，查询后再将该数据存入缓存中, 并且会设置过期时间。</p>
+</blockquote>
+<h3 id="读写操作"><a href="#读写操作" class="headerlink" title="读写操作"></a>读写操作</h3><h4 id="读操作"><a href="#读操作" class="headerlink" title="读操作"></a>读操作</h4><p>就是上图所述</p>
+<h4 id="写操作"><a href="#写操作" class="headerlink" title="写操作"></a>写操作</h4><p><strong>延迟双删</strong>即修改数据库时，需要删除缓存-&gt;修改数据库-&gt;删除缓存</p>
+<blockquote>
+<p><img src="/%E5%BB%B6%E8%BF%9F%E5%8F%8C%E5%88%A0.png"></p>
+</blockquote>
+<ol>
+<li>是先删缓存，再修改数据库，还是反过来？ 为什么这两种方式都不能保证数据一致性？<blockquote>
+<p><strong>先删缓存，再修改数据库</strong><br><img src="/%E5%85%88%E5%88%A0%E7%BC%93%E5%AD%98.png" alt="|450"><br>先修改数据库，再删缓存<br>正常情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5.png" alt="|450"><br>不一致情况<br><img src="/%E5%85%88%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8D%E4%B8%80%E8%87%B4.png" alt="|475"></p>
+</blockquote>
+</li>
+<li>为什么需要延迟删除?<blockquote>
+<p>数据库主从复制需要时间进行同步数据</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="强一致性（加锁）"><a href="#强一致性（加锁）" class="headerlink" title="强一致性（加锁）"></a>强一致性（加锁）</h3><blockquote>
+<p>这种会导致性能下降，只适用于<strong>读多写少</strong>的场景<br><img src="/%E5%BC%BA%E4%B8%80%E8%87%B4%E6%80%A7.png" alt="|450"></p>
+</blockquote>
+<h3 id="使用异步通信（MQ）"><a href="#使用异步通信（MQ）" class="headerlink" title="使用异步通信（MQ）"></a>使用异步通信（MQ）</h3><blockquote>
+<p>缺点：太过依赖于 MQ 的可靠性<br><img src="/%E5%BC%82%E6%AD%A5%E9%80%9A%E4%BF%A1%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"></p>
+</blockquote>
+<h3 id="面试问题"><a href="#面试问题" class="headerlink" title="面试问题"></a>面试问题</h3><p><img src="/redis%E5%92%8Cmysql%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7.png"> </p>
 
                 
             </div>
@@ -445,7 +481,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/09/28/test-for-ob/">http://example.com/2023/09/28/test-for-ob/</a>
+                    <a href="http://example.com/2023/09/30/shuang-xie-yi-zhi/">http://example.com/2023/09/30/shuang-xie-yi-zhi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -483,12 +519,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                                    <span class="chip bg-color">测试</span>
-                                </a>
-                            
-                                <a href="/tags/%E7%AE%97%E6%B3%95/">
-                                    <span class="chip bg-color">算法</span>
+                                <a href="/tags/redis/">
+                                    <span class="chip bg-color">redis</span>
                                 </a>
                             
                         </div>
@@ -836,9 +868,60 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2023/09/30/shuang-xie-yi-zhi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="双写一致">
+                        
+                        <span class="card-title">双写一致</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-30
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                    框架/中间件
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/redis/">
+                        <span class="chip bg-color">redis</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2023/09/30/redis-huan-cun-san-xiong-di/">
                     <div class="card-image">
@@ -856,9 +939,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-09-30
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-30
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -880,51 +963,6 @@
                     
                     <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
                         <span class="chip bg-color">中间件</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2023/09/24/lru-huan-cun/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="LRU缓存">
-                        
-                        <span class="card-title">LRU缓存</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-24
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            KTpro
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
                     </a>
                     
                 </div>
