@@ -16,7 +16,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
 缓存雪崩
 
 
-一 . 缓存击穿定义：如果用户请求一个数据库中永远不存在的数据，比如查询 id 为 0 或负数时，">
+一 . 缓存穿透定义：如果用户请求一个数据库中永远不存在的数据，比如查询 id 为 0 或负数时，">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -410,7 +410,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-09-30
+                    2023-10-01
                 </div>
                 
 
@@ -458,7 +458,7 @@ Date: 2023&amp;#x2F;9&amp;#x2F;29
 <li>缓存雪崩</li>
 </ul>
 </blockquote>
-<h2 id="一-缓存击穿"><a href="#一-缓存击穿" class="headerlink" title="一 . 缓存击穿"></a>一 . 缓存击穿</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h3><p>如果用户请求一个数据库中永远不存在的数据，比如查询 id 为 0 或负数时，服务端会先查 redis，发现没有，就会去转发到数据库查询，数据库中一定不会查询到该数据（id 自增），但是也会对数据库造成压力，如果有人知道了请求路径，就可以通过大量请求这样的 id，可能会导致数据库崩溃。</p>
+<h2 id="一-缓存穿透"><a href="#一-缓存穿透" class="headerlink" title="一 . 缓存穿透"></a>一 . 缓存穿透</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h3><p>如果用户请求一个数据库中永远不存在的数据，比如查询 id 为 0 或负数时，服务端会先查 redis，发现没有，就会去转发到数据库查询，数据库中一定不会查询到该数据（id 自增），但是也会对数据库造成压力，如果有人知道了请求路径，就可以通过大量请求这样的 id，可能会导致数据库崩溃。</p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法:"></a>解决方法:</h3><p>如果 redis 中不存在，转发到数据库中查询，如果查询不到，就把需要查询的 <code>id</code> (id &lt;&#x3D; 0)作为 key，value 设为 NULL，存到 redis 中，这样再次有一样的请求，就会直接返回 redis 中对应的空值；</p>
 <blockquote>
 <p>当然，这里的 key 需要设置一个过期时间，否则会造成内存压力过大。</p>
