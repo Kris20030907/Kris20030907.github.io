@@ -4,23 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="LRU缓存, KTnoobStation">
-    <meta name="description" content="哈希表+双链表实现LRU缓存机制将有下面四个问题待解决：
+    <meta name="keywords" content="买卖股票IV--状态机DP, KTnoobStation">
+    <meta name="description" content="
+本文包括 ACWing 提高课一题以及力扣上的一题变式Acwing: 1057. 股票买卖 IV - AcWing题库Leetcode: 123. 买卖股票的最佳时机 III - 力扣（LeetCode） 
 
-什么是LRU缓存机制？
-
-为什么要用哈希表存？
-
-为什么要用双链表，而不用队列？
-
-如何实现？
-
-
-
-什么是LRU缓存机制
-LRU_百度百科 (baidu.com)
-
-LRU是Le">
+算是对 java 的初体验，">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -32,7 +20,7 @@ LRU是Le">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>LRU缓存 | KTnoobStation</title>
+    <title>买卖股票IV--状态机DP | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -349,12 +337,12 @@ LRU是Le">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">LRU缓存</h1>
+                    <h1 class="description center-align post-title">买卖股票IV--状态机DP</h1>
                 </div>
             </div>
         </div>
@@ -382,10 +370,23 @@ LRU是Le">
                                 <span class="chip bg-color">算法</span>
                             </a>
                         
+                            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                                <span class="chip bg-color">动态规划</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                算法
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -394,28 +395,28 @@ LRU是Le">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-09-24
+                    2023-10-03
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-09-28
+                    2023-10-03
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    963
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    5 分
+                    4 分
                 </div>
                 
 
@@ -438,159 +439,104 @@ LRU是Le">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="哈希表-双链表实现LRU缓存机制"><a href="#哈希表-双链表实现LRU缓存机制" class="headerlink" title="哈希表+双链表实现LRU缓存机制"></a>哈希表+双链表实现LRU缓存机制</h2><p>将有下面四个问题待解决：</p>
-<ol>
-<li><p>什么是LRU缓存机制？</p>
+                <blockquote>
+<p>本文包括 ACWing 提高课一题以及力扣上的一题变式<br>Acwing: <a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/description/1059/">1057. 股票买卖 IV - AcWing题库</a><br>Leetcode: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/description/?envType=daily-question&envId=2023-10-03">123. 买卖股票的最佳时机 III - 力扣（LeetCode）</a> </p>
+</blockquote>
+<p>算是对 java 的初体验，太耗空间时间了😭</p>
+<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><img src="/images/%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8IV--%E7%8A%B6%E6%80%81%E6%9C%BADP.png"> </p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><ol>
+<li><p>划分当前持有股票状态有和无</p>
 </li>
-<li><p>为什么要用哈希表存？</p>
+<li><p>如果只是定义 DP 数组位 dp[i][j], 则只能说明前 i 天共有 j 次交易，区分不出状态</p>
 </li>
-<li><p>为什么要用双链表，而不用队列？</p>
+<li><p>因此多加一个属性，第 i 天在进行第 j 次交易时，当前是否持有股票，如 dp[i][j][0]; 无股票</p>
 </li>
-<li><p>如何实现？</p>
+<li><p>根据状态转换，<mark>dp[i][j][0] &#x3D; max (dp[i-1][j][0], dp[i-1][j][1] + w[i]);</mark><br> 解释：<br> 第 i 天如果没有持有股票，则由前一天状态过来后，j 次交易的最大利润和是”前一天没股票，<br> 则今天也无法获得收益（因为不持有股票）”   以及<br> “前一天有股票，今天需要卖出股票才能达成 dp[i][j][0]的状态，因此是 dp[i-1][j][1] + w[i]” 中的最大值</p>
 </li>
 </ol>
-<hr>
-<h3 id="什么是LRU缓存机制"><a href="#什么是LRU缓存机制" class="headerlink" title="什么是LRU缓存机制"></a>什么是LRU缓存机制</h3><blockquote>
-<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/LRU">LRU_百度百科 (baidu.com)</a></p>
+<ul>
+<li>同理： dp[i][j][1] ,如果前一天没股票，需要购买当前股票，则 dp[i-1][j-1][0] - w[i]; (买入算一次交易),有的话就不变，因为不能一天内同时进行多笔交易，则 dp[i-1][j][1]; 取 max   </li>
+<li>初始化，刚开始是无货的，j &#x3D;&#x3D; 0 时，f[i][j][0] &#x3D; 0 和 f[i][j][1] &#x3D; -INF（因为没进行交易不可能有货）;  可以先将所有状态都初始化为 -INF, 然后再将 f[i][0][0]都更新为 0</li>
+</ul>
+<blockquote>
+<p>最后因为空间问题，设置 dp 为 dp[2][N][M];  但分析还是上述的</p>
 </blockquote>
-<p>LRU是Least Recently Used的缩写，即最近最少使用，是一种常用的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/7626091?fromModule=lemma_inlink">页面置换算法</a>，选择最近最久未使用的页面予以淘汰。该算法赋予每个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%A1%B5%E9%9D%A2/5544813?fromModule=lemma_inlink">页面</a>一个访问字段，用来记录一个页面自上次被访问以来所经历的时间 t，当须淘汰一个页面时，选择现有页面中其 t 值最大的，即最近最少使用的页面予以淘汰。</p>
-<h4 id="先把题目贴出来吧"><a href="#先把题目贴出来吧" class="headerlink" title="先把题目贴出来吧"></a>先把题目贴出来吧</h4><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/lru-cache/description/?envType=daily-question&envId=2023-09-24">146. LRU 缓存 - 力扣（LeetCode）</a> </p>
-</blockquote>
-<p><img src="/images/LRU.png"></p>
-<hr>
-<h3 id="为什么要用哈希表"><a href="#为什么要用哈希表" class="headerlink" title="为什么要用哈希表"></a>为什么要用哈希表</h3><p>因为很明显要用到键值对存key和value</p>
-<hr>
-<h3 id="为什么要用双链表而不用队列？"><a href="#为什么要用双链表而不用队列？" class="headerlink" title="为什么要用双链表而不用队列？"></a>为什么要用双链表而不用队列？</h3><p>因为题目说，要在满足Cache满的时候将最久未使用过的关键字剔除，所以我一开始是打算用队列来实现的，只要容量满了就把队头元素中的key对应键值对删了（先进先出），但是题目说了 <strong>“删除最久未使用的关键字”</strong> ，关键点就在这,假设这个关键字是key，只要我们取出该元素，或者插入该元素，或者修改该元素就算使用过，这时候这个元素就不应该在队列的队头，而应该在队尾（刚使用过）。因此队列无法满足要求（wa一次: 8&#x2F;22）；且题目要求在O(1)内完成，而双链表就能在O(1)的平均时间复杂度里执行各种操作。</p>
-<hr>
-<h3 id="下面开始实现"><a href="#下面开始实现" class="headerlink" title="下面开始实现"></a>下面开始实现</h3><blockquote>
-<p>初见参考b站<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15Y4y1574Q/?vd_source=1ffd466ed0c5135e3f1bc07afebf6213">【LeetCode 每日一题】146. LRU 缓存 | 手写图解版思路 + 代码讲解_哔哩哔哩_bilibili</a> </p>
-</blockquote>
-<h4 id="准备双链表"><a href="#准备双链表" class="headerlink" title="准备双链表"></a>准备双链表</h4><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;双链表数据结构
-struct Node&#123;
-    int key, val;
-    Node *pre;
-    Node *next;
+<h4 id="JAVA-版本"><a href="#JAVA-版本" class="headerlink" title="JAVA 版本"></a>JAVA 版本</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java">import java.util.*;
+import java.io.*;
 
-    Node(): key(0),val(0),pre(NULL),next(NULL)&#123;&#125;
-    Node(int _key,int _val): key(_key),val(_val),pre(NULL),next(NULL)&#123;&#125;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h4 id="初始化哈希表和双链表"><a href="#初始化哈希表和双链表" class="headerlink" title="初始化哈希表和双链表"></a>初始化哈希表和双链表</h4><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">Node *head, *tail;    &#x2F;&#x2F;双链表虚拟头尾指针
-   unordered_map&lt;int, Node*&gt; cache;
-   int capacity, size;   &#x2F;&#x2F;最大容量，当前元素个数
-
-   LRUCache(int _capacity): capacity(_capacity),size(0)&#123;
-       head &#x3D; new Node();
-       tail &#x3D; new Node();
-       head-&gt;next &#x3D; tail;
-       tail-&gt;pre &#x3D; head;
-   &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="双链表删除节点以及插入节点到头部的操作"><a href="#双链表删除节点以及插入节点到头部的操作" class="headerlink" title="双链表删除节点以及插入节点到头部的操作"></a>双链表删除节点以及插入节点到头部的操作</h4><blockquote>
-<p>双链表这部分就不多说了，数据结构基础</p>
-</blockquote>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;删除节点
-    void removeNode(Node *node)&#123;
-        node-&gt;pre-&gt;next &#x3D; node-&gt;next;
-        node-&gt;next-&gt;pre &#x3D; node-&gt;pre;
-    &#125;
-
-    &#x2F;&#x2F;将节点插到链表头部
-    void addToHead(Node* node)&#123;
-        node-&gt;pre &#x3D; head;
-        node-&gt;next &#x3D; head-&gt;next;
-        head-&gt;next-&gt;pre &#x3D; node;
-        head-&gt;next &#x3D; node;
-    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="最后根据题目逻辑给出完整代码"><a href="#最后根据题目逻辑给出完整代码" class="headerlink" title="最后根据题目逻辑给出完整代码"></a>最后根据题目逻辑给出完整代码</h4><blockquote>
-<p>注释很完整了</p>
-</blockquote>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;双链表数据结构
-struct Node&#123;
-    int key, val;
-    Node *pre;
-    Node *next;
-
-    Node(): key(0),val(0),pre(NULL),next(NULL)&#123;&#125;
-    Node(int _key,int _val): key(_key),val(_val),pre(NULL),next(NULL)&#123;&#125;
-&#125;;
-
-class LRUCache &#123;
-public:
-    Node *head, *tail;    &#x2F;&#x2F;双链表虚拟头尾指针
-    unordered_map&lt;int, Node*&gt; cache;
-    int capacity, size;   &#x2F;&#x2F;最大容量，当前元素个数
-
-    LRUCache(int _capacity): capacity(_capacity),size(0)&#123;
-        head &#x3D; new Node();
-        tail &#x3D; new Node();
-        head-&gt;next &#x3D; tail;
-        tail-&gt;pre &#x3D; head;
-    &#125;
-
-    int get(int key) &#123;
-        &#x2F;&#x2F;不存在该key键值对
-        if(!cache.count(key)) return -1;
-
-        &#x2F;&#x2F;存在
-        Node *node &#x3D; cache[key];
-
-        &#x2F;&#x2F;取出后，算使用过，则更新其位置到链表头部
-        removeNode(node);
-        addToHead(node);
-        return node-&gt;val;
-    &#125;
-
-    void put(int key, int value) &#123;
-        if(cache.count(key))&#123;
-            &#x2F;&#x2F;存在key，则修改key对应的value，更新使用状态
-            Node* node &#x3D; cache[key];
-            node-&gt;val &#x3D; value;
-
-            removeNode(node);
-            addToHead(node);
-        &#125;else &#123;
-            &#x2F;&#x2F;不存在，则插入一个新节点，且更新状态
-
-            &#x2F;&#x2F;1.判断容量是否超过capacity,如果超了需要删去链表尾部元素还有哈希表的对应元素
-            if(size &#x3D;&#x3D; capacity)&#123;
-                Node *removedNode &#x3D; tail-&gt;pre;
-                removeNode(removedNode);
-                cache.erase(removedNode-&gt;key);    &#x2F;&#x2F;注意删的不是当前要插入的key！！（这里找了好久的bug，要删掉的是链表头部节点对应的key）
-                size--;
+class Main&#123;
+    static int N &#x3D; 100010, M &#x3D; 110, INF &#x3D; 0x3f3f3f3f;
+    
+    static int[][][] dp &#x3D; new int [2][N][M];
+    static int[] w &#x3D; new int[N];
+    
+    public static void main(String[] args) throws IOException&#123;
+        Scanner scan &#x3D; new Scanner(System.in);
+        BufferedReader bf &#x3D; new BufferedReader(new InputStreamReader(System.in));
+        
+        String[] t &#x3D; bf.readLine().split(&quot; &quot;);
+        int n &#x3D; Integer.parseInt(t[0]);
+        int k &#x3D; Integer.parseInt(t[1]);
+        
+        String[] str &#x3D; bf.readLine().split(&quot; &quot;);
+        
+        for(int i &#x3D; 1; i &lt;&#x3D; n;i++)&#123;
+            w[i] &#x3D; Integer.parseInt(str[i-1]);
+        &#125; 
+        
+        &#x2F;&#x2F;初始化状态
+        for (int i &#x3D; 0; i &lt; 2; i ++)
+            for (int j &#x3D; 0; j &lt;&#x3D; n; j ++)
+                Arrays.fill(dp[i][j], -0x3f3f3f3f);
+        
+        for(int i &#x3D; 0; i &lt;&#x3D; n;i++) dp[0][i][0] &#x3D; 0;  &#x2F;&#x2F;j为0，前 i 天 0 次交易，如果无货则为利润0;
+        
+        for(int i &#x3D; 1; i &lt;&#x3D; n; i++)&#123;
+            for(int j &#x3D; 1; j &lt;&#x3D; k; j++)&#123;
+                dp[0][i][j] &#x3D; Math.max(dp[0][i-1][j], dp[1][i-1][j] + w[i]); &#x2F;&#x2F;后面的是卖出
+                dp[1][i][j] &#x3D; Math.max(dp[1][i-1][j], dp[0][i-1][j-1] - w[i]); &#x2F;&#x2F;后面的是买入,算一次交易
             &#125;
-            &#x2F;&#x2F;2.未超过，则将新节点插入哈希表，且插入到链表
-            Node *node &#x3D; new Node(key, value);
-            addToHead(node);
-            cache[key] &#x3D; node;
-            size++;   
         &#125;
+        int ans &#x3D; 0;   &#x2F;&#x2F;最多进行k次交易，不一定交易笔数越多，利润越高，枚举最大值
+        for(int i &#x3D; 0 ; i &lt;&#x3D; k; i++)&#123;
+            ans &#x3D; Math.max(dp[0][n][i], ans);
+        &#125;
+        
+        System.out.println(ans);
     &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-    &#x2F;&#x2F;删除节点
-    void removeNode(Node *node)&#123;
-        node-&gt;pre-&gt;next &#x3D; node-&gt;next;
-        node-&gt;next-&gt;pre &#x3D; node-&gt;pre;
-    &#125;
+<h3 id="力扣题目描述"><a href="#力扣题目描述" class="headerlink" title="力扣题目描述"></a>力扣题目描述</h3><p><img src="/images/%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8IV--%E7%8A%B6%E6%80%81%E6%9C%BADP-%E5%8A%9B%E6%89%A3.png"> </p>
+<h4 id="C-版本"><a href="#C-版本" class="headerlink" title="C++版本"></a>C++版本</h4><pre class="line-numbers language-C" data-language="C"><code class="language-C">class Solution &#123;
 
-    &#x2F;&#x2F;将节点插到链表头部
-    void addToHead(Node* node)&#123;
-        node-&gt;pre &#x3D; head;
-        node-&gt;next &#x3D; head-&gt;next;
-        head-&gt;next-&gt;pre &#x3D; node;
-        head-&gt;next &#x3D; node;
-    &#125;
+public:
+    static const int N &#x3D; 100010, M &#x3D; 5;
+    
+    int maxProfit(vector&lt;int&gt;&amp; prices) &#123;
+        int n &#x3D; prices.size(); int k &#x3D; 2;
+        int dp[N][M][2];
+        memset(dp,-0x3f, sizeof dp);
+
+        &#x2F;&#x2F;初始化0次交易0利润
+        for(int i &#x3D; 0; i &lt;&#x3D; n;i++)&#123;
+            dp[i][0][0] &#x3D; 0;
+        &#125;
+        for(int i &#x3D; 1;i &lt;&#x3D; n;i++)&#123;
+            for(int j &#x3D; 1; j &lt;&#x3D; k; j++)&#123;
+                dp[i][j][0] &#x3D; max(dp[i-1][j][1] + prices[i-1], dp[i-1][j][0]);
+                dp[i][j][1] &#x3D; max(dp[i-1][j-1][0] - prices[i-1], dp[i-1][j][1]);
+            &#125;
+        &#125;
+        &#x2F;&#x2F;最多两笔交易，但是可能不会发生交易，万一亏本呢
+        int ans &#x3D; 0;
+        for(int i &#x3D; 0; i &lt;&#x3D; k; i++)&#123;
+            ans &#x3D; max(ans, dp[n][i][0]);  &#x2F;&#x2F;最后一定要是交易完成的结果
+        &#125;
+        return ans;  
+    &#125;
 &#125;;
-
-&#x2F;**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj &#x3D; new LRUCache(capacity);
- * int param_1 &#x3D; obj-&gt;get(key);
- * obj-&gt;put(key,value);
- *&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -616,7 +562,7 @@ public:
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/09/24/lru-huan-cun/">http://example.com/2023/09/24/lru-huan-cun/</a>
+                    <a href="http://example.com/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/">http://example.com/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -656,6 +602,10 @@ public:
                             
                                 <a href="/tags/%E7%AE%97%E6%B3%95/">
                                     <span class="chip bg-color">算法</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                                    <span class="chip bg-color">动态规划</span>
                                 </a>
                             
                         </div>
@@ -1003,17 +953,18 @@ public:
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/09/28/test-for-ob/">
+                <a href="/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="test for ob">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="买卖股票IV--状态机DP">
                         
-                        <span class="card-title">test for ob</span>
+                        <span class="card-title">买卖股票IV--状态机DP</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1023,26 +974,31 @@ public:
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-09-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-03
+                            </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            KTpro
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                        <span class="chip bg-color">测试</span>
-                    </a>
-                    
                     <a href="/tags/%E7%AE%97%E6%B3%95/">
                         <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                        <span class="chip bg-color">动态规划</span>
                     </a>
                     
                 </div>
@@ -1056,13 +1012,13 @@ public:
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/09/10/hello/">
+                <a href="/2023/09/30/shuang-xie-yi-zhi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="图片测试">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="双写一致">
                         
-                        <span class="card-title">图片测试</span>
+                        <span class="card-title">双写一致</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1073,12 +1029,16 @@ public:
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-30
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            KTpro
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                    框架/中间件
+                                </a>
+                            
                             
                         </span>
                     </div>
@@ -1086,8 +1046,8 @@ public:
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                        <span class="chip bg-color">测试</span>
+                    <a href="/tags/redis/">
+                        <span class="chip bg-color">redis</span>
                     </a>
                     
                 </div>
