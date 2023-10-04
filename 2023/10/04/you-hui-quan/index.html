@@ -1,0 +1,2185 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="优惠券, KTnoobStation">
+    <meta name="description" content="
+主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。具体包括：
+
+全局唯一 ID
+实现优惠券秒杀下单 
+超卖问题
+乐观锁解决超卖问题的改进
+
+
+一人一单 
+分布式锁 
+Redis 优化秒杀 
+Redis 消息队列">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>优惠券 | KTnoobStation</title>
+    <link rel="icon" type="image/png" href="/medias/logoofmine.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logoofmine.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">KTnoobStation</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logoofmine.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">KTnoobStation</div>
+        <div class="logo-desc">
+            
+            你好呀！欢迎访问我的小破站
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Kris20030907/Kris20030907.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Kris20030907/Kris20030907.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">优惠券</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/redis/">
+                                <span class="chip bg-color">redis</span>
+                            </a>
+                        
+                            <a href="/tags/%E9%A1%B9%E7%9B%AE/">
+                                <span class="chip bg-color">项目</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                框架/中间件
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-10-04
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2023-10-04
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    25 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <blockquote>
+<p>主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。<br>具体包括：</p>
+<ul>
+<li>全局唯一 ID</li>
+<li>实现优惠券秒杀下单 </li>
+<li>超卖问题<ul>
+<li>乐观锁解决超卖问题的改进</li>
+</ul>
+</li>
+<li>一人一单 </li>
+<li>分布式锁 </li>
+<li>Redis 优化秒杀 </li>
+<li>Redis 消息队列实现异步秒杀</li>
+</ul>
+</blockquote>
+<h3 id="全局唯一-ID-的实现"><a href="#全局唯一-ID-的实现" class="headerlink" title="全局唯一 ID 的实现"></a>全局唯一 ID 的实现</h3><blockquote>
+<p>为什么要使用全局唯一 ID，直接用数据库自增 ID 不好吗？</p>
+</blockquote>
+<p>这样会有一个问题，id 自增，那用户可以根据 id 猜测到一定规律，不够安全，被发现销量很少怎么办（doge）；而且数据库表的最大存储量是有限的，用户量一多就会受限制，多开表的话由于 id 会自增，可能会造成 id 重复，也就是说某些订单的 id 可能相同，这合理吗？不合理！</p>
+<h4 id="如何实现全局唯一-ID？"><a href="#如何实现全局唯一-ID？" class="headerlink" title="如何实现全局唯一 ID？"></a>如何实现全局唯一 ID？</h4><p><mark>全局 ID 生成器</mark> </p>
+<blockquote>
+<p>要满足的特性： </p>
+<ul>
+<li>唯一性，这个不必多说</li>
+<li>高性能，如果生成一个 id 需要很久，那要你何用</li>
+<li>高可用，这个系统不会挂掉</li>
+<li>递增性，必须有一个递增趋势</li>
+<li>安全性，不能有明显规律<br>使用 redis 的 incre 能满足上述特性</li>
+</ul>
+</blockquote>
+<p>可以定义一个全局 ID 生成器; 下面是实现过程：</p>
+<ol>
+<li><p>ID 的组成<br><img src="/images/%E5%85%A8%E5%B1%80ID%E7%9A%84%E7%BB%93%E6%9E%84.png"> </p>
+</li>
+<li><p>Idea 中实现生成过程，带注释</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.hmdp.utils;  
+  
+import org.springframework.data.redis.core.StringRedisTemplate;  
+import org.springframework.format.annotation.DateTimeFormat;  
+import org.springframework.stereotype.Component;  
+  
+import javax.annotation.Resource;  
+import java.time.LocalDateTime;  
+import java.time.ZoneOffset;  
+import java.time.format.DateTimeFormatter;  
+  
+@Component  
+public class RedisIdWorker &#123;  
+  
+	@Resource  
+	private StringRedisTemplate stringRedisTemplate;  
+  
+	private final static long BEGIN_TIME &#x3D; 1672531200L; &#x2F;&#x2F;初始时间，用于生成时间戳  
+	private final static int COUNT_BITS &#x3D; 32; &#x2F;&#x2F;序列号的位数，可更改  
+  
+	&#x2F;**  
+	* 生成id，前缀由于区分不同业务  
+	* @param keyPrefix  
+	* @return  
+	*&#x2F;  
+	public long nextId(String keyPrefix)&#123;  
+	&#x2F;&#x2F;1.生成时间戳 : 当前秒数 - 初始时间秒数  
+	LocalDateTime now &#x3D; LocalDateTime.now();  
+	long nowTime &#x3D; now.toEpochSecond(ZoneOffset.UTC);  
+	  
+	long timestamp &#x3D; nowTime - BEGIN_TIME;  
+	&#x2F;&#x2F;2.生成序列号 使用redis生成自增长序列号(每一天都对应一个不同的icrKey)  
+	  
+	&#x2F;&#x2F;2.1 获取当前的日期，精确到天  
+	String day &#x3D; now.format(DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;));  
+	  
+	&#x2F;&#x2F;2.2 redis生成自增长key的值(序列号)  
+	long count &#x3D; stringRedisTemplate.opsForValue().increment(&quot;icr:&quot; + keyPrefix + &quot;:&quot; + day);  
+	  
+	&#x2F;&#x2F;3.拼接并返回,注意这里不是字符串拼接，而是位运算得到32位 long 类型的值  
+	  
+	return timestamp &lt;&lt; COUNT_BITS | count ; &#x2F;&#x2F;使用或运算，使空出的32位填充成序列号  
+	&#125;  
+  
+	public static void main(String[] args) &#123;  
+	&#x2F;&#x2F;生成一个初始时间  
+	LocalDateTime time &#x3D; LocalDateTime.of(2023, 1, 1, 0, 0, 0);  
+	long second &#x3D; time.toEpochSecond(ZoneOffset.UTC);  
+	System.out.println(second);  
+	  
+	&#125;  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>测试生成 30000 个 id </p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">@Resource  
+private RedisIdWorker redisIdWorker;  
+  
+private ExecutorService es &#x3D; Executors.newFixedThreadPool(500); &#x2F;&#x2F;线程池  
+  
+@Test  
+void testIdGenerator() throws InterruptedException &#123;  
+	CountDownLatch countDownLatch &#x3D; new CountDownLatch(300); &#x2F;&#x2F;阻塞当前线程  
+	  
+	Runnable task &#x3D; ()-&gt;&#123;  
+	for(int i &#x3D; 0; i &lt; 100; i++)&#123;  
+	long id &#x3D; redisIdWorker.nextId(&quot;shop&quot;);  
+	System.out.println(&quot;id &#x3D; &quot; + id);  
+	&#125;  
+	countDownLatch.countDown(); &#x2F;&#x2F;完成一次任务，计数器-1  
+	&#125;;  
+	&#x2F;&#x2F;执行三百次任务，共30000个id  
+	long begin &#x3D; System.currentTimeMillis();  
+	  
+	for(int i &#x3D; 0; i &lt; 300;i++)&#123;  
+	es.submit(task);  
+	&#125;  
+	countDownLatch.await();  
+	  
+	long end &#x3D; System.currentTimeMillis();  
+	  
+	System.out.println(&quot;共耗时:&quot;+ (end - begin));  
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>成功，但是 CPU 爆了</p>
+<blockquote>
+<p><img src="/images/30000%20ID%E7%94%9F%E6%88%90%E8%80%97%E6%97%B6.png" alt="|775"> 2134 ms</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="实现优惠券秒杀下单功能"><a href="#实现优惠券秒杀下单功能" class="headerlink" title="实现优惠券秒杀下单功能"></a>实现优惠券秒杀下单功能</h3><blockquote>
+<ul>
+<li>首先要知道优惠券实体类的结构：<br>Voucher 实体内的属性包括特价优惠券的所有属性<br>特价优惠券的表用优惠券 id 与优惠券表进行关联</li>
+<li>业务流程<br><img src="/images/%E4%BC%98%E6%83%A0%E5%88%B8%E4%B8%8B%E5%8D%95%E4%B8%9A%E5%8A%A1%E6%B5%81%E7%A8%8B.png"></li>
+</ul>
+</blockquote>
+<h4 id="根据流程图，进行业务初步实现-未使用-redis"><a href="#根据流程图，进行业务初步实现-未使用-redis" class="headerlink" title="根据流程图，进行业务初步实现 (未使用 redis)"></a>根据流程图，进行业务初步实现 (未使用 redis)</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.hmdp.service.impl;
+
+import com.hmdp.dto.Result;
+import com.hmdp.entity.SeckillVoucher;
+import com.hmdp.entity.User;
+import com.hmdp.entity.Voucher;
+import com.hmdp.entity.VoucherOrder;
+import com.hmdp.mapper.VoucherOrderMapper;
+import com.hmdp.service.ISeckillVoucherService;
+import com.hmdp.service.IVoucherOrderService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.service.IVoucherService;
+import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.UserHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+
+@Service
+public class VoucherOrderServiceImpl extends ServiceImpl&lt;VoucherOrderMapper, VoucherOrder&gt; implements IVoucherOrderService &#123;
+
+    @Resource
+    private RedisIdWorker redisIdWorker;   &#x2F;&#x2F;生成id
+
+    @Resource
+    private ISeckillVoucherService secKillVoucherService;
+    &#x2F;**
+     * 秒杀下单优惠券
+     *
+     * @param voucherId
+     * @return
+     *&#x2F;
+    @Override
+    @Transactional
+    public Result seckillVoucher(Long voucherId) &#123;
+        &#x2F;&#x2F;1.查询优惠券
+        SeckillVoucher seckillVoucher &#x3D; secKillVoucherService.getById(voucherId);
+        &#x2F;&#x2F;2.判断是否在秒杀时间段内
+        if(seckillVoucher.getBeginTime().isAfter(LocalDateTime.now()))&#123;
+            &#x2F;&#x2F;2.1未在秒杀时间内，返回错误
+            return Result.fail(&quot;秒杀尚未开始!&quot;);
+        &#125;
+        if(seckillVoucher.getEndTime().isBefore(LocalDateTime.now()))&#123;
+            return Result.fail(&quot;秒杀结束!&quot;);
+        &#125;
+        &#x2F;&#x2F;2.2 在秒杀时间内
+        &#x2F;&#x2F;3.判断库存是否充足
+        Integer stock &#x3D; seckillVoucher.getStock();
+        if(stock &lt; 1)&#123;
+            return Result.fail(&quot;库存不足&quot;);
+        &#125;
+        &#x2F;&#x2F;4.充足，扣减库存
+        boolean success &#x3D; secKillVoucherService.update().setSql(&quot;stock &#x3D; stock - 1&quot;).eq(&quot;voucher_id&quot;, voucherId).update();
+
+        if(!success) return Result.fail(&quot;库存不足&quot;);
+        &#x2F;&#x2F;5.进行订单的插入
+        &#x2F;**
+         * 1.订单id，使用生成器实现
+         * 2.用户id
+         * 3.优惠券id
+         *&#x2F;
+        &#x2F;&#x2F;封装订单，其他属性有默认值，暂时不管
+        VoucherOrder voucherOrder &#x3D; new VoucherOrder();
+        long orderId &#x3D; redisIdWorker.nextId(&quot;voucher_order:&quot;);
+        Long userId &#x3D; UserHolder.getUser().getId();
+        voucherOrder.setId(orderId);
+        voucherOrder.setUserId(userId);
+        voucherOrder.setVoucherId(voucherId);
+
+        save(voucherOrder);
+        return Result.ok(orderId);
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="超卖问题"><a href="#超卖问题" class="headerlink" title="超卖问题"></a>超卖问题</h3><blockquote>
+<p>即一瞬间大量请求进来请求该接口并查询数据库，可能会导致库存数量为负数的情况，即超卖；</p>
+</blockquote>
+<h4 id="为什么会出现超卖"><a href="#为什么会出现超卖" class="headerlink" title="为什么会出现超卖"></a>为什么会出现超卖</h4><p>主要因为多线程时，线程 1 进行查询，发现有库存，正要去更新数据库，线程 2 可能会在线程 1 更新库存之前查询数据库导致超卖。<br><img src="/images/%E8%B6%85%E5%8D%96.png" alt="|400"> </p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>可以通过加锁实现,这里引出了两种锁的概念 [[悲观锁和乐观锁]] </p>
+<blockquote>
+<p>具体概念可跳转到具体文件</p>
+</blockquote>
+<p>使用乐观锁的CAS方法进行实现</p>
+<blockquote>
+<p>CAS方法，不加锁，只通过在查询库存后，更新数据库库存时，加一个判断条件，&#x3D;&#x3D;当前库存等于查询时的库存&#x3D;&#x3D; 可以避免超卖问题。<br><img src="/images/%E4%B9%90%E8%A7%82%E9%94%81CAS%E8%A7%A3%E5%86%B3%E8%B6%85%E5%8D%96%E9%97%AE%E9%A2%98.png"></p>
+</blockquote>
+<p>这种方法，会导致原本能卖出去的券卖不出去，即”少卖”的情况；<br>为什么呢，如果很多线程一起来，那就会出现即使库存充足，但是由于数据不同步（查询和更新时的stock）导致失败。</p>
+<h4 id="乐观锁的改进-提高成功率"><a href="#乐观锁的改进-提高成功率" class="headerlink" title="乐观锁的改进-提高成功率"></a>乐观锁的改进-提高成功率</h4><p>上述判断条件会导致成功率大幅下降，所以可以放宽要求，只要&#x3D;&#x3D;更新时的库存大于0就能进行更新&#x3D;&#x3D;。<br><img src="/images/%E4%B9%90%E8%A7%82%E9%94%81CAS-%E6%94%B9%E8%BF%9B.png"></p>
+<h3 id="一人一单"><a href="#一人一单" class="headerlink" title="一人一单"></a>一人一单</h3><blockquote>
+<p>即一人只能买一张优惠券</p>
+</blockquote>
+<p><img src="/images/%E4%B8%80%E4%BA%BA%E4%B8%80%E5%8D%95.png"></p>
+<h4 id="方法-："><a href="#方法-：" class="headerlink" title="方法 ："></a>方法 ：</h4><p>在库存充足时，判断数据库中是否已经存在当前用户 user_id 且 voucher 都相等的订单，如果存在则返回异常，否则可以继续下单。<br><img src="/images/%E4%B8%80%E4%BA%BA%E4%B8%80%E5%8D%95-1.png"></p>
+<h4 id="出现多线程安全的问题"><a href="#出现多线程安全的问题" class="headerlink" title="出现多线程安全的问题"></a>出现多线程安全的问题</h4><p>如果只是上述判断，会出现很多请求同时请求到订单数为 0 的情况，这时由于都可以进行订单插入，就会导致一人多单。</p>
+<h4 id="一人多单的悲观锁解决方案"><a href="#一人多单的悲观锁解决方案" class="headerlink" title="一人多单的悲观锁解决方案"></a>一人多单的悲观锁解决方案</h4><p>不用乐观锁是因为，没有更新操作，而是插入操作，不能通过判断某值进行锁。</p>
+<p>%%不得不说，下面加锁和事务的过程实在太复杂，现在听不懂！🤣%%</p>
+<p>将下单和库存判断封装起来进行加锁（针对当前用户的锁）</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">@Override
+    public Result seckillVoucher(Long voucherId) &#123;
+        &#x2F;&#x2F;1.查询优惠券
+        SeckillVoucher seckillVoucher &#x3D; secKillVoucherService.getById(voucherId);
+        &#x2F;&#x2F;2.判断是否在秒杀时间段内
+        if (seckillVoucher.getBeginTime().isAfter(LocalDateTime.now())) &#123;
+            &#x2F;&#x2F;2.1未在秒杀时间内，返回错误
+            return Result.fail(&quot;秒杀尚未开始!&quot;);
+        &#125;
+        if (seckillVoucher.getEndTime().isBefore(LocalDateTime.now())) &#123;
+            return Result.fail(&quot;秒杀结束!&quot;);
+        &#125;
+        &#x2F;&#x2F;2.2 在秒杀时间内
+        &#x2F;&#x2F;3.判断库存是否充足
+        Integer stock &#x3D; seckillVoucher.getStock();
+        if (stock &lt; 1) &#123;
+            return Result.fail(&quot;库存不足&quot;);
+        &#125;
+
+        &#x2F;&#x2F;以用户id‘作为锁的关键字，防止每个用户都要加锁，降低效率
+        &#x2F;&#x2F; intern是在字符串常量池里找相同的值,否则每次toString都会新建对象，导致不等
+        synchronized (UserHolder.getUser().getId().toString().intern()) &#123;
+        &#x2F;&#x2F;获取与事务有关的对象
+            IVoucherService proxy &#x3D; (IVoucherService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
+        &#125;
+    &#125;
+
+    @Transactional
+    public Result createVoucherOrder(Long voucherId) &#123;
+        &#x2F;&#x2F;一人一单
+        Long userId &#x3D; UserHolder.getUser().getId();
+
+        Integer orders &#x3D; query().eq(&quot;user_id&quot;, userId).eq(&quot;voucher_id&quot;, voucherId).count();
+        if (orders &gt; 0) return Result.fail(&quot;用户已经购买过该优惠券！&quot;);
+
+        &#x2F;&#x2F;4.充足，扣减库存
+        boolean success &#x3D; secKillVoucherService.update()
+                .setSql(&quot;stock &#x3D; stock - 1&quot;)
+                .eq(&quot;voucher_id&quot;, voucherId)
+                .gt(&quot;stock&quot;, 0)
+                .update();
+
+        if (!success) return Result.fail(&quot;库存不足&quot;);
+
+        &#x2F;&#x2F;5.进行订单的插入
+        &#x2F;**
+         * 1.订单id，使用生成器实现
+         * 2.用户id
+         * 3.优惠券id
+         *&#x2F;
+        &#x2F;&#x2F;封装订单，其他属性有默认值，暂时不管
+        VoucherOrder voucherOrder &#x3D; new VoucherOrder();
+        long orderId &#x3D; redisIdWorker.nextId(&quot;voucher_order:&quot;);
+        voucherOrder.setId(orderId);
+        voucherOrder.setUserId(userId);
+        voucherOrder.setVoucherId(voucherId);
+
+        save(voucherOrder);
+        return Result.ok(orderId);
+
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>这种一人一单的解决方法在集群模式下还是不能正常实现，因为多个 Tomcat 服务器分别有一个 JVM 存储不同的字符串常量池，导致锁监控器彼此之间无法进行同步，也就无法实现锁住同一个 userId ; 所以需要用到下一部分的知识: &#x3D;&#x3D;分布式锁&#x3D;&#x3D; </p>
+</blockquote>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>满足分布式系统或集群模式下多”&#x3D;&#x3D;进程&#x3D;&#x3D;”之间&#x3D;&#x3D;可见并且互斥&#x3D;&#x3D;的锁</p>
+<blockquote>
+<blockquote>
+<p>可见性是很好实现的，如 redis，mysql，zookeeper 都可以<br>多个服务器之间执行的不同应用就是不同的进程</p>
+</blockquote>
+<p>特性：</p>
+<ol>
+<li>高可用</li>
+<li>高性能</li>
+<li>安全性</li>
+</ol>
+</blockquote>
+<h4 id="使用-redis-实现分布式锁"><a href="#使用-redis-实现分布式锁" class="headerlink" title="使用 redis 实现分布式锁"></a>使用 redis 实现分布式锁</h4><blockquote>
+<p>根据 redis 互斥锁的特性, 获取锁需要具备原子性<br><img src="/images/%E5%9F%BA%E4%BA%8Eredis%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.png"></p>
+</blockquote>
+<h4 id="下面是代码实现"><a href="#下面是代码实现" class="headerlink" title="下面是代码实现"></a>下面是代码实现</h4><h5 id="ILock-接口"><a href="#ILock-接口" class="headerlink" title="ILock 接口"></a>ILock 接口</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.hmdp.utils;  
+  
+public interface ILock &#123;  
+	&#x2F;**  
+	* 自己实现redis锁的接口  
+	* timeOutSec是过期时间  
+	* 注意：这里要实现的是非阻塞式的锁，否则会影响性能  
+	*&#x2F;  
+boolean tryLock(long timeOutSec);  
+  
+&#x2F;&#x2F;释放锁  
+	void unlock();  
+	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="实现类-SimpleRedisLock"><a href="#实现类-SimpleRedisLock" class="headerlink" title="实现类 SimpleRedisLock"></a>实现类 SimpleRedisLock</h5><p>实现锁时，需要区分每个业务之间的区别，需要加 name 作为区分标识。&#x3D;&#x3D;在调用该锁的对象使用 tryLock 时可以特别写一下业务名称&#x3D;&#x3D;。如 redisLock. TryLock (“order”+userId, 5);</p>
+<blockquote>
+<p>这里加上 userId 就是为了保证”一人一单”。多进程之间也不会额外创建新的订单。</p>
+</blockquote>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.hmdp.utils;
+
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.concurrent.TimeUnit;
+
+
+public class SimpleRedisLock implements ILock&#123;
+
+
+    private StringRedisTemplate stringRedisTemplate;
+    private String name;   &#x2F;&#x2F;需要加锁的业务名称
+
+    public SimpleRedisLock(StringRedisTemplate stringRedisTemplate, String name) &#123;
+        this.stringRedisTemplate &#x3D; stringRedisTemplate;
+        this.name &#x3D; name;
+    &#125;
+
+    private static final String KEY_PREFIX &#x3D; &quot;lock:&quot;;
+
+    @Override
+    public boolean tryLock(long timeOutSec) &#123;
+        &#x2F;&#x2F;当前线程ID
+        long threadId &#x3D; Thread.currentThread().getId();
+        &#x2F;&#x2F;1.获取锁
+        Boolean success &#x3D; stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId + &quot; &quot;, timeOutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    &#125;
+
+    &#x2F;&#x2F;释放锁
+    @Override
+    public void unlock() &#123;
+        stringRedisTemplate.delete(KEY_PREFIX+name);
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="在下单代码中应用-redis-锁"><a href="#在下单代码中应用-redis-锁" class="headerlink" title="在下单代码中应用 redis 锁"></a>在下单代码中应用 redis 锁</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java">public Result seckillVoucher(Long voucherId) &#123;
+        -------省略内容-----
+
+        Long userId &#x3D; UserHolder.getUser().getId();
+
+        SimpleRedisLock redisLock &#x3D; new SimpleRedisLock(&quot;order&quot; + userId, stringRedisTemplate);
+
+        boolean locked &#x3D; redisLock.tryLock(5);
+
+        if (!locked) &#123;
+            &#x2F;&#x2F;获取锁失败
+            return Result.fail(&quot;一个人只允许下一单&quot;);
+        &#125;
+
+        try &#123;
+            IVoucherOrderService proxy &#x3D; (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
+        &#125; catch (IllegalStateException e) &#123;
+            throw new RuntimeException(e);
+        &#125;finally &#123;
+            &#x2F;&#x2F;结束后释放锁
+            redisLock.unlock();
+        &#125;
+       &#x2F;*
+        &#x2F;&#x2F;以用户id‘作为锁的关键字，防止每个用户都要加锁，降低效率
+        &#x2F;&#x2F; intern是在字符串常量池里找相同的值,否则每次toString都会新建对象，导致不等
+        synchronized (UserHolder.getUser().getId().toString().intern()) &#123;
+            &#x2F;&#x2F;获取与事务有关的对象
+            IVoucherOrderService proxy &#x3D; (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
+        &#125;
+       * *&#x2F;
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="改进-redis-分布式锁"><a href="#改进-redis-分布式锁" class="headerlink" title="改进 redis 分布式锁"></a>改进 redis 分布式锁</h4><p>当某个获取到锁的线程阻塞时，一旦过期时间达到，锁过期被删，其他线程就会趁虚而入获取锁，发现可以获取到锁从而导致又一次串行的情况。</p>
+<h5 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h5><p><img src="/images/%E6%94%B9%E8%BF%9Bredis%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.png"></p>
+<blockquote>
+<p>使用 (uuid + 线程 id) 是因为如果按照普通的线程 id，很有可能造成不同服务器之间的线程 id 冲突。</p>
+</blockquote>
+<p>代码实现：修改锁的实现类中的方法<br><img src="/images/%E4%BF%AE%E6%94%B9redis%E5%88%86%E5%B8%83%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0.png"></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">
+	----省略-----
+    private static final String KEY_PREFIX &#x3D; &quot;lock:&quot;;
+    private static final String ID_PREFIX &#x3D; UUID.randomUUID().toString(true) + &quot;-&quot;;  &#x2F;&#x2F;作为线程id前缀
+
+    @Override
+    public boolean tryLock(long timeOutSec) &#123;
+        &#x2F;&#x2F;重新拼接线程ID
+        String threadId &#x3D; ID_PREFIX + Thread.currentThread().getId();
+        &#x2F;&#x2F;1.获取锁
+        Boolean success &#x3D; stringRedisTemplate.opsForValue()
+                .setIfAbsent(KEY_PREFIX + name, threadId , timeOutSec, TimeUnit.SECONDS);
+        return Boolean.TRUE.equals(success);
+    &#125;
+
+    &#x2F;&#x2F;释放锁
+    @Override
+    public void unlock() &#123;
+        &#x2F;&#x2F;获取线程标识
+        String threadId &#x3D; ID_PREFIX + Thread.currentThread().getId();
+        &#x2F;&#x2F;获取 redis 锁的标识
+        String id &#x3D; stringRedisTemplate.opsForValue().get(KEY_PREFIX + name);
+        &#x2F;&#x2F;判断是否一致，如果不一致则说明当前线程无权进行该锁的删除,一致则可以删
+        if(threadId.equals(id)) stringRedisTemplate.delete(KEY_PREFIX+name);
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="你以为这就完了嘛？"><a href="#你以为这就完了嘛？" class="headerlink" title="你以为这就完了嘛？"></a>你以为这就完了嘛？</h5><p>并么有，由于判断和删除是两个动作，即使两者之间没有其他代码，但是由于 &#x3D;&#x3D;JVM GC 垃圾回收时会堵塞线程&#x3D;&#x3D;，如果时间过长，锁由于过期时间达到而被删除，其他线程就会获取锁，一旦 GC 结束，该线程的锁就会被删除（误删）（key 一样都是 prefix + 业务名称 name）。<br><img src="/images/JVM%20GC%E5%A0%B5%E5%A1%9E%E7%BA%BF%E7%A8%8B%E9%87%8A%E6%94%BE%E9%94%81.png"></p>
+<h4 id="Redis-Lua-脚本实现原子性"><a href="#Redis-Lua-脚本实现原子性" class="headerlink" title="Redis Lua 脚本实现原子性"></a>Redis Lua 脚本实现原子性</h4><p>基于 lua 语言特性和 redis 自带的脚本命令 script ，调用 redis 相关的方法进行判断可以满足原子性; 这里只贴图，相关实现不作说明。如果遇到该问题时可以回来看看。</p>
+<p><img src="/images/lua%E8%B0%83%E7%94%A8redis.png"><br>改进 redis 的分布式锁<br><img src="/images/%E4%BD%BF%E7%94%A8lua%E5%86%99redis%E8%84%9A%E6%9C%AC.png"></p>
+<h3 id="使用-Redisson-实现分布式锁"><a href="#使用-Redisson-实现分布式锁" class="headerlink" title="使用 Redisson 实现分布式锁"></a>使用 Redisson 实现分布式锁</h3><h4 id="基于-redis-的-setnx-实现的分布式锁有什么问题"><a href="#基于-redis-的-setnx-实现的分布式锁有什么问题" class="headerlink" title="基于 redis 的 setnx 实现的分布式锁有什么问题"></a>基于 redis 的 setnx 实现的分布式锁有什么问题</h4><blockquote>
+<p>在&#x3D;&#x3D;高要求的情况&#x3D;&#x3D;下，有如下四个问题：<br><img src="/images/%E5%9F%BA%E4%BA%8Esetnx%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E9%97%AE%E9%A2%98.png"><br>基于 setnx 实现已经能够满足大部分的需求，如果需要的话可以使用 Redisson 实现。</p>
+</blockquote>
+<h4 id="Redisson-实现"><a href="#Redisson-实现" class="headerlink" title="Redisson 实现"></a>Redisson 实现</h4><p>Redisson 是一个基于 redis 基础上实现的，能提供一系列分布式服务包括（分布式锁，分布式对象等）的实现。</p>
+<blockquote>
+<p>官方文档的翻译：<a target="_blank" rel="noopener" href="https://blog.csdn.net/A_art_xiang/article/details/125525864">redisson使用全解——redisson官方文档+注释（上篇）_redisson官网中文-CSDN博客</a> </p>
+</blockquote>
+<p>下面开始具体实现 redisson 的测试:</p>
+<ol>
+<li>写配置类，将 redissonClent 加入 bean<pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.hmdp.config;
+
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RedissonConfig &#123;
+
+    @Bean
+    public RedissonClient redissonClient()&#123;
+        &#x2F;&#x2F;1. 获取redisson的配置
+        Config config &#x3D; new Config();
+        &#x2F;&#x2F;2.配置redis 地址和密码
+        config.useSingleServer().setAddress(&quot;redis:&#x2F;&#x2F;127.0.0.1:6379&quot;).setPassword(&quot;123456&quot;);
+
+        &#x2F;&#x2F;返回redissonClient对象
+        return Redisson.create(config);
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>将之前实现的 simpleLock 方法换成 redisson<br><img src="/images/redisson%E9%94%81.png"><blockquote>
+<p> tryLock () 这里可以查看参数, 分别为</p>
+<ul>
+<li>无参: 默认获取锁失败直接返回</li>
+<li>三参: 分别为获取锁失败重试时间，锁自动过期时间，时间单位</li>
+<li>两参: 自动过期时间和时间单位</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<p>经过测试发现 redisson 确实可以实现安全性要求和可重入性，且更简单</p>
+<blockquote>
+<p>额外说明一下可重入性：同一个线程内的方法可以获取一个锁两次（多次）</p>
+</blockquote>
+<h4 id="Redisson-实现可重入锁的原理"><a href="#Redisson-实现可重入锁的原理" class="headerlink" title="Redisson 实现可重入锁的原理"></a>Redisson 实现可重入锁的原理</h4><p>先上图：<br><img src="/images/redisson%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86.png"></p>
+<blockquote>
+<p>大概就是，不使用 redis 的 setnx 互斥锁，而是自定义一个 hashMap 结构的值，分别&#x3D;&#x3D;记录线程名和获取锁的次数&#x3D;&#x3D;, 同一个线程内的方法尝试获取锁会允许获取锁，此线程的获取锁次数+1，反之，执行完业务后释放锁，判断如果是当前线程的锁，这个次数就-1，只有当次数回到 0 时，才会将该锁删除，不为 0 就重置锁的有效期，为同线程的其他业务留够时间。</p>
+</blockquote>
+<p>跟踪源码发现确实是使用 Lua 脚本 + redis script 实现的可重入锁<br><img src="/images/redisson%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0-1.png"></p>
+<p>后一部分是讲解锁重试机制的源码和看门狗机制，先润了，以后看</p>
+<blockquote>
+<p>WatchDog: Redisson 内部提供了一个监控锁的看门狗，它的作用是在 Redisson 实例被关闭前，不断的延长锁的有效期。默认情况下，看门狗的检查锁的超时时间是 30 秒钟，也可以通过修改 Config. LockWatchdogTimeout 来另行指定。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cr4y1671t/?p=67&spm_id_from=pageDriver&vd_source=1ffd466ed0c5135e3f1bc07afebf6213">实战篇-20.分布式锁-Redisson的锁重试和WatchDog机制_哔哩哔哩_bilibili</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cr4y1671t?p=68&vd_source=1ffd466ed0c5135e3f1bc07afebf6213">实战篇-21.分布式锁-Redisson的multiLock原理_哔哩哔哩_bilibili</a> </p>
+<h3 id="Redis-优化秒杀"><a href="#Redis-优化秒杀" class="headerlink" title="Redis 优化秒杀"></a>Redis 优化秒杀</h3><blockquote>
+<p>Tip: 终于回来了＞﹏＜</p>
+</blockquote>
+<p>原本的下订单，除了锁之外有四个部分是直接请求数据库的，因此并发效率不高。<br><img src="/images/redis%E4%BC%98%E5%8C%96%E7%A7%92%E6%9D%80-%E6%95%B0%E6%8D%AE%E5%BA%93.png"></p>
+<h4 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h4><p>将判断库存和校验一人一单的部分分离出来给 redis 做，并通过异步线程完成数据库的其他调用。<br><img src="/images/redis%E7%A7%92%E6%9D%80%E4%BC%98%E5%8C%96.png"></p>
+<h5 id="如何实现-？"><a href="#如何实现-？" class="headerlink" title="如何实现 ？"></a>如何实现 ？</h5><p><img src="/images/redis%E4%BC%98%E5%8C%96%E4%BC%98%E6%83%A0%E5%88%B8%E4%B8%8B%E5%8D%95-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png"></p>
+<ol>
+<li>判断库存<br>先将优惠券的库存缓存到 redis 中，使用优惠券 id 作为 key 和库存数量作为 value，用户下单则库存 - 1；</li>
+<li>实现一人一单<br>使用 key-set 集合 redis 数据结构，即可满足不重复性，且一张优惠券可被多个用户购买。</li>
+</ol>
+<p>基本流程：</p>
+<blockquote>
+<p>为保证多个操作时的原子性，使用 lua 脚本实现</p>
+</blockquote>
+<p><img src="/images/redis%E4%BC%98%E5%8C%96%E4%B8%8B%E5%8D%95%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B.png"></p>
+<h5 id="业务实现"><a href="#业务实现" class="headerlink" title="业务实现"></a>业务实现</h5><ol>
+<li>将秒杀优惠券信息缓存到 redis 中<br> <img src="/images/%E7%BC%93%E5%AD%98%E7%A7%92%E6%9D%80%E4%BC%98%E6%83%A0%E5%88%B8%E4%BF%A1%E6%81%AF.png"></li>
+<li>编写 lua 脚本实现判断库存和一人一单<blockquote>
+<p>根据流程图来，lua 脚本的语法熟悉就好，主要还是 redis 操作的命令。<br><img src="/images/lua%E8%84%9A%E6%9C%AC%E5%88%A4%E6%96%AD%E4%BC%98%E6%83%A0%E5%88%B8%E5%BA%93%E5%AD%98%E5%92%8C%E4%B8%80%E4%BA%BA%E4%B8%80%E5%8D%95-1.png"></p>
+</blockquote>
+</li>
+<li>修改优惠券下单的接口：seckillOrderImpl 里的下单 seckillVoucher ()<blockquote>
+<p><img src="/images/lua%E8%84%9A%E6%9C%AC%E4%B8%8B%E5%8D%95%E5%88%A4%E6%96%AD.png" alt="|450"></p>
+</blockquote>
+</li>
+</ol>
+<p>3.1 redis 脚本 script 执行配置<br><img src="/images/redis%20script.png"></p>
+<p>3.2 剩余代码实现</p>
+<blockquote>
+<p>执行判断库存和一人一单并将下单信息加入到堵塞队列<br>异步下单，开启独立线程进行对应订单的数据库插入<br>不好意思，看不懂 (), 先贴着</p>
+</blockquote>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">
+private static final DefaultRedisScript&lt;Long&gt; SECKILL_SCRIPT;
+
+&#x2F;&#x2F;redis script
+static &#123;
+    SECKILL_SCRIPT &#x3D; new DefaultRedisScript&lt;&gt;();
+    SECKILL_SCRIPT.setLocation(new ClassPathResource(&quot;seckill.lua&quot;));
+    SECKILL_SCRIPT.setResultType(Long.class);
+&#125;
+
+&#x2F;&#x2F;创建堵塞队列  &#x2F;&#x2F;空的时候会堵塞请求的线程，有元素则会接收线程请求消息
+private BlockingQueue&lt;VoucherOrder&gt; orderTasks &#x3D; new ArrayBlockingQueue&lt;&gt;(1024*1024);
+
+&#x2F;&#x2F;线程池
+private static final ExecutorService SECKILL_ORDER_EXECUTOR &#x3D; Executors.newSingleThreadExecutor();
+
+@PostConstruct
+private void init()&#123;
+    SECKILL_ORDER_EXECUTOR.submit(new VoucherOrderHandler());
+&#125;
+
+private class VoucherOrderHandler implements Runnable&#123;
+    private final String queueName &#x3D; &quot;stream.orders&quot;;
+    @Override
+    public void run() &#123;
+        while (true) &#123;
+            try &#123;
+                &#x2F;&#x2F; 0.初始化stream
+                initStream();
+                &#x2F;&#x2F; 1.获取消息队列中的订单信息 XREADGROUP GROUP g1 c1 COUNT 1 BLOCK 2000 STREAMS s1 &gt;
+                List&lt;MapRecord&lt;String, Object, Object&gt;&gt; list &#x3D; stringRedisTemplate.opsForStream().read(
+                        Consumer.from(&quot;g1&quot;, &quot;c1&quot;),
+                        StreamReadOptions.empty().count(1).block(Duration.ofSeconds(2)),
+                        StreamOffset.create(queueName, ReadOffset.lastConsumed())
+                );
+                &#x2F;&#x2F; 2.判断订单信息是否为空
+                if (list &#x3D;&#x3D; null || list.isEmpty()) &#123;
+                    &#x2F;&#x2F; 如果为null，说明没有消息，继续下一次循环
+                    continue;
+                &#125;
+                &#x2F;&#x2F; 解析数据
+                MapRecord&lt;String, Object, Object&gt; record &#x3D; list.get(0);
+                Map&lt;Object, Object&gt; value &#x3D; record.getValue();
+                VoucherOrder voucherOrder &#x3D; BeanUtil.fillBeanWithMap(value, new VoucherOrder(), true);
+                &#x2F;&#x2F; 3.创建订单
+                handleVoucherOrder(voucherOrder);
+                &#x2F;&#x2F; 4.确认消息 XACK stream.orders g1 id
+                stringRedisTemplate.opsForStream().acknowledge(queueName, &quot;g1&quot;, record.getId());
+            &#125; catch (Exception e) &#123;
+                log.error(&quot;处理订单异常&quot;, e);
+                handlePendingList();
+            &#125;
+        &#125;
+    &#125;
+
+    public void initStream()&#123;
+        Boolean exists &#x3D; stringRedisTemplate.hasKey(queueName);
+        if (BooleanUtil.isFalse(exists)) &#123;
+            log.info(&quot;stream不存在，开始创建stream&quot;);
+            &#x2F;&#x2F; 不存在，需要创建
+            stringRedisTemplate.opsForStream().createGroup(queueName, ReadOffset.latest(), &quot;g1&quot;);
+            log.info(&quot;stream和group创建完毕&quot;);
+            return;
+        &#125;
+        &#x2F;&#x2F; stream存在，判断group是否存在
+        StreamInfo.XInfoGroups groups &#x3D; stringRedisTemplate.opsForStream().groups(queueName);
+        if(groups.isEmpty())&#123;
+            log.info(&quot;group不存在，开始创建group&quot;);
+            &#x2F;&#x2F; group不存在，创建group
+            stringRedisTemplate.opsForStream().createGroup(queueName, ReadOffset.latest(), &quot;g1&quot;);
+            log.info(&quot;group创建完毕&quot;);
+        &#125;
+    &#125;
+
+    private void handlePendingList() &#123;
+        while (true) &#123;
+            try &#123;
+                &#x2F;&#x2F; 1.获取消息队列中的订单信息 XREADGROUP GROUP g1 c1 COUNT 1 STREAMS s1 0
+                List&lt;MapRecord&lt;String, Object, Object&gt;&gt; list &#x3D; stringRedisTemplate.opsForStream().read(
+                        Consumer.from(&quot;g1&quot;, &quot;c1&quot;),
+                        StreamReadOptions.empty().count(1),
+                        StreamOffset.create(queueName, ReadOffset.from(&quot;0&quot;))
+                );
+                &#x2F;&#x2F; 2.判断订单信息是否为空
+                if (list &#x3D;&#x3D; null || list.isEmpty()) &#123;
+                    &#x2F;&#x2F; 如果为null，说明没有消息，继续下一次循环
+                    break;
+                &#125;
+                &#x2F;&#x2F; 解析数据
+                MapRecord&lt;String, Object, Object&gt; record &#x3D; list.get(0);
+                Map&lt;Object, Object&gt; value &#x3D; record.getValue();
+                VoucherOrder voucherOrder &#x3D; BeanUtil.fillBeanWithMap(value, new VoucherOrder(), true);
+                &#x2F;&#x2F; 3.创建订单
+                handleVoucherOrder(voucherOrder);
+                &#x2F;&#x2F; 4.确认消息 XACK stream.orders g1 id
+                stringRedisTemplate.opsForStream().acknowledge(queueName, &quot;g1&quot;, record.getId());
+            &#125; catch (Exception e) &#123;
+                log.error(&quot;处理订单异常&quot;, e);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+private void handleVoucherOrder(VoucherOrder voucherOrder) &#123;
+    Long userId &#x3D; voucherOrder.getId();
+    &#x2F;&#x2F; 创建锁对象
+    &#x2F;&#x2F; SimpleRedisLock lock &#x3D; new SimpleRedisLock(&quot;order:&quot; + userId, stringRedisTemplate);
+    RLock lock &#x3D; redissonClient.getLock(&quot;lock:order:&quot; + userId);
+    &#x2F;&#x2F; 获取锁
+    boolean isLock &#x3D; lock.tryLock();
+    &#x2F;&#x2F; 判断是否获取锁成功
+    if(!isLock)&#123;
+        &#x2F;&#x2F; 获取锁失败，返回错误或重试
+        log.error(&quot;不允许重复下单&quot;);
+        return;
+    &#125;
+    try &#123;
+        &#x2F;&#x2F; 获取代理对象（事务）
+        createVoucherOrder(voucherOrder);
+    &#125; finally &#123;
+        &#x2F;&#x2F; 释放锁
+        lock.unlock();
+    &#125;
+&#125;
+
+IVoucherOrderService proxy;
+@Override
+public Result seckillVoucher(Long voucherId) &#123;
+    Long userId &#x3D; UserHolder.getUser().getId();
+    long orderId &#x3D; redisIdWorker.nextId(&quot;order&quot;);
+    &#x2F;&#x2F; 1.执行lua脚本
+    Long result &#x3D; stringRedisTemplate.execute(
+            SECKILL_SCRIPT,
+            Collections.emptyList(),
+            voucherId.toString(), userId.toString(), String.valueOf(orderId)
+    );
+    int r &#x3D; result.intValue();
+    &#x2F;&#x2F; 2.判断结果是否为0
+    if (r !&#x3D; 0) &#123;
+        &#x2F;&#x2F; 2.1.不为0 ，代表没有购买资格
+        return Result.fail(r &#x3D;&#x3D; 1 ? &quot;库存不足&quot; : &quot;不能重复下单&quot;);
+    &#125;
+    &#x2F;&#x2F; 3.获取代理对象
+    proxy &#x3D; (IVoucherOrderService) AopContext.currentProxy();
+    &#x2F;&#x2F; 4.返回订单id
+    return Result.ok(orderId);
+&#125;
+
+@Transactional
+public void createVoucherOrder(VoucherOrder voucherOrder) &#123;
+    &#x2F;&#x2F; 5.一人一单
+    Long userId &#x3D; voucherOrder.getUserId();
+
+    &#x2F;&#x2F; 5.1.查询订单
+    int count &#x3D; query().eq(&quot;user_id&quot;, userId).eq(&quot;voucher_id&quot;, voucherOrder.getVoucherId()).count();
+    &#x2F;&#x2F; 5.2.判断是否存在
+    if (count &gt; 0) &#123;
+        &#x2F;&#x2F; 用户已经购买过了
+        log.error(&quot;用户已经购买过一次！&quot;);
+        return;
+    &#125;
+
+    &#x2F;&#x2F; 6.扣减库存
+    boolean success &#x3D; secKillVoucherService.update()
+            .setSql(&quot;stock &#x3D; stock - 1&quot;) &#x2F;&#x2F; set stock &#x3D; stock - 1
+            .eq(&quot;voucher_id&quot;, voucherOrder.getVoucherId()).gt(&quot;stock&quot;, 0) &#x2F;&#x2F; where id &#x3D; ? and stock &gt; 0
+            .update();
+    if (!success) &#123;
+        &#x2F;&#x2F; 扣减失败
+        log.error(&quot;库存不足！&quot;);
+        return;
+    &#125;
+
+    &#x2F;&#x2F; 7.创建订单
+    save(voucherOrder);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="局外话"><a href="#局外话" class="headerlink" title="局外话"></a>局外话</h3><p>这里的秒杀如果只用堵塞队列实现下单还会有问题，大概理解上面这些秒杀的实现方式就好，老师最后讲的那部分真的复杂；<br>下面就看看用 redis 消息队列实现好不好理解吧。</p>
+<h3 id="Redis-消息队列实现异步秒杀"><a href="#Redis-消息队列实现异步秒杀" class="headerlink" title="Redis 消息队列实现异步秒杀"></a>Redis 消息队列实现异步秒杀</h3><blockquote>
+<p> P 72 - P 77 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cr4y1671t?p=72">redis消息队列</a> </p>
+<blockquote>
+<p>这里的堵塞队列或者消息队列实现很复杂，只能暂时理解过程，想实现和完全搞懂还是有些距离，期待以后什么时候能补掉吧，唉😥</p>
+</blockquote>
+</blockquote>
+<p>暂时停更优惠券专题：date: 2023&#x2F;10&#x2F;4 20:11</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">KTpro</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://example.com/2023/10/04/you-hui-quan/">http://example.com/2023/10/04/you-hui-quan/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">KTpro</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/redis/">
+                                    <span class="chip bg-color">redis</span>
+                                </a>
+                            
+                                <a href="/tags/%E9%A1%B9%E7%9B%AE/">
+                                    <span class="chip bg-color">项目</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的认可是我前进的动力！</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '10qGqhzFmq9j8dAQmPyXKA0M-gzGzoHsz',
+        appKey: 'E4NvM3qSDAgTYtSIx2yMBOzF',
+        serverURLs: '',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'any commits！'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2023/10/04/you-hui-quan/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="优惠券">
+                        
+                        <span class="card-title">优惠券</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
+                                    框架/中间件
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/redis/">
+                        <span class="chip bg-color">redis</span>
+                    </a>
+                    
+                    <a href="/tags/%E9%A1%B9%E7%9B%AE/">
+                        <span class="chip bg-color">项目</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="买卖股票IV--状态机DP">
+                        
+                        <span class="card-title">买卖股票IV--状态机DP</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                        <span class="chip bg-color">动态规划</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="tencent"
+                   type="playlist"
+                   id="8597011921"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2023</span>
+            
+            <a href="/about" target="_blank">KTpro</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">31.2k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2021";
+                        var startMonth = "7";
+                        var startDate = "21";
+                        var startHour = "9";
+                        var startMinute = "7";
+                        var startSecond = "26";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:3185633428@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3185633428" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 3185633428" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+
+</html>
