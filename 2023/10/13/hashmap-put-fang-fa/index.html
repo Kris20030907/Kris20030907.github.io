@@ -4,9 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="图片测试, KTnoobStation">
-    <meta name="description" content="
-">
+    <meta name="keywords" content="HashMapPut方法, KTnoobStation">
+    <meta name="description" content="先上流程图
+基本过程
+判断键值对 table 数组(存数据的) 是不是空的，如果是需要进行初始化扩容 resize 为 16 大小，且阈值为 12
+如果 table 非空，根据 key 进行哈希运算得到在数组中的（桶）索引，判断该索引的节点">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>图片测试 | KTnoobStation</title>
+    <title>HashMapPut方法 | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -334,12 +336,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">图片测试</h1>
+                    <h1 class="description center-align post-title">HashMapPut方法</h1>
                 </div>
             </div>
         </div>
@@ -363,14 +365,27 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                                <span class="chip bg-color">测试</span>
+                            <a href="/tags/JAVA%E9%9B%86%E5%90%88/">
+                                <span class="chip bg-color">JAVA集合</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%8E%9F%E7%90%86/">
+                                <span class="chip bg-color">原理</span>
                             </a>
                         
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E9%9B%86%E5%90%88/" class="post-category">
+                                集合
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -379,28 +394,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-09-10
+                    2023-10-13
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-09-10
+                    2023-10-13
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    644
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -423,8 +438,81 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><img src="/images/t.png"></p>
-
+                <p>先上流程图<br><img src="/images/HashMap%20Put%E6%96%B9%E6%B3%95.png"></p>
+<h3 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h3><ol>
+<li>判断键值对 table 数组(存数据的) 是不是空的，如果是需要进行初始化扩容 resize 为 16 大小，且阈值为 12</li>
+<li>如果 table 非空，根据 key 进行哈希运算得到在数组中的（桶）索引，判断该索引的节点是不是空的，如果是空的则直接插入；（<code>tab[i] = newNode(hash, key, value, null);</code>）是新增节点，而不是赋值。</li>
+</ol>
+<ul>
+<li>调用 put 方法时会调用底层的 putVal 方法<pre class="line-numbers language-java" data-language="java"><code class="language-java">public V put(K key, V value) &#123;
+        return putVal(hash(key), key, value, false, true);
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li>可以看到确实使用 hash 函数计算 key 对应的索引</li>
+</ul>
+<ol start="3">
+<li>如果该索引的节点不为空，则判断该位置 table[i]存的是不是红黑树节点</li>
+</ol>
+<ul>
+<li>是红黑树节点：直接按照红黑树的插入方式插入该节点</li>
+<li>不是红黑树节点：遍历链表</li>
+</ul>
+<ol start="4">
+<li><p>遍历链表时，如果和当前待插入节点 key 一样的链表节点存在，则直接覆盖 value；如果不同则在尾部插入新节点；</p>
+<blockquote>
+<p>拓展：Jdk 8 之后采用尾插法，之前采用头插法, 参考：<a href="HashMap%E6%8B%89%E9%93%BE%E6%B3%95%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98.md">HashMap拉链法可能出现的问题</a> </p>
+</blockquote>
+</li>
+<li><p>链表新增节点后，需要判断当前链表节点值是否超过了 8 个，如果超过，需要将该链表转换为红黑树；</p>
+</li>
+<li><p>最后节点插入完毕，判断当前数组中所有节点数是否大于阈值 threshold，如果大于还需要最后调用一次 resize ()进行扩容；</p>
+<blockquote>
+<p>扩容过程参考：<a href="HashMap%E6%89%A9%E5%AE%B9.md">HashMap扩容</a></p>
+</blockquote>
+</li>
+</ol>
+<p>最后附上 putVal 完整源码</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) &#123;
+        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+        if ((tab &#x3D; table) &#x3D;&#x3D; null || (n &#x3D; tab.length) &#x3D;&#x3D; 0)
+            n &#x3D; (tab &#x3D; resize()).length;
+        if ((p &#x3D; tab[i &#x3D; (n - 1) &amp; hash]) &#x3D;&#x3D; null)
+            tab[i] &#x3D; newNode(hash, key, value, null);
+        else &#123;
+            Node&lt;K,V&gt; e; K k;
+            if (p.hash &#x3D;&#x3D; hash &amp;&amp;
+                ((k &#x3D; p.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))
+                e &#x3D; p;
+            else if (p instanceof TreeNode)
+                e &#x3D; ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+            else &#123;
+                for (int binCount &#x3D; 0; ; ++binCount) &#123;
+                    if ((e &#x3D; p.next) &#x3D;&#x3D; null) &#123;
+                        p.next &#x3D; newNode(hash, key, value, null);
+                        if (binCount &gt;&#x3D; TREEIFY_THRESHOLD - 1) &#x2F;&#x2F; -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    &#125;
+                    if (e.hash &#x3D;&#x3D; hash &amp;&amp;
+                        ((k &#x3D; e.key) &#x3D;&#x3D; key || (key !&#x3D; null &amp;&amp; key.equals(k))))
+                        break;
+                    p &#x3D; e;
+                &#125;
+            &#125;
+            if (e !&#x3D; null) &#123; &#x2F;&#x2F; existing mapping for key
+                V oldValue &#x3D; e.value;
+                if (!onlyIfAbsent || oldValue &#x3D;&#x3D; null)
+                    e.value &#x3D; value;
+                afterNodeAccess(e);
+                return oldValue;
+            &#125;
+        &#125;
+        ++modCount;
+        if (++size &gt; threshold)
+            resize();
+        afterNodeInsertion(evict);
+        return null;
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -450,7 +538,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/09/10/hello/">http://example.com/2023/09/10/hello/</a>
+                    <a href="http://example.com/2023/10/13/hashmap-put-fang-fa/">http://example.com/2023/10/13/hashmap-put-fang-fa/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -488,8 +576,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B5%8B%E8%AF%95/">
-                                    <span class="chip bg-color">测试</span>
+                                <a href="/tags/JAVA%E9%9B%86%E5%90%88/">
+                                    <span class="chip bg-color">JAVA集合</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%8E%9F%E7%90%86/">
+                                    <span class="chip bg-color">原理</span>
                                 </a>
                             
                         </div>
@@ -837,17 +929,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/09/24/lru-huan-cun/">
+                <a href="/2023/10/13/hashmap-put-fang-fa/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="LRU缓存">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="HashMapPut方法">
                         
-                        <span class="card-title">LRU缓存</span>
+                        <span class="card-title">HashMapPut方法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -857,22 +950,31 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-09-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-13
+                            </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            KTpro
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E9%9B%86%E5%90%88/" class="post-category">
+                                    集合
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
+                    <a href="/tags/JAVA%E9%9B%86%E5%90%88/">
+                        <span class="chip bg-color">JAVA集合</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8E%9F%E7%90%86/">
+                        <span class="chip bg-color">原理</span>
                     </a>
                     
                 </div>
@@ -886,13 +988,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/09/10/tuo-bu-xu-lie/">
+                <a href="/2023/10/05/gu-piao-mai-mai-v/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="拓扑排序">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="股票买卖V">
                         
-                        <span class="card-title">拓扑排序</span>
+                        <span class="card-title">股票买卖V</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -903,7 +1005,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-05
                             </span>
                         <span class="publish-author">
                             
@@ -922,6 +1024,10 @@
                     
                     <a href="/tags/%E7%AE%97%E6%B3%95/">
                         <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
+                        <span class="chip bg-color">动态规划</span>
                     </a>
                     
                 </div>
