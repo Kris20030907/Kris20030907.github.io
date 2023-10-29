@@ -400,21 +400,21 @@ LRU是Le">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-09-28
+                    2023-10-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    1.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    5 分
+                    7 分
                 </div>
                 
 
@@ -589,6 +589,94 @@ public:
  * int param_1 &#x3D; obj-&gt;get(key);
  * obj-&gt;put(key,value);
  *&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="JAVA-版本"><a href="#JAVA-版本" class="headerlink" title="JAVA 版本"></a>JAVA 版本</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java">public class LRUCache &#123;
+    &#x2F;&#x2F;双链表  从左往右使用减少
+    class DLinkedNode&#123;
+        int key, val;
+        DLinkedNode pre;
+        DLinkedNode next;
+        public DLinkedNode()&#123;&#125;
+        public DLinkedNode(int _key, int _val) &#123;
+            this.key &#x3D; _key;
+            this.val &#x3D; _val;
+        &#125;
+    &#125;
+
+    DLinkedNode tail, head;  &#x2F;&#x2F;双链表头指针和尾部指针
+    HashMap&lt;Integer, DLinkedNode&gt; cache &#x3D; new HashMap&lt;&gt;();
+    int size;    &#x2F;&#x2F;当前元素数量
+    int capacity;  &#x2F;&#x2F;容量
+
+    &#x2F;&#x2F;1.初始化
+    public LRUCache(int _capacity) &#123;
+        this.capacity &#x3D; _capacity;
+        this.size &#x3D; 0;
+        tail &#x3D; new DLinkedNode();
+        head &#x3D; new DLinkedNode();
+        head.next &#x3D; tail;
+        tail.pre &#x3D; head;
+    &#125;
+    
+    public int get(int key) &#123;
+        DLinkedNode node &#x3D; cache.get(key);
+
+        if(node &#x3D;&#x3D; null)&#123;
+            &#x2F;&#x2F;不存在key
+            return -1;
+        &#125;else &#123;
+            &#x2F;&#x2F;使用了该数，更新缓存
+            deleteNode(node);
+            addToHead(node);
+        &#125;
+        return node.val;
+    &#125;
+    
+    public void put(int key, int value) &#123;
+        DLinkedNode node &#x3D; cache.get(key);
+
+        &#x2F;&#x2F;如果存在，修改并更新缓存;
+        if(node !&#x3D; null)&#123;
+            node.val &#x3D; value;
+            deleteNode(node);
+            addToHead(node);
+        &#125;else &#123;
+            &#x2F;&#x2F;不存在
+            &#x2F;&#x2F;1.判断容量  达到最大容量，删除最近未使用节点(别忘了cache也要删)
+            if(size &#x3D;&#x3D; capacity)&#123;
+                DLinkedNode removeNode &#x3D; tail.pre;
+                deleteNode(removeNode);
+                cache.remove(removeNode.key);
+                size--;
+            &#125;
+            DLinkedNode newNode &#x3D; new DLinkedNode(key, value);
+            size++;
+            addToHead(newNode);
+            cache.put(key, newNode);
+        &#125;
+    &#125;
+
+    &#x2F;&#x2F;删除双链表中的节点
+    public void deleteNode(DLinkedNode node)&#123;
+        node.pre.next &#x3D; node.next;
+        node.next.pre &#x3D; node.pre;
+    &#125;
+
+    &#x2F;&#x2F;加入到链表头部
+    public void addToHead(DLinkedNode node)&#123;
+        node.pre &#x3D; head;
+        node.next &#x3D; head.next;
+        head.next.pre &#x3D; node;
+        head.next &#x3D; node;
+    &#125;  
+&#125;
+
+&#x2F;**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj &#x3D; new LRUCache(capacity);
+ * int param_1 &#x3D; obj.get(key);
+ * obj.put(key,value);
+ *&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>
@@ -1283,7 +1371,7 @@ public:
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">37.5k</span>
+                        class="white-color">37.9k</span>
             
             
             
