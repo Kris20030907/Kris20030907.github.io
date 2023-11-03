@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>LC208：Trie前缀树</title>
+      <link href="/2023/11/03/lc208-trie-qian-zhui-shu/"/>
+      <url>/2023/11/03/lc208-trie-qian-zhui-shu/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>算是对 Acwing 那题的复习了</p></blockquote><p>题目如下：<br><img src="/../images/LC208%EF%BC%9ATrie%E5%89%8D%E7%BC%80%E6%A0%91.png"></p><p><strong>思路就不说了，就是将字符串按照多叉树存储，插入和查询差不多，只要把每个字符串结尾的字符标记一下或者记录一下个数就行。</strong> </p><p>下面是代码：</p><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">class Trie &#123;public:    static const int N &#x3D; 100010;    int son[N][26] &#x3D; &#123;0&#125;;  &#x2F;&#x2F;son[1][2] &#x3D; 3; 说明节点1有一个节点3的儿子字符C（0-25）    int cnt[N] &#x3D; &#123;0&#125;; &#x2F;&#x2F;存以当前节点为结尾的字符串有多少个    int idx &#x3D; 0;  &#x2F;&#x2F;存节点序号    Trie() &#123;    &#125;    void insert(string word) &#123;        int p &#x3D; 0;  &#x2F;&#x2F;0是所有节点的根节点        int size &#x3D; word.size();        for(int i &#x3D; 0; i &lt; size; i++)&#123;            int u &#x3D; word[i] - &#39;a&#39;;            if(!son[p][u]) son[p][u] &#x3D; ++idx;  &#x2F;&#x2F;没有值为这个字符的子节点就创建并编号            p &#x3D; son[p][u];  &#x2F;&#x2F;并且就移动到孩子节点,进行下一个字符的插入        &#125;        cnt[p]++;    &#125;    bool search(string word) &#123;        int p &#x3D; 0;        int size &#x3D; word.size();        for(int i &#x3D; 0; i &lt; size; i++)&#123;            int u &#x3D; word[i]-&#39;a&#39;;            if(!son[p][u]) return false; &#x2F;&#x2F;字符断了，说明没有这个前缀单词            p &#x3D; son[p][u];  &#x2F;&#x2F;移动到孩子        &#125;        return cnt[p] &gt; 0;  &#x2F;&#x2F;以当前字符串结尾的单词存在，说明word存在    &#125;    &#x2F;&#x2F;自定义查询前缀    bool startsWith(string prefix) &#123;        int p &#x3D; 0;        int size &#x3D; prefix.size();        for(int i &#x3D; 0; i &lt; size; i++)&#123;            int u &#x3D; prefix[i]-&#39;a&#39;;            if(!son[p][u]) return false; &#x2F;&#x2F;字符断了，说明没有这个前缀单词            p &#x3D; son[p][u];  &#x2F;&#x2F;移动到孩子        &#125;        return true;  &#x2F;&#x2F;到达了当前字符串的尾部，说明存在    &#125;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 力扣 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MVCC概念和实现原理</title>
       <link href="/2023/10/28/mvcc-gai-nian-he-shi-xian-yuan-li/"/>
       <url>/2023/10/28/mvcc-gai-nian-he-shi-xian-yuan-li/</url>
