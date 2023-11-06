@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>LC318：最长单词长度乘积</title>
+      <link href="/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/"/>
+      <url>/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>这题标准解法位运算，但是确实没想到可以这样做，记录一下。</p></blockquote><blockquote><p>Problem: <a href="https://leetcode.cn/problems/maximum-product-of-word-lengths/description/">318. 最大单词长度乘积</a></p></blockquote><p><img src="/../images/LC318%EF%BC%9A%E6%9C%80%E9%95%BF%E5%8D%95%E8%AF%8D%E9%95%BF%E5%BA%A6%E4%B9%98%E7%A7%AF.png"></p><h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><ol><li><p>暴力做法 167&#x2F;168 ,太🐕了，卡样例</p></li><li><p>位运算，从未设想的道路</p></li></ol><h1 id="位运算思路"><a href="#位运算思路" class="headerlink" title="位运算思路"></a>位运算思路</h1><p><strong>位运算做法，用一个int的数（2^31-1)也就是31位，完全可以存储26个字母对应的位数</strong>。</p><p>举例：一个字符串 abcd,如果用一个 int 的数 x，初始值为0，那它的二进制数就是 <code>000~~~</code>,然后通过位（或）运算把每个出现的字符都放在 x 的二进制数对应位置上，得到 <code>1111000~~</code>，如果再来一个字符串 <code>efgj</code>就得到了对应的数 y 的二进制数<code> 0000111001000 ~~~</code>，这两个二进制数作与运算，如果为0就说明没有重复字符，可以求积。</p><h1 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h1><pre class="line-numbers language-Cpp" data-language="Cpp"><code class="language-Cpp">class Solution &#123;public:&#x2F;&#x2F;没想到过用位运算    int maxProduct(vector&lt;string&gt;&amp; words) &#123;            int len &#x3D; words.size();            vector&lt;int&gt; st(len);   &#x2F;&#x2F;每个字符串都对应一个“掩码”            for(int i &#x3D; 0; i &lt; len; i++)&#123;                string word &#x3D; words[i];                int size &#x3D; word.size();                for(int j &#x3D; 0; j &lt; size; j++)&#123;                    st[i] |&#x3D; 1 &lt;&lt; (word[j] - &#39;a&#39;);  &#x2F;&#x2F;出现的字符，映射到对应的位上                &#125;            &#125;            int ans &#x3D; 0;            for(int i &#x3D; 0; i &lt; len; i++)&#123;                for(int j &#x3D; i + 1; j &lt; len; j++)&#123;                    if((st[i] &amp; st[j]) &#x3D;&#x3D; 0)&#123;   &#x2F;&#x2F;不存在相同字符                        ans &#x3D; max(ans, (int)(words[i].size() * words[j].size()));                    &#125;                &#125;            &#125;            return ans;    &#125;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h1 id="暴力"><a href="#暴力" class="headerlink" title="暴力"></a>暴力</h1><pre class="line-numbers language-cpp" data-language="cpp"><div class="caption"><span>[]</span></div><code class="language-cpp">class Solution &#123;public:    &#x2F;&#x2F;暴力一发    &#x2F;&#x2F;没两个字符串，先判断是否有重复字符，有的话就跳过，没有就求积    bool check(string &amp;a, string &amp;b)&#123;        int st[26] &#x3D; &#123;0&#125;;   &#x2F;&#x2F;每个字符出现的个数        for(int i &#x3D; 0; i &lt; a.size(); i++)&#123;            st[a[i] - &#39;a&#39;]++;        &#125;        for(int i &#x3D; 0; i &lt; b.size(); i++)&#123;            if(st[b[i]-&#39;a&#39;] &gt; 0) return false;  &#x2F;&#x2F;只要已经存在了这个字符，就说明b与a重复了        &#125;        return true;    &#125;    int maxProduct(vector&lt;string&gt;&amp; words) &#123;        &#x2F;&#x2F;取子串        int len &#x3D; words.size();        int ans &#x3D; 0;        for(int i &#x3D; 0; i &lt; len; i++)&#123;            for(int j &#x3D; i + 1; j &lt; len; j++)&#123;                string a &#x3D; words[i]; string b &#x3D; words[j];                if(check(a, b))&#123;                    ans &#x3D; max(ans, (int)(a.size() * b.size()));                    &#x2F;&#x2F;长见识了，字符串长度返回的是 unsigned long int 类型，和int不匹配                &#125;            &#125;        &#125;        return ans;    &#125;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LC208：Trie前缀树</title>
       <link href="/2023/11/03/lc208-trie-qian-zhui-shu/"/>
       <url>/2023/11/03/lc208-trie-qian-zhui-shu/</url>

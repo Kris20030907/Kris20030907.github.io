@@ -4,17 +4,21 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="LC208：Trie前缀树, KTnoobStation">
+    <meta name="keywords" content="LC318：最长单词长度乘积, KTnoobStation">
     <meta name="description" content="
-算是对 Acwing 那题的复习了
+这题标准解法位运算，但是确实没想到可以这样做，记录一下。
 
-题目如下：
-思路就不说了，就是将字符串按照多叉树存储，插入和查询差不多，只要把每个字符串结尾的字符标记一下或者记录一下个数就行。 
-下面是代码：
-class Trie &amp;#123;
 
-public:
-">
+Problem: 318. 最大单词长度乘积
+
+
+思路
+暴力做法 167&amp;#x2F;168 ,太🐕了，卡样例
+
+位运算，从未设想的道路
+
+
+位运算思路位运算做法，用一个int">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -26,7 +30,7 @@ public:
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>LC208：Trie前缀树 | KTnoobStation</title>
+    <title>LC318：最长单词长度乘积 | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -342,12 +346,12 @@ public:
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">LC208：Trie前缀树</h1>
+                    <h1 class="description center-align post-title">LC318：最长单词长度乘积</h1>
                 </div>
             </div>
         </div>
@@ -375,10 +379,6 @@ public:
                                 <span class="chip bg-color">算法</span>
                             </a>
                         
-                            <a href="/tags/%E5%8A%9B%E6%89%A3/">
-                                <span class="chip bg-color">力扣</span>
-                            </a>
-                        
                     </div>
                     
                 </div>
@@ -400,21 +400,21 @@ public:
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-11-03
+                    2023-11-06
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-11-03
+                    2023-11-06
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    449
+                    620
                 </div>
                 
 
@@ -445,58 +445,79 @@ public:
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <blockquote>
-<p>算是对 Acwing 那题的复习了</p>
+<p>这题标准解法位运算，但是确实没想到可以这样做，记录一下。</p>
 </blockquote>
-<p>题目如下：<br><img src="/../images/LC208%EF%BC%9ATrie%E5%89%8D%E7%BC%80%E6%A0%91.png"></p>
-<p><strong>思路就不说了，就是将字符串按照多叉树存储，插入和查询差不多，只要把每个字符串结尾的字符标记一下或者记录一下个数就行。</strong> </p>
-<p>下面是代码：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">class Trie &#123;
-
+<blockquote>
+<p>Problem: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/maximum-product-of-word-lengths/description/">318. 最大单词长度乘积</a></p>
+</blockquote>
+<p><img src="/../images/LC318%EF%BC%9A%E6%9C%80%E9%95%BF%E5%8D%95%E8%AF%8D%E9%95%BF%E5%BA%A6%E4%B9%98%E7%A7%AF.png"></p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><ol>
+<li><p>暴力做法 167&#x2F;168 ,太🐕了，卡样例</p>
+</li>
+<li><p>位运算，从未设想的道路</p>
+</li>
+</ol>
+<h1 id="位运算思路"><a href="#位运算思路" class="headerlink" title="位运算思路"></a>位运算思路</h1><p><strong>位运算做法，用一个int的数（2^31-1)也就是31位，完全可以存储26个字母对应的位数</strong>。</p>
+<p>举例：一个字符串 abcd,如果用一个 int 的数 x，初始值为0，那它的二进制数就是 <code>000~~~</code>,然后通过位（或）运算把每个出现的字符都放在 x 的二进制数对应位置上，得到 <code>1111000~~</code>，如果再来一个字符串 <code>efgj</code>就得到了对应的数 y 的二进制数<code> 0000111001000 ~~~</code>，这两个二进制数作与运算，如果为0就说明没有重复字符，可以求积。</p>
+<h1 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h1><pre class="line-numbers language-Cpp" data-language="Cpp"><code class="language-Cpp">
+class Solution &#123;
 public:
-
-    static const int N &#x3D; 100010;
-    int son[N][26] &#x3D; &#123;0&#125;;  &#x2F;&#x2F;son[1][2] &#x3D; 3; 说明节点1有一个节点3的儿子字符C（0-25）
-    int cnt[N] &#x3D; &#123;0&#125;; &#x2F;&#x2F;存以当前节点为结尾的字符串有多少个
-    int idx &#x3D; 0;  &#x2F;&#x2F;存节点序号
-
-    Trie() &#123;
-    &#125;
-
-    void insert(string word) &#123;
-
-        int p &#x3D; 0;  &#x2F;&#x2F;0是所有节点的根节点
-        int size &#x3D; word.size();
-        for(int i &#x3D; 0; i &lt; size; i++)&#123;
-            int u &#x3D; word[i] - &#39;a&#39;;
-            if(!son[p][u]) son[p][u] &#x3D; ++idx;  &#x2F;&#x2F;没有值为这个字符的子节点就创建并编号
-            p &#x3D; son[p][u];  &#x2F;&#x2F;并且就移动到孩子节点,进行下一个字符的插入
-        &#125;
-        cnt[p]++;
-    &#125;
-    bool search(string word) &#123;
-        int p &#x3D; 0;
-        int size &#x3D; word.size();
-        for(int i &#x3D; 0; i &lt; size; i++)&#123;
-            int u &#x3D; word[i]-&#39;a&#39;;
-            if(!son[p][u]) return false; &#x2F;&#x2F;字符断了，说明没有这个前缀单词
-            p &#x3D; son[p][u];  &#x2F;&#x2F;移动到孩子
-        &#125;
-        return cnt[p] &gt; 0;  &#x2F;&#x2F;以当前字符串结尾的单词存在，说明word存在
-    &#125;
-
-    &#x2F;&#x2F;自定义查询前缀
-    bool startsWith(string prefix) &#123;
-        int p &#x3D; 0;
-        int size &#x3D; prefix.size();
-        for(int i &#x3D; 0; i &lt; size; i++)&#123;
-            int u &#x3D; prefix[i]-&#39;a&#39;;
-            if(!son[p][u]) return false; &#x2F;&#x2F;字符断了，说明没有这个前缀单词
-            p &#x3D; son[p][u];  &#x2F;&#x2F;移动到孩子
-        &#125;
-        return true;  &#x2F;&#x2F;到达了当前字符串的尾部，说明存在
+&#x2F;&#x2F;没想到过用位运算
+    int maxProduct(vector&lt;string&gt;&amp; words) &#123;
+            int len &#x3D; words.size();
+            vector&lt;int&gt; st(len);   &#x2F;&#x2F;每个字符串都对应一个“掩码”
+            for(int i &#x3D; 0; i &lt; len; i++)&#123;
+                string word &#x3D; words[i];
+                int size &#x3D; word.size();
+                for(int j &#x3D; 0; j &lt; size; j++)&#123;
+                    st[i] |&#x3D; 1 &lt;&lt; (word[j] - &#39;a&#39;);  &#x2F;&#x2F;出现的字符，映射到对应的位上
+                &#125;
+            &#125;
+            int ans &#x3D; 0;
+            for(int i &#x3D; 0; i &lt; len; i++)&#123;
+                for(int j &#x3D; i + 1; j &lt; len; j++)&#123;
+                    if((st[i] &amp; st[j]) &#x3D;&#x3D; 0)&#123;   &#x2F;&#x2F;不存在相同字符
+                        ans &#x3D; max(ans, (int)(words[i].size() * words[j].size()));
+                    &#125;
+                &#125;
+            &#125;
+            return ans;
     &#125;
 &#125;;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="暴力"><a href="#暴力" class="headerlink" title="暴力"></a>暴力</h1><pre class="line-numbers language-cpp" data-language="cpp"><div class="caption"><span>[]</span></div><code class="language-cpp">class Solution &#123;
+public:
+    &#x2F;&#x2F;暴力一发
+    &#x2F;&#x2F;没两个字符串，先判断是否有重复字符，有的话就跳过，没有就求积
+    bool check(string &amp;a, string &amp;b)&#123;
+        int st[26] &#x3D; &#123;0&#125;;   &#x2F;&#x2F;每个字符出现的个数
+        for(int i &#x3D; 0; i &lt; a.size(); i++)&#123;
+            st[a[i] - &#39;a&#39;]++;
+        &#125;
+        for(int i &#x3D; 0; i &lt; b.size(); i++)&#123;
+            if(st[b[i]-&#39;a&#39;] &gt; 0) return false;  &#x2F;&#x2F;只要已经存在了这个字符，就说明b与a重复了
+        &#125;
+        return true;
+    &#125;
+
+    int maxProduct(vector&lt;string&gt;&amp; words) &#123;
+        &#x2F;&#x2F;取子串
+        int len &#x3D; words.size();
+        int ans &#x3D; 0;
+        for(int i &#x3D; 0; i &lt; len; i++)&#123;
+            for(int j &#x3D; i + 1; j &lt; len; j++)&#123;
+                string a &#x3D; words[i]; string b &#x3D; words[j];
+                if(check(a, b))&#123;
+                    ans &#x3D; max(ans, (int)(a.size() * b.size()));
+                    &#x2F;&#x2F;长见识了，字符串长度返回的是 unsigned long int 类型，和int不匹配
+                &#125;
+            &#125;
+        &#125;
+        return ans;
+    &#125;
+&#125;;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -522,7 +543,7 @@ public:
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/11/03/lc208-trie-qian-zhui-shu/">http://example.com/2023/11/03/lc208-trie-qian-zhui-shu/</a>
+                    <a href="http://example.com/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/">http://example.com/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -562,10 +583,6 @@ public:
                             
                                 <a href="/tags/%E7%AE%97%E6%B3%95/">
                                     <span class="chip bg-color">算法</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%8A%9B%E6%89%A3/">
-                                    <span class="chip bg-color">力扣</span>
                                 </a>
                             
                         </div>
@@ -913,9 +930,10 @@ public:
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/">
                     <div class="card-image">
@@ -933,9 +951,59 @@ public:
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-11-06
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-11-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/11/03/lc208-trie-qian-zhui-shu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="LC208：Trie前缀树">
+                        
+                        <span class="card-title">LC208：Trie前缀树</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-11-03
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -955,61 +1023,8 @@ public:
                         <span class="chip bg-color">算法</span>
                     </a>
                     
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2023/10/28/mvcc-gai-nian-he-shi-xian-yuan-li/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="MVCC概念和实现原理">
-                        
-                        <span class="card-title">MVCC概念和实现原理</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-28
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
-                                    数据库
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
-                        <span class="chip bg-color">数据库</span>
-                    </a>
-                    
-                    <a href="/tags/Mysql/">
-                        <span class="chip bg-color">Mysql</span>
-                    </a>
-                    
-                    <a href="/tags/MVCC/">
-                        <span class="chip bg-color">MVCC</span>
+                    <a href="/tags/%E5%8A%9B%E6%89%A3/">
+                        <span class="chip bg-color">力扣</span>
                     </a>
                     
                 </div>
