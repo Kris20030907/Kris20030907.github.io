@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Bean的三级缓存解决循环依赖</title>
+      <link href="/2023/11/11/bean-de-san-ji-huan-cun-jie-jue-xun-huan-yi-lai/"/>
+      <url>/2023/11/11/bean-de-san-ji-huan-cun-jie-jue-xun-huan-yi-lai/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>忘了就可以回顾一下黑马的：<a href="https://www.bilibili.com/video/BV15b4y117RJ?p=184&vd_source=1ffd466ed0c5135e3f1bc07afebf6213">框架篇-51-循环依赖_一级缓存作用_哔哩哔哩_bilibili</a> </p></blockquote><p>主要用于<mark style="background: #FFFF00;">解决 Bean 的循环依赖和重复创建问题</mark>。<br><img src="/images/Bean%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png"></p><h2 id="Bean-的三级缓存是什么"><a href="#Bean-的三级缓存是什么" class="headerlink" title="Bean 的三级缓存是什么"></a>Bean 的三级缓存是什么</h2><p>三级缓存分别如下：</p><ol><li><strong>singletonObjects：</strong> 当一个 <strong>Bean 被完全创建和初始化后</strong>，会被放入 singletonObjects 单例池缓存中。这个缓存存储的是<strong>完全初始化的 Bean 实例</strong>。</li><li><strong>earlySingleObjects</strong>：存放还没走完生命周期的 Bean，也就是半成品 Bean 对象。</li><li><strong>singletonFactories</strong>: 存储创建 Bean 的 ObjectFactory 工厂类对象的缓存。</li></ol><h2 id="为什么要加上三级缓存（怎么解决缓存依赖问题）"><a href="#为什么要加上三级缓存（怎么解决缓存依赖问题）" class="headerlink" title="为什么要加上三级缓存（怎么解决缓存依赖问题）"></a>为什么要加上三级缓存（怎么解决缓存依赖问题）</h2><p>从三级缓存的作用以及不足讲解。</p><h3 id="一级缓存"><a href="#一级缓存" class="headerlink" title="一级缓存"></a>一级缓存</h3><p>singletonObjects ： 单例池缓存。</p><p><strong>作用</strong>：Bean 对象只会在这里保存一份对象，<strong>避免 Bean 重复创建</strong>，实现单例。</p><p><strong>缺点</strong>：<strong>不能解决循环依赖问题</strong> </p><p><img src="/images/%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png"><br>在加载 A 的过程中想要使用 B 对象，结果单例池不存在，则需要先去创建 B 对象，然而 B 类的内部也需要 A，则会等 A 创建成功才能使用 A 对象，才能完成 B 的创建。造成了<strong>彼此等待</strong>的情况，也就是循环依赖。</p><h3 id="二级缓存"><a href="#二级缓存" class="headerlink" title="二级缓存"></a>二级缓存</h3><p>earlySingleObjects ： 二级缓存</p><p><strong>作用</strong>：存放半成品的 Bean 对象，循环依赖的另一个对象可以通过二级缓存得到半成品对象完成实例化，然后再返回给半成品对象完成实例化。</p><p>解决循环依赖的过程：</p><p><img src="/images/Bean%E7%9A%84%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98.png"></p><blockquote><p>A 的对象创建，<strong>实例化的时候先把半成品的放到二级缓存</strong>，然后需要 B，先查单例池和二级缓存，发现没有 B 对象，然后就去创建 B，B 发现缓存中有半成品的 A 对象，就拿来进行 B 的创建，创建并初始化完成得到<strong>完全体 B 对象</strong>，然后返回给 A 进行下面的创建，就解决了循环依赖问题。</p></blockquote><p><strong>缺点</strong>：虽然看样子解决了问题，但是如果在有代理对象要创建的情况下，还是会有问题。</p><p>通过代理给对象进行功能增强，需要创建代理对象，如果不使用三级缓存，会<mark style="background: #FFFF00;">导致代理功能失效</mark>。比如下图：<br><img src="/images/Bean%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98.png"></p><blockquote><p>可以看到传递给 B 的 <strong>A 对象不是完整的被代理增强过</strong>的，而是半成品的 A 对象，这样 A 的增强就失效了。</p></blockquote><h3 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h3><p>singletonFactories ：存放创建 Bean 的 ObjectFactory 对象。</p><p><strong>作用</strong>：<strong>完全解决循环依赖</strong>的问题。</p><p>解决过程如下：<br><img src="/images/Bean%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98-1.png"></p><p>解决方法实际上就是通过三级缓存存储 ObjectFactory 对象（这个对象可以创建某个对象的<strong>代理对象或普通对象</strong>），当创建 A 对象的时候会先把它的 ObjectFactory 比如 Fa 对象放进三级缓存中，然后查询 B，发现没有 B，就去创建 B，同样放进一个 Fb 对象到缓存，然后发现需要 A 的对象，结果找到了 A 的工厂对象 Fa，这个工厂对象就看你<strong>是不是发生了循环依赖</strong>，如果是就会创建代理对象给 B，否则就给普通对象。剩下的过程略。</p><p>所以使用这种三级缓存就可以解决<strong>代理失效</strong>问题，完全解决循环依赖问题。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 原理 </tag>
+            
+            <tag> Spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LC318：最长单词长度乘积</title>
       <link href="/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/"/>
       <url>/2023/11/06/lc318-zui-chang-dan-ci-chang-du-cheng-ji/</url>
