@@ -6,18 +6,21 @@
     <meta charset="utf-8">
     <meta name="keywords" content="优惠券, KTnoobStation">
     <meta name="description" content="
-主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。具体包括：
+主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。
 
-全局唯一 ID
-实现优惠券秒杀下单 
+
+具体包括：
+
+
+全局唯一 ID 的实现
+如何实现全局唯一 ID？
+
+
+实现优惠券秒杀下单功能 
 超卖问题
-乐观锁解决超卖问题的改进
-
-
-一人一单 
-分布式锁 
-Redis 优化秒杀 
-Redis 消息队列">
+为什么会出现超卖
+解决方法
+乐观锁的改进-提高成">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -410,14 +413,14 @@ Redis 消息队列">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-10-04
+                    2023-11-12
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.7k
+                    5.9k
                 </div>
                 
 
@@ -448,20 +451,62 @@ Redis 消息队列">
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <blockquote>
-<p>主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。<br>具体包括：</p>
+<p>主要根据黑马的教学目标进行学习，优惠券秒杀，分布式锁以及超卖问题等的具体实践。</p>
+</blockquote>
+<blockquote>
+<p>具体包括：</p>
+</blockquote>
 <ul>
-<li>全局唯一 ID</li>
-<li>实现优惠券秒杀下单 </li>
-<li>超卖问题<ul>
-<li>乐观锁解决超卖问题的改进</li>
+<li><a href="#%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80%20ID%20%E7%9A%84%E5%AE%9E%E7%8E%B0">全局唯一 ID 的实现</a><ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80%20ID%EF%BC%9F">如何实现全局唯一 ID？</a></li>
 </ul>
 </li>
-<li>一人一单 </li>
-<li>分布式锁 </li>
-<li>Redis 优化秒杀 </li>
-<li>Redis 消息队列实现异步秒杀</li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E4%BC%98%E6%83%A0%E5%88%B8%E7%A7%92%E6%9D%80%E4%B8%8B%E5%8D%95%E5%8A%9F%E8%83%BD">实现优惠券秒杀下单功能</a> </li>
+<li><a href="#%E8%B6%85%E5%8D%96%E9%97%AE%E9%A2%98">超卖问题</a><ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0%E8%B6%85%E5%8D%96">为什么会出现超卖</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">解决方法</a></li>
+<li><a href="#%E4%B9%90%E8%A7%82%E9%94%81%E7%9A%84%E6%94%B9%E8%BF%9B-%E6%8F%90%E9%AB%98%E6%88%90%E5%8A%9F%E7%8E%87">乐观锁的改进-提高成功率</a></li>
 </ul>
-</blockquote>
+</li>
+<li><a href="#%E4%B8%80%E4%BA%BA%E4%B8%80%E5%8D%95">一人一单</a><ul>
+<li><a href="#%E6%96%B9%E6%B3%95%20%EF%BC%9A">方法 ：</a></li>
+<li><a href="#%E5%87%BA%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98">出现多线程安全的问题</a></li>
+<li><a href="#%E4%B8%80%E4%BA%BA%E5%A4%9A%E5%8D%95%E7%9A%84%E6%82%B2%E8%A7%82%E9%94%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">一人多单的悲观锁解决方案</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">分布式锁</a><ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%20redis%20%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">使用 redis 实现分布式锁</a></li>
+<li><a href="#%E4%B8%8B%E9%9D%A2%E6%98%AF%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">下面是代码实现</a><ul>
+<li><a href="#ILock%20%E6%8E%A5%E5%8F%A3">ILock 接口</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E7%B1%BB%20SimpleRedisLock">实现类 SimpleRedisLock</a></li>
+<li><a href="#%E5%9C%A8%E4%B8%8B%E5%8D%95%E4%BB%A3%E7%A0%81%E4%B8%AD%E5%BA%94%E7%94%A8%20redis%20%E9%94%81">在下单代码中应用 redis 锁</a></li>
+</ul>
+</li>
+<li><a href="#%E6%94%B9%E8%BF%9B%20redis%20%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">改进 redis 分布式锁</a><ul>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">解决方法</a></li>
+<li><a href="#%E4%BD%A0%E4%BB%A5%E4%B8%BA%E8%BF%99%E5%B0%B1%E5%AE%8C%E4%BA%86%E5%98%9B%EF%BC%9F">你以为这就完了嘛？</a></li>
+</ul>
+</li>
+<li><a href="#Redis%20Lua%20%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E5%AD%90%E6%80%A7">Redis Lua 脚本实现原子性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8%20Redisson%20%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">使用 Redisson 实现分布式锁</a><ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%20redis%20%E7%9A%84%20setnx%20%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98">基于 redis 的 setnx 实现的分布式锁有什么问题</a></li>
+<li><a href="#Redisson%20%E5%AE%9E%E7%8E%B0">Redisson 实现</a></li>
+<li><a href="#Redisson%20%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86">Redisson 实现可重入锁的原理</a></li>
+</ul>
+</li>
+<li><a href="#Redis%20%E4%BC%98%E5%8C%96%E7%A7%92%E6%9D%80">Redis 优化秒杀</a><ul>
+<li><a href="#%E4%BC%98%E5%8C%96">优化</a><ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%20%EF%BC%9F">如何实现 ？</a></li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E5%AE%9E%E7%8E%B0">业务实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%B1%80%E5%A4%96%E8%AF%9D">局外话</a></li>
+<li><a href="#Redis%20%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5%E7%A7%92%E6%9D%80">Redis 消息队列实现异步秒杀</a></li>
+</ul>
 <h3 id="全局唯一-ID-的实现"><a href="#全局唯一-ID-的实现" class="headerlink" title="全局唯一 ID 的实现"></a>全局唯一 ID 的实现</h3><blockquote>
 <p>为什么要使用全局唯一 ID，直接用数据库自增 ID 不好吗？</p>
 </blockquote>
@@ -1864,7 +1909,7 @@ public void createVoucherOrder(VoucherOrder voucherOrder) &#123;
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">39.8k</span>
+                        class="white-color">39.9k</span>
             
             
             
