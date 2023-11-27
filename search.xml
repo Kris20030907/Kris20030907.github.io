@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>CountDownLatch</title>
+      <link href="/2023/11/27/countdownlatch/"/>
+      <url>/2023/11/27/countdownlatch/</url>
+      
+        <content type="html"><![CDATA[<ul><li><input checked="" disabled="" type="checkbox"> #task countdownlauch ✅ 2023-11-24</li></ul><h2 id="主要方法"><a href="#主要方法" class="headerlink" title="主要方法"></a>主要方法</h2><p>CountDownLatch 的几个<strong>主要方法</strong>：</p><p><strong>（1）构造函数</strong>：public CountDownLatch(int count) { };<br>它的构造函数是传入一个参数，该参数 count 是需要倒数的数值。</p><p>**（2）await()**：调用 await() 方法的线程<mark style="background: #FFFF00;">开始等待，直到倒数结束</mark>，也就是 count 值为 0 的时候才会继续执行。</p><p>**（3）await(long timeout, TimeUnit unit)**：传入超时参数，这里可以设置超时时间，如果超时就不再等待了。</p><p>**（4）countDown()**：把数值倒数 1，也就是将 count 值减 1，直到减为 0 时，之前等待的线程会被唤起。</p><h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>主要有如下两种：<strong>一等多、多等一</strong> </p><h3 id="一个线程等待多个线程执行完毕"><a href="#一个线程等待多个线程执行完毕" class="headerlink" title="一个线程等待多个线程执行完毕"></a>一个线程等待多个线程执行完毕</h3><p>比如一个裁判员和多个跑步运动员，<strong>裁判员必须在所有运动员都完成比赛才能吹哨比赛结束</strong>。就可以通过 <em>CountDownLatch</em> 设置计数器（应该设置为 5，因为要等 5 个线程结束），让”裁判员”最后执行吹哨。</p><blockquote><p>翻译过来就是：<strong>多个线程执行完毕，这个线程才能执行</strong>。</p></blockquote><p>示例代码如下：一个裁判、五个运动员。<br><img src="/images/CountDownLatch1.png"></p><h3 id="多个线程必须等待一个线程执行完才能继续执行"><a href="#多个线程必须等待一个线程执行完才能继续执行" class="headerlink" title="多个线程必须等待一个线程执行完才能继续执行"></a>多个线程必须等待一个线程执行完才能继续执行</h3><p>换个场景，<strong>多个运动员必须等待裁判开枪才能起跑</strong>。</p><blockquote><p><em>CountDownLatch</em> 设置计数器（应该设置为 1，因为要等 1 个线程结束）</p></blockquote><p>那就是让每个运动员线程执行 <em>await</em> 方法等待, 直到”裁判”开枪（调用 <em>countDown</em> ）, 使计数器为 0，才能让运动员开始跑。</p><p>示例代码：<br><img src="/images/carbon%20(2).png"></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总之：CountDownLatch 类在创建实例的时候，需要在构造函数中传入<strong>倒数次数</strong>，然后<strong>由需要等待的线程去调用 await 方法开始等待</strong>，而每一次其他线程调用了 <em><strong>countDown 方法</strong></em>之后，计数便会减 1，直到减为 0 时，之前等待的线程便会继续运行。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JUC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 原理 </tag>
+            
+            <tag> JUC </tag>
+            
+            <tag> 并发编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Bean的三级缓存解决循环依赖</title>
       <link href="/2023/11/11/bean-de-san-ji-huan-cun-jie-jue-xun-huan-yi-lai/"/>
       <url>/2023/11/11/bean-de-san-ji-huan-cun-jie-jue-xun-huan-yi-lai/</url>
