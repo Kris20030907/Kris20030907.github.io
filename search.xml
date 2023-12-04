@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>区间合并-贪心</title>
+      <link href="/2023/12/02/qu-jian-he-bing-tan-xin/"/>
+      <url>/2023/12/02/qu-jian-he-bing-tan-xin/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>反复遇到，因此做个笔记，思想不难，所以直接看注释就够了。</p></blockquote><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>LC-56： <a href="https://leetcode.cn/problems/merge-intervals/description/">56. 合并区间 - 力扣（LeetCode）</a> </p><h2 id="Java-代码"><a href="#Java-代码" class="headerlink" title="Java 代码"></a>Java 代码</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java">class Solution &#123;    public int[][] merge(int[][] intervals) &#123;        &#x2F;&#x2F;1.按照左端点排序        Arrays.sort(intervals, (v1, v2) -&gt; v1[0] - v2[0]);        int[][] res &#x3D; new int[intervals.length][2];  &#x2F;&#x2F;存最终合并后的区间        int idx &#x3D; -1;   &#x2F;&#x2F;第index个区间序号        for(int[] interval : intervals)&#123;            &#x2F;&#x2F;初始时idx &#x3D; -1，无区间；或者 上一个区间右端点小于当前区间的左端点，应该新加一个区间            if(idx &#x3D;&#x3D; -1 || interval[0] &gt; res[idx][1])&#123;                res[++idx] &#x3D; interval;            &#125;else &#123;                &#x2F;&#x2F;否则就是区间端点有重叠，需要合并右端点(更新当前合并后区间的右端点)                res[idx][1] &#x3D; Math.max(res[idx][1], interval[1]);            &#125;        &#125;        return Arrays.copyOf(res, idx + 1);           &#x2F;&#x2F;这里为什么要拷贝一个大小为idx + 1的数组？         &#x2F;**        因为最后合并区间的个数肯定是小于等于原区间个数的，而创建的临时数组res的大小就是原区间个数，如果最后合并后的区间个数小了，则会出现[0, 0]的情况。        且个数为 idx + 1个区间，0 --&gt; idx 个         *&#x2F;    &#125;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">class Solution &#123;public:    vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) &#123;        vector&lt;vector&lt;int&gt;&gt; ans;        sort(intervals.begin(), intervals.end(), [](vector&lt;int&gt;&amp; a, vector&lt;int&gt;&amp; b)&#123;return a[0] &lt; b[0];&#125;);  &#x2F;&#x2F;按照左端点，递增排序        int st &#x3D; -1, ed &#x3D; -1;        int tmp[2]&#x3D;&#123;0&#125;;        for(auto interval : intervals)&#123;            if(ed &lt; interval[0])&#123;                &#x2F;&#x2F;区间右端点无法覆盖下一个区间，所以是个新区间(除了开始的默认区间-1，-1)                tmp[0] &#x3D; st, tmp[1] &#x3D; ed;                if(st !&#x3D; -1) ans.push_back(&#123;tmp[0], tmp[1]&#125;);                &#x2F;&#x2F;然后更新辅助区间为下一区间                st &#x3D; interval[0], ed &#x3D; interval[1];            &#125;else &#123;                &#x2F;&#x2F;否则能覆盖，更新最大覆盖范围                ed &#x3D; max(ed, interval[1]);            &#125;        &#125;        if(st !&#x3D; -1)&#123;            &#x2F;&#x2F;最后一个区间，由于没有参照物，所以只能判断是否为空，不为空集合则放入答案数组            ans.push_back(&#123;st, ed&#125;);        &#125;        return ans;    &#125;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 力扣 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CountDownLatch</title>
       <link href="/2023/11/27/countdownlatch/"/>
       <url>/2023/11/27/countdownlatch/</url>
