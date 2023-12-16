@@ -4,8 +4,15 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, KTnoobStation">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="循环队列模拟, KTnoobStation">
+    <meta name="description" content="
+大体思路记得，但是具体细节有遗忘，可以参考：循环队列中判断队满与队空_循环队列判断队空和队满-CSDN博客
+
+题目
+代码都是自己写的，Debug 也是。
+&amp;#x2F;**
+    普通队列约定：
+       1. hh &amp;#x3D;&amp;#">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +24,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | KTnoobStation</title>
+    <title>循环队列模拟 | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -333,12 +340,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title">循环队列模拟</h1>
                 </div>
             </div>
         </div>
@@ -360,12 +367,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                <span class="chip bg-color">算法</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%8A%9B%E6%89%A3/">
+                                <span class="chip bg-color">力扣</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                算法
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -374,28 +398,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-07-23
+                    2023-12-16
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-09-10
+                    2023-12-16
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    75
+                    445
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -418,20 +442,72 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new &quot;My New Post&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <blockquote>
+<p>大体思路记得，但是具体细节有遗忘，可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u010429311/article/details/51043149">循环队列中判断队满与队空_循环队列判断队空和队满-CSDN博客</a></p>
+</blockquote>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><img src="/../images/LC622.%E6%95%B0%E7%BB%84%E6%A8%A1%E6%8B%9F%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97%EF%BC%88%E5%A4%8D%E4%B9%A0%EF%BC%89.png"></p>
+<p>代码都是自己写的，Debug 也是。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">&#x2F;**
+    普通队列约定：
+       1. hh &#x3D;&#x3D; tt队空；但是容量有限
+       2. 元素入队尾指针 q[tt++] &#x3D; val  ; 队头元素，q[hh]; 出队元素头指针 ++hh;
+    循环队列
+        1. 队满 hh &#x3D;&#x3D; (tt + 1) % Q_size;   &#x2F;&#x2F;留一个位置判定满元素
+        2. 队空 hh &#x3D;&#x3D; tt; 
+     *&#x2F;
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+class MyCircularQueue &#123;
+    &#x2F;&#x2F;设计一个循环队列，一个空间用来存放两指针的交界，判断是为空还是满
+    int[] MyQueue;
+    int hh &#x3D; 0, tt &#x3D; 0;
+    int size &#x3D; 0 ;  &#x2F;&#x2F;存元素个数
+    int MAX_SIZE &#x3D; 0;
+    
+    public MyCircularQueue(int k) &#123;
+        MyQueue &#x3D; new int[k + 1];
+        MAX_SIZE &#x3D; k + 1;   &#x2F;&#x2F;用来取模的队列长度; 注意是k + 1,因为一个位置要拿来取模
+    &#125;
+    
+    &#x2F;&#x2F;元素入队
+    public boolean enQueue(int value) &#123;
+        if(isFull()) return false;
+        
+        MyQueue[tt] &#x3D; value;   &#x2F;&#x2F;入队
+        tt &#x3D; (tt + 1) % MAX_SIZE;  &#x2F;&#x2F;更新指针
+        size++;  &#x2F;&#x2F;更新容量
+        return true;
+    &#125;
+    
+    &#x2F;&#x2F;元素删除； 删除头部元素
+    public boolean deQueue() &#123;
+        if(isEmpty()) return false;   &#x2F;&#x2F;队空，删除失败
+        hh &#x3D; (hh + 1) % MAX_SIZE;
+        size--;  &#x2F;&#x2F;更新容量
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+        return true;
+    &#125;
+    
+    public int Front() &#123;
+        if(isEmpty()) return -1;   &#x2F;&#x2F;队空，弹出元素失败
+        return MyQueue[hh];
+    &#125;
+    
+    public int Rear() &#123;
+        if(isEmpty()) return -1;   &#x2F;&#x2F;队空，弹出元素失败
+        return MyQueue[(tt - 1 + MAX_SIZE) % MAX_SIZE];    &#x2F;&#x2F;队尾稍微不太一样，因为可能会在0的位置，但是此时队列并空，所以要求和取模
+    &#125;
+    
+    &#x2F;&#x2F;判定队空
+    public boolean isEmpty() &#123;
+        return hh &#x3D;&#x3D; tt;
+    &#125;
+    
+    &#x2F;&#x2F;判定队满
+    public boolean isFull() &#123;
+        return (tt + 1) % MAX_SIZE &#x3D;&#x3D; hh;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -457,7 +533,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/07/23/hello-world/">http://example.com/2022/07/23/hello-world/</a>
+                    <a href="http://example.com/2023/12/16/lc622.shu-zu-mo-ni-xun-huan-dui-lie-fu-xi/">http://example.com/2023/12/16/lc622.shu-zu-mo-ni-xun-huan-dui-lie-fu-xi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -494,7 +570,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                    <span class="chip bg-color">算法</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%8A%9B%E6%89%A3/">
+                                    <span class="chip bg-color">力扣</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -840,70 +924,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/08/04/dan-lian-biao-de-ji-ben-cao-zuo-dai-ma-shi-xian/">
+                <a href="/2023/12/16/lc622.shu-zu-mo-ni-xun-huan-dui-lie-fu-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="单链表的基本操作代码实现">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="循环队列模拟">
                         
-                        <span class="card-title">单链表的基本操作代码实现</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-08-04
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-category">
-                                    数据结构
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
-                        <span class="chip bg-color">数据结构</span>
-                    </a>
-                    
-                    <a href="/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/07/23/hello-world/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Hello World">
-                        
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">循环队列模拟</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -914,17 +946,86 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-16
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            KTpro
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%9B%E6%89%A3/">
+                        <span class="chip bg-color">力扣</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/12/02/qu-jian-he-bing-tan-xin/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="区间合并-贪心">
+                        
+                        <span class="card-title">区间合并-贪心</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%9B%E6%89%A3/">
+                        <span class="chip bg-color">力扣</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
