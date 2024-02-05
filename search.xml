@@ -4,6 +4,127 @@
   
     
     <entry>
+      <title>Mysql--谈谈自己对索引的理解</title>
+      <link href="/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/"/>
+      <url>/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/</url>
+      
+        <content type="html"><![CDATA[<p>从下面几点回答：</p><ol><li><em>索引是什么</em>？ （是单独存储在磁盘上的一种数据库结构。能加快数据查询的速度）</li><li><em>索引的底层数据结构包括 B+树索引，B 树索引，还有哈希索引等</em>。在不同的存储引擎中的存储形式是不同的。而且存储引擎也不一定支持所有的索引类型。</li><li><em>索引的优缺点</em>。</li></ol><h2 id="参考回答"><a href="#参考回答" class="headerlink" title="参考回答"></a>参考回答</h2><ul><li>索引是什么</li></ul><blockquote><p>嗯，索引是<strong>单独存储在磁盘上的一种数据库结构</strong>，它呢主要是为了<strong>提高数据查询的速度</strong>，因为当数据量很大的时候，<strong>如果没有索引</strong>，那数据库进行查询的时候会进行全表扫描，会非常慢。而引用了索引之后，<strong>比如 B+树索引</strong>，它的底层是平衡搜索二叉树，查询的效率会提高很多，时间复杂度大概在 O (logn)。</p></blockquote><p><del>（如果可以的话就继续扯下面的）</del> </p><ul><li>索引的底层数据结构</li></ul><blockquote><p>索引的底层数据结构包括，B+树索引，B 树索引，还有 Hash 哈希索引这几种主要的。在不同的存储引擎之间的默认数据结构是不同的。比如 <code>Memory</code> 数据引擎，是基于内存的，额外一提这种数据引擎比较适合创建临时表。回来继续，这个数据引擎其索引的数据结构就是哈希索引。而 Msyql 再 5.5 之后的默认存储引擎 <code>InnoDB</code> 和另一个存储引擎 <code>MyIsam</code> ，默认使用的索引数据类型是 B+树索引。</p></blockquote><blockquote><p>其实可以拿 B+树索引来看，B+树本身是一个平衡搜索二叉树，它的特点是<strong>只有叶子节点存储数据，非叶子节点只存储主键或者其他字段以及指针</strong>，用来快速定位所需要查询的数据，而且由于叶子节点之间通过<strong>双向链表</strong>进行连接，可以更方便的进行范围查询。</p></blockquote><blockquote><p>再看 B 树索引，B 树是 B+树的前身，因此可以说它是 B-树。B 树的话，不只是叶子节点存储数据，而是<strong>所有节点都存储数据</strong>，这样在<u>查询的时候，可能最快只需要一次 IO 就可以拿到数据，而 B+树索引则需要依次判断，最后到叶子节点才能拿到数据</u>，从这里看，其实 B 树的 IO 效率会更高一些。</p></blockquote><ul><li>索引的优缺点</li></ul><p>优点：</p><ol><li>通过<strong>建立唯一索引</strong>，可以保证数据的唯一性，<u>这点在我的项目里就有很大用处，因为要保证短链接以及短链接访问记录等的唯一性</u>，可以减少很多查询的次数。</li><li>刚才说过了，索引能够极大的提高数据查询的效率，原因在上面。</li><li>在分组查询和排序的过程中使用索引也能加快速度。</li></ol><p>缺点：</p><ol><li><strong>创建索引以及维护索引是比较麻烦</strong>的，只<u>要数据表数据更新时，索引可能需要对插入的数据进行存储，这时候树为了保证数据有序，可能就需要进行动态调整</u>，所以维护比较麻烦。而且创建索引会占用一定的存储空间。</li></ol><p>唯一索引应用（自己的项目）：</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">&#x2F;** * 记录基础访问监控数据 *&#x2F;@Insert(&quot;INSERT INTO t_link_access_stats (full_short_url, gid, date, pv, uv, uip, hour, weekday, create_time, update_time, del_flag) &quot; +        &quot;VALUES( #&#123;linkAccessStats.fullShortUrl&#125;, #&#123;linkAccessStats.gid&#125;, #&#123;linkAccessStats.date&#125;, #&#123;linkAccessStats.pv&#125;, #&#123;linkAccessStats.uv&#125;, #&#123;linkAccessStats.uip&#125;, #&#123;linkAccessStats.hour&#125;, #&#123;linkAccessStats.weekday&#125;, NOW(), NOW(), 0) ON DUPLICATE KEY UPDATE pv &#x3D; pv +  #&#123;linkAccessStats.pv&#125;, &quot; +        &quot;uv &#x3D; uv + #&#123;linkAccessStats.uv&#125;, &quot; +        &quot; uip &#x3D; uip + #&#123;linkAccessStats.uip&#125;;&quot;)void shortLinkStats(@Param(&quot;linkAccessStats&quot;) LinkAccessStatsDO linkAccessStatsDO);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>希望能够熟练的讲清楚吧，能想出来，但回答不好肯定不行….</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Mysql </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据库/索引 </tag>
+            
+            <tag> 索引是什么 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM--触发GC的时机</title>
+      <link href="/2024/01/28/jvm-hong-fa-gc-de-shi-ji/"/>
+      <url>/2024/01/28/jvm-hong-fa-gc-de-shi-ji/</url>
+      
+        <content type="html"><![CDATA[<p>首先这个 GC 主要是针对堆内存的。</p><p>而 HotPot 虚拟机会把堆分为新生代 <code>Eden </code>和老年代以及<code>survivor</code>幸存区。</p><blockquote><p>为什么需要 <code>survivor </code>区，主要是因为如果没有这个区，只有新生代和老年代的话。</p><ol><li>新生代每次内存快满的时候触发 <code>Minor GC </code> 时都直接把幸存的对象加入老年代，就可能导致老年代的内存很快就会满从而触发 <code> Full GC</code> ，而 <code> FULL GC</code> 的耗时是很长的, 会触发 STP 问题，不方便对老年代进行垃圾回收。</li><li>有了幸存区，可以理解成一层缓冲，新生代对象在经历一次垃圾回收后，如果存活就先防、放在 survivor 区中，如果多次都存活，则再加入到老年代，对老年代管理对象比较友好。</li></ol></blockquote><h2 id="触发-GC-的时机"><a href="#触发-GC-的时机" class="headerlink" title="触发 GC 的时机"></a>触发 GC 的时机</h2><ul><li><p>对于新生代内存耗尽的情况，会触发 <code>Minor GC</code>，对新生代进行垃圾回收，然后把存活对象加到 <code>survivor </code> 区，多次存活则转移到老年代。</p></li><li><p>对于老年代而言，是触发 <code>FULL GC</code> （FULL GC 是对整个堆进行垃圾回收）。</p><ul><li>对于 Serial GC <strong>串行垃圾回收器</strong>，会在老年代剩余内存小于”<em>平均转入老年代的新生代所需内存大小</em>“时，会触发 <code>FULL GC</code>。</li><li>对于 CMS 等各种<strong>并发垃圾回收器</strong>，会每隔一段时间检查一下老年代内存空间占用是否超过一定比例，如果超过则进行 <code>FULL GC</code>。</li></ul></li></ul><h2 id="减少-FULL-GC-的次数"><a href="#减少-FULL-GC-的次数" class="headerlink" title="减少 FULL GC 的次数"></a>减少 FULL GC 的次数</h2><p>其实从触发要求来看，可以找到如下解决方法：</p><ol><li><strong>增加新生代或老年代的内存大小</strong>，能装的对象多了，也就能够减少触发的机会。</li><li>一般老年代使用的垃圾回收算法是‘‘<strong>标记-整理</strong>’‘，就是把存活的对象移到内存的一侧，这样能够流出足够的空间存放其他对象，从而减少 GC。</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JVM/什么时候触发GC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>解决消息队列重复消费问题</title>
+      <link href="/2024/01/23/jie-jue-xiao-xi-dui-lie-chong-fu-xiao-fei-wen-ti/"/>
+      <url>/2024/01/23/jie-jue-xiao-xi-dui-lie-chong-fu-xiao-fei-wen-ti/</url>
+      
+        <content type="html"><![CDATA[<h2 id="重复消费产生原因"><a href="#重复消费产生原因" class="headerlink" title="重复消费产生原因"></a>重复消费产生原因</h2><ol><li>网络问题</li><li><strong>消息队列一般对消息消费失败都有重试机制</strong>，假如有一个消息消费执行了某些逻辑后在删除标识时失败了 (服务宕机，断电等问题导致中断)，那消息队列就会进行重试，而造成重复消费。</li></ol><p>待补充。</p><h2 id="怎么解决"><a href="#怎么解决" class="headerlink" title="怎么解决"></a>怎么解决</h2><p><strong>通过 Redis 设置幂等标识，当需要进行消费时，判断以当前消息 ID 为后缀的幂等 Key 是否存在于 Redis 中，如果其已经被消费，则直接返回，否则放行进行消费并设置完成标识</strong>。</p><p>完成标识和消息消费的标识是<strong>同一个 Key</strong>，因为消息消费是判断是否存在这条消息消费记录，而完成标识是通过设置这个 key 的 value 为 1 表示完成。</p><p>(<em>双重判定保证消费不会因为异常丢失</em>)这一点也可以写上。</p><p>消费过程如下：</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">@Override   public void onMessage(MapRecord&lt;String, String, String&gt; message) &#123;       String stream &#x3D; message.getStream();       RecordId id &#x3D; message.getId();       &#x2F;&#x2F; 判断当前的这个消息是否已经被消费       if (!messageQueueIdempotentHandler.isMessageProcessed(id.toString())) &#123;           &#x2F;&#x2F;消费失败，但是此时已经设置了消费标识，可能会导致消息未被真实消费，所以设置一个完成标识           if (messageQueueIdempotentHandler.isAccomplish(id.toString())) &#123;               return;           &#125;           throw new ServiceException(&quot;消息未完成流程，需要消息队列重试&quot;);       &#125;       try &#123;           Map&lt;String, String&gt; producerMap &#x3D; message.getValue();           String fullShortUrl &#x3D; producerMap.get(&quot;fullShortUrl&quot;);           if (StrUtil.isNotBlank(fullShortUrl)) &#123;               String gid &#x3D; producerMap.get(&quot;gid&quot;);               ShortLinkStatsRecordDTO statsRecord &#x3D; JSON.parseObject(producerMap.get(&quot;statsRecord&quot;), ShortLinkStatsRecordDTO.class);               &#x2F;&#x2F;核心：调用原本的短链接统计方法               actualSaveShortLinkStats(fullShortUrl, gid, statsRecord);           &#125;           &#x2F;&#x2F;由于Redis自身没有像MQ那种智能的把消费过的信息，待一段时间后自动删除，而且内存珍贵，所以手动删除这个消息（也能避免重复消费）           stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue());       &#125; catch (Throwable ex) &#123;           &#x2F;&#x2F; 消息队列宕机处理           messageQueueIdempotentHandler.delMessageProcessed(id.toString());           log.error(&quot;记录短链接监控消费异常&quot;, ex);       &#125;       &#x2F;&#x2F;当完整执行完消费流程，才会设置完成标识。       messageQueueIdempotentHandler.setAccomplish(id.toString());   &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 项目 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 项目/重复消费 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Redis--Set集合</title>
+      <link href="/2024/01/12/redis-set-ji-he/"/>
+      <url>/2024/01/12/redis-set-ji-he/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h2><p><strong>无序并唯一的键值集合</strong>，存储顺序不按照插入顺序。支持交集、并集、差集运算。</p><h3 id="1-1-内部实现"><a href="#1-1-内部实现" class="headerlink" title="1.1. 内部实现"></a>1.1. 内部实现</h3><p><strong>哈希表或整数集合</strong>。</p><ul><li>如果集合中的元素都是整数且元素个数小于 <code>512</code> （默认值）个，Redis 会使用<strong>整数集合</strong>作为 Set 类型的底层数据结构；</li><li>否则采用哈希表存储</li></ul><h4 id="1-1-1-哈希表"><a href="#1-1-1-哈希表" class="headerlink" title="1.1.1. 哈希表"></a>1.1.1. 哈希表</h4><p>没有用红黑树，只是<strong>桶数组 + 链表</strong>。</p><h4 id="1-1-2-整数集合"><a href="#1-1-2-整数集合" class="headerlink" title="1.1.2. 整数集合"></a>1.1.2. 整数集合</h4><p>#整数集合  #Redis&#x2F;intset</p><p><code>intset</code> 整数集合其实就是一个数组，但是其会在数组的头部保存当前数组的编码类型，还有数组真实的首部地址。</p><p><img src="/../images/intSet%E7%BB%93%E6%9E%84%E4%BD%93.png"></p><ol><li><p>当进行增加元素的命令时，会<strong>根据插入数据的大小，决定是否需要升级当前的编码</strong>，其内部共有三种编码，<code>int16,int32,int64</code> 分别相当于 java 的 short，int，long 类型的数据范围。</p></li><li><p><strong>查找时采用二分查找</strong>，效率还是很快的。其判断元素地址的时候，会根据当前元素的下标，以及编码类型确定元素的真实所在地址（因为不是默认的 int 数组，所以需要自定义规则）。寻址公式：<code>startPtr + (sizeof(int64) * index)</code> 得到真实地址。</p></li><li><p>intset 插入数据时会保证数据是有序的，并且当编码类型改变时，会进行如下操作：</p><ul><li>进行扩容，接着<strong>申请一段内存</strong> </li><li>然后对所有元素进行复制，复制的时候对所有元素根据<strong>逆序进行插入</strong>，主要是防止其他元素会被当前元素覆盖。</li><li>复制过程中，<strong>会根据新的编码类型和索引进行真实地址的求解</strong>。</li></ul></li></ol><h3 id="1-2-常用命令"><a href="#1-2-常用命令" class="headerlink" title="1.2. 常用命令"></a>1.2. 常用命令</h3><pre class="line-numbers language-none"><code class="language-none"># 往集合key中存入元素，元素存在则忽略，若key不存在则新建SADD key member [member ...]# 从集合key中删除元素SREM key member [member ...] # 获取集合key中所有元素SMEMBERS key# 获取集合key中的元素个数SCARD key# 判断member元素是否存在于集合key中SISMEMBER key member# 从集合key中随机选出count个元素，元素不从key中删除SRANDMEMBER key [count]# 从集合key中随机选出count个元素，元素从key中删除SPOP key [count]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>交并差集：</p><ul><li>交集：<code>SINTER key [key ...]</code> </li><li>并集：<code>SUNION key [key ...]</code> </li><li>差集：<code>SDIFF key [key ...]</code></li></ul><h3 id="1-3-应用场景"><a href="#1-3-应用场景" class="headerlink" title="1.3. 应用场景"></a>1.3. 应用场景</h3><p>保证数据唯一时，如点赞，每个用户只能点赞同一个帖子一次。</p><p>可以做到：</p><ul><li>获取点赞数量</li><li>获取点赞的所有用户 id</li><li>点赞和取消点赞</li><li><strong>用集合运算得到共同关注的好友、公众号等</strong>。</li><li>抽奖活动：同一个用户只能中奖一次。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Redis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Redis/intset </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Redis-String底层</title>
+      <link href="/2024/01/05/redis-string-shu-ju-lei-xing/"/>
+      <url>/2024/01/05/redis-string-shu-ju-lei-xing/</url>
+      
+        <content type="html"><![CDATA[<h2 id="String-字符串"><a href="#String-字符串" class="headerlink" title="String 字符串"></a>String 字符串</h2><p>是最基本的 redis 数据类型，比如常见的 <code>set key value</code> 就是 String 类型。</p><h3 id="底层实现"><a href="#底层实现" class="headerlink" title="底层实现"></a>底层实现</h3><p>String 内部是基于<strong>动态字符串 SDS</strong> 实现的，这和 C 语言的字符串不一样。</p><p><img src="/../images/Redis--String%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B.png"></p><ul><li>SDS 不仅可以保存文本信息<strong>也可以保存二进制数据</strong>，所以视频、音频、图片都可以用 SDS 保存。</li></ul><blockquote><p>为啥可以存储二进制数据，其底层不也是 char 数组吗，而且还有 <code>\0</code> ，存二进制不是会造成误判吗？<br>因为 SDS 底层在对象头里加了一个字段，<strong>记录当前字符串的长度</strong>，忽略了 C 语言字符串的 <code>\0</code> ，所以可以直接用来获取字符串长度。</p><p>但是不建议用 redis 存储，因为一般这些数据的体积很大，而 String 的 value 最大限制为 <code>512M</code> </p></blockquote><ul><li>SDS 自带 <strong>len 变量记录数据长度</strong>，可以很快获得数据长度。</li><li>SDS <strong>拼接字符串不会造成缓冲区溢</strong>出，因为在拼接字符串之前会检测并会自动扩容（预分配机制）。</li></ul><h3 id="常用命令-包含应用场景"><a href="#常用命令-包含应用场景" class="headerlink" title="常用命令 (包含应用场景)"></a>常用命令 (包含应用场景)</h3><p>列举一些常用的：</p><ol><li>设置 key 的值：<code>set key value</code>  获取 key 的值: <code>get key</code> （可用于 <strong>Session 存储和读取</strong>）</li><li><strong>分布式锁的应用</strong>（一种互斥锁）：<code>SETNX key value</code> 存在就不能创建，不存在则可以创建。</li><li>指定多个 key - value ：<code>MSET key1 value1 key2 value2</code> MSET 命令后每一对就是一个键值对。</li><li>获取 key 对应的数据长度：<code>STRLEN key</code> </li><li>删除键值对：<code>DEL key</code>   (通用)</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> String </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>循环队列模拟</title>
       <link href="/2023/12/16/lc622.shu-zu-mo-ni-xun-huan-dui-lie-fu-xi/"/>
       <url>/2023/12/16/lc622.shu-zu-mo-ni-xun-huan-dui-lie-fu-xi/</url>
