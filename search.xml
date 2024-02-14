@@ -4,6 +4,65 @@
   
     
     <entry>
+      <title>为什么说线程创建的方式只有一种</title>
+      <link href="/2024/02/14/wei-shi-me-shuo-xian-cheng-chuang-jian-de-fang-shi-zhi-you-yi-chong/"/>
+      <url>/2024/02/14/wei-shi-me-shuo-xian-cheng-chuang-jian-de-fang-shi-zhi-you-yi-chong/</url>
+      
+        <content type="html"><![CDATA[<p>线程创建的方式说是有四种, 但是<strong>实际上只有一种创建方式</strong>. 为什么?</p><p>因为不管是 Callable 还是线程池创建线程, 看它们的实现方式或者说底层源码,<em>其本质上都是通过创建 Thread 对象来实现真正的创建线程</em>.  而实现 Runable 接口, 给我的感觉就是把重写 Thread 的 run 方法<em>提出来成为一个可重复利用的任务</em>, 这样创建相同任务的线程就比较方便.</p><ul><li>至于线程池为什么用到 Thread, 可以查看线程创建工厂 threadFactory 底层的接口, 就是一系列的判断和 new Thread.</li><li>Callable 就是类似, 不过把任务换成了 <code>FutureTask</code> 作为任务对象, 从而能够拿到线程执行的结果.</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 线程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ThreadLocal的应用--用户信息上下文记录</title>
+      <link href="/2024/02/14/threadlocal-de-ying-yong-yong-hu-xin-xi-shang-xia-wen-ji-lu/"/>
+      <url>/2024/02/14/threadlocal-de-ying-yong-yong-hu-xin-xi-shang-xia-wen-ji-lu/</url>
+      
+        <content type="html"><![CDATA[<p>就拿用户上下文信息保存来说。</p><p><strong>场景</strong>：</p><p>现在有一个场景，客户端请求新建一个短链接的分组，用户只需要输入一个分组名，然后确认即可创建分组。（全局唯一的分组 ID 这些都是由后端进行处理的）。如下请求：<br><img src="/images/%E7%9F%AD%E9%93%BE%E6%8E%A5%E5%88%86%E7%BB%84%E5%88%9B%E5%BB%BA%E8%AF%B7%E6%B1%82.png"></p><p>而且，我们<strong>分组和用户名要进行关联</strong>，不然我们怎么知道某个用户下的分组有哪些，或者说短链接分组的归属是谁？</p><ul><li>然后呢，问题来了，我们这个用户名参数是由<strong>前端传递</strong>嘛，那前端浏览器总不能一直存储用户信息吧，不安全。</li><li>或者说让<strong>用户手动传递用户名</strong>，然后后端验证是否是同一个用户然后再执行请求？这对用户的体验肯定非常不好，（我就是创建个分组而已，你连我是谁都不知道？）</li></ul><p><strong>解决方法</strong>：</p><p>这就可以使用 ThreadLocal 对象，在用户发第一次请求时，拦截器拦截后的处理中，就可以把用户信息作为 value，当前线程 ID 作为 key 存储在 ThreadLocalMap 中，这个 ThreadLocalMap 是封装在 ThreadLocal 中的一个 map 结构，其类似 HashMap，可以存储用户信息对象。</p><p>之后在需要获取用户名的时候，只要用用户上下文对象，通过 get 拿到要用的用户信息。</p><hr><p>如下是封装的一个 UserContext 类，包含 <code>set,get,remove等</code> 方法。</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">package org.ktpro.shortlink.admin.common.biz.user;import com.alibaba.ttl.TransmittableThreadLocal;import java.util.Optional;&#x2F;** * 用户上下文 *&#x2F;public final class UserContext &#123;&#x2F;&#x2F;实现ThreadLoal泛型    private static final ThreadLocal&lt;UserInfoDTO&gt; USER_THREAD_LOCAL &#x3D; new TransmittableThreadLocal&lt;&gt;();    &#x2F;**     * 设置用户至上下文     *     * @param user 用户详情信息     *&#x2F;    public static void setUser(UserInfoDTO user) &#123;        USER_THREAD_LOCAL.set(user);    &#125;        &#x2F;**     * 获取上下文中用户 ID     *     * @return 用户 ID     *&#x2F;    public static String getUserId() &#123;        UserInfoDTO userInfoDTO &#x3D; USER_THREAD_LOCAL.get();        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getUserId).orElse(null);    &#125;        &#x2F;**     * 获取上下文中用户名称     *     * @return 用户名称     *&#x2F;    public static String getUsername() &#123;        UserInfoDTO userInfoDTO &#x3D; USER_THREAD_LOCAL.get();        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getUsername).orElse(null);    &#125;    &#x2F;**     * 获取上下文中用户真实姓名     *     * @return 用户真实姓名     *&#x2F;    public static String getRealName() &#123;        UserInfoDTO userInfoDTO &#x3D; USER_THREAD_LOCAL.get();        return Optional.ofNullable(userInfoDTO).map(UserInfoDTO::getRealName).orElse(null);    &#125;    &#x2F;**     * 清理用户上下文     *&#x2F;    public static void removeUser() &#123;        USER_THREAD_LOCAL.remove();    &#125;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> JUC </tag>
+            
+            <tag> 并发编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Session的工作原理以及实操</title>
+      <link href="/2024/02/04/session-de-gong-zuo-yuan-li-yi-ji-shi-cao/"/>
+      <url>/2024/02/04/session-de-gong-zuo-yuan-li-yi-ji-shi-cao/</url>
+      
+        <content type="html"><![CDATA[<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><mark style="background: #FFFF00;">Session 依赖于 Cookie</mark>。 </p><p>当客户端首次访问服务器时，服务器会为其创建一个 session 对象，该对象具有一个唯一标识 SESSIONID。并且在响应阶段，服务器会创建一个 cookie，并将 SESSIONID 存入其中。 </p><p>客户端通过响应的 cookie 而持有 SESSIONID，所以当它再次访问服务器时，会<mark style="background: #FFFF00;">通过 cookie 携带这个 SESSIONID。服务器获取到 SESSIONID 后，就可以找到与之对应的 session 对象</mark>，进而从这个 session 中获取该客户端的状态。</p><h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>存储用户信息</p><ol><li>用户端发起 POST 请求，服务端进行一定的逻辑处理后把用户信息存储在 Session。</li></ol><pre class="line-numbers language-java" data-language="java"><code class="language-java">protected void doPost(HttpServletRequest request, HttpServletResponse response)            throws ServletException, IOException &#123;        String username &#x3D; request.getParameter(&quot;username&quot;);        String email &#x3D; request.getParameter(&quot;email&quot;);        &#x2F;&#x2F; 创建或获取会话对象        HttpSession session &#x3D; request.getSession();                &#x2F;&#x2F; 将用户信息存储在会话中        session.setAttribute(&quot;username&quot;, username);        session.setAttribute(&quot;email&quot;, email);        &#x2F;&#x2F; 重定向到用户信息展示页面        response.sendRedirect(request.getContextPath() + &quot;&#x2F;userInfo.jsp&quot;);    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><ol start="2"><li>客户端请求时携带带有 sessionID 的 Cookie，判断是否存在该 sessionID，如果存在则可以取出数据。</li></ol><pre class="line-numbers language-java" data-language="java"><code class="language-java">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;        &#x2F;&#x2F; 获取请求中的所有Cookie        Cookie[] cookies &#x3D; request.getCookies();        if (cookies !&#x3D; null) &#123;            &#x2F;&#x2F; 遍历Cookie找到名为 &quot;JSESSIONID&quot; 的Cookie            for (Cookie cookie : cookies) &#123;                if (&quot;JSESSIONID&quot;.equals(cookie.getName())) &#123;                    &#x2F;&#x2F; 获取Session ID                    String sessionID &#x3D; cookie.getValue();                    &#x2F;&#x2F; 获取或创建与该Session ID关联的会话                    HttpSession session &#x3D; request.getSession(false);                    if (session !&#x3D; null &amp;&amp; session.getId().equals(sessionID)) &#123;                        &#x2F;&#x2F; 会话存在且Session ID有效                        &#x2F;&#x2F; 可以在此处验证用户身份或执行其他操作                        &#x2F;&#x2F; 例如：String username &#x3D; (String) session.getAttribute(&quot;username&quot;);                        &#x2F;&#x2F; 返回验证成功的响应                        response.getWriter().println(&quot;Session is valid.&quot;);                        return;                    &#125;                &#125;            &#125;        &#125;        &#x2F;&#x2F; 没有有效的会话或Session ID，需要重定向到登录页面或其他处理方式        response.getWriter().println(&quot;Session is invalid.&quot;);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><hr><h2 id="双链"><a href="#双链" class="headerlink" title="双链"></a>双链</h2><pre class="line-numbers language-dataview" data-language="dataview"><code class="language-dataview">table file.inlinks as 被引用where file &#x3D; this.filelimit 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> web/session工作原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Mysql--谈谈自己对索引的理解</title>
       <link href="/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/"/>
       <url>/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/</url>
@@ -81,6 +140,25 @@
     
     
     <entry>
+      <title>关于项目中的消息队列重复消费问题</title>
+      <link href="/2024/01/23/guan-yu-xiang-mu-zhong-de-xiao-xi-dui-lie-chong-fu-xiao-fei-wen-ti/"/>
+      <url>/2024/01/23/guan-yu-xiang-mu-zhong-de-xiao-xi-dui-lie-chong-fu-xiao-fei-wen-ti/</url>
+      
+        <content type="html"><![CDATA[<h2 id="重复消费产生原因"><a href="#重复消费产生原因" class="headerlink" title="重复消费产生原因"></a>重复消费产生原因</h2><ol><li>网络问题</li><li><strong>消息队列一般对消息消费失败都有重试机制</strong>，假如有一个消息消费执行了某些逻辑后在删除标识时失败了 (服务宕机，断电等问题导致中断)，那消息队列就会进行重试，而造成重复消费。</li></ol><p>待补充。</p><h2 id="怎么解决"><a href="#怎么解决" class="headerlink" title="怎么解决"></a>怎么解决</h2><p><strong>通过 Redis 设置幂等标识，当需要进行消费时，判断以当前消息 ID 为后缀的幂等 Key 是否存在于 Redis 中，如果其已经被消费，则直接返回，否则放行进行消费并设置完成标识</strong>。</p><p>完成标识和消息消费的标识是<strong>同一个 Key</strong>，因为消息消费是判断是否存在这条消息消费记录，而完成标识是通过设置这个 key 的 value 为 1 表示完成。</p><p>(<em>双重判定保证消费不会因为异常丢失</em>)这一点也可以写上。</p><p>消费过程如下：</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">@Override   public void onMessage(MapRecord&lt;String, String, String&gt; message) &#123;       String stream &#x3D; message.getStream();       RecordId id &#x3D; message.getId();       &#x2F;&#x2F; 判断当前的这个消息是否已经被消费       if (!messageQueueIdempotentHandler.isMessageProcessed(id.toString())) &#123;           &#x2F;&#x2F;消费失败，但是此时已经设置了消费标识，可能会导致消息未被真实消费，所以设置一个完成标识           if (messageQueueIdempotentHandler.isAccomplish(id.toString())) &#123;               return;           &#125;           throw new ServiceException(&quot;消息未完成流程，需要消息队列重试&quot;);       &#125;       try &#123;           Map&lt;String, String&gt; producerMap &#x3D; message.getValue();           String fullShortUrl &#x3D; producerMap.get(&quot;fullShortUrl&quot;);           if (StrUtil.isNotBlank(fullShortUrl)) &#123;               String gid &#x3D; producerMap.get(&quot;gid&quot;);               ShortLinkStatsRecordDTO statsRecord &#x3D; JSON.parseObject(producerMap.get(&quot;statsRecord&quot;), ShortLinkStatsRecordDTO.class);               &#x2F;&#x2F;核心：调用原本的短链接统计方法               actualSaveShortLinkStats(fullShortUrl, gid, statsRecord);           &#125;           &#x2F;&#x2F;由于Redis自身没有像MQ那种智能的把消费过的信息，待一段时间后自动删除，而且内存珍贵，所以手动删除这个消息（也能避免重复消费）           stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue());       &#125; catch (Throwable ex) &#123;           &#x2F;&#x2F; 消息队列宕机处理           messageQueueIdempotentHandler.delMessageProcessed(id.toString());           log.error(&quot;记录短链接监控消费异常&quot;, ex);       &#125;       &#x2F;&#x2F;当完整执行完消费流程，才会设置完成标识。       messageQueueIdempotentHandler.setAccomplish(id.toString());   &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><hr>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 项目/重复消费 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis--Set集合</title>
       <link href="/2024/01/12/redis-set-ji-he/"/>
       <url>/2024/01/12/redis-set-ji-he/</url>
@@ -117,6 +195,27 @@
         <tags>
             
             <tag> String </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JWT登录校验</title>
+      <link href="/2023/12/24/jwt-deng-lu-xiao-yan/"/>
+      <url>/2023/12/24/jwt-deng-lu-xiao-yan/</url>
+      
+        <content type="html"><![CDATA[<h2 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h2><p><strong>JWT</strong> （JSON Web Token）也是一种 Token，可以基于 JWT 来做权限认证。</p><p>由 Header、Payload 以及 Signature 三部分组成构成。</p><ul><li>其中 Header 是描述 JWT 的元数据，包括 <strong>token 的类型和生成签名的算法</strong>。</li><li>Payload：负载，存的是需要传递的数据；比如<strong>登录的时候需要存储用户的登录信息</strong>。</li><li>Signature：签名，通过 Header 里指定的签名算法，对 Header 和 Payload 配合密钥生成。主要是防止 Token 被篡改。</li></ul><h2 id="基于-JWT-进行身份验证原理（过程）"><a href="#基于-JWT-进行身份验证原理（过程）" class="headerlink" title="基于 JWT 进行身份验证原理（过程）"></a>基于 JWT 进行身份验证原理（过程）</h2><p>客户端发起登录请求（提交登录信息，比如用户名和密码），假设验证成功，服务端会根据 Header 和 Payload 以及 Secret 密钥生成一个 <code> token</code>，并发送给客户端，客户端收到后存储在 <code>Cookies</code> 或 <code>LocalStorage</code> 中，以后客户端每次请求都会在 Header 中携带这个令牌用作登录验证。</p><blockquote><p>tips：LocalStorage 是浏览器中永久存在的，只有主动删除时才会被删除，而 sessionStorage 是会话结束后自动删除。</p></blockquote><p>服务端收到请求后，会对令牌进行验证，验证通过才能放行。</p><h2 id="如何防止-Token-被篡改"><a href="#如何防止-Token-被篡改" class="headerlink" title="如何防止 Token 被篡改"></a>如何防止 Token 被篡改</h2><p>因为服务端收到 Header 和 Payload 后，会再生成一个签名 Signature ，用这个 signature 和 Token 中携带的 signature 进行对比，如果不一致说明被篡改了。</p><blockquote><p>因此密钥要保护好，否则攻击者可以通过该密钥，对 Header 和 Payload 生成一个新的签名，再给服务端就检测不到错误了。</p></blockquote><h2 id="与-Session-相比有什么优缺点"><a href="#与-Session-相比有什么优缺点" class="headerlink" title="与 Session 相比有什么优缺点"></a>与 Session 相比有什么优缺点</h2><p>对服务端空间友好，不需要存额外的数据，而 session 需要存在 Redis 或者 Mysql 里。</p><p>安全性更高，不需要通过 Cookies 进行验证（Cookies 很容易被作为伪造身份的信息），如上述中有一层认证更安全。</p><h2 id="子知识"><a href="#子知识" class="headerlink" title="子知识"></a>子知识</h2><p><a href="../../3%20%E5%AD%90%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0%E7%9B%92/%E9%80%9A%E7%94%A8/%E9%80%9A%E7%94%A8--%E5%AD%90%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0--JWT%20%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.md">通用–子知识笔记–JWT 身份认证常见问题及解决办法</a> </p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> JWT </tag>
+            
+            <tag> 通用 </tag>
             
         </tags>
       
