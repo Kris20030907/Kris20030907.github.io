@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>为什么要引入消息队列之异步削峰解耦</title>
+      <link href="/2024/02/17/wei-shi-me-yao-yin-ru-xiao-xi-dui-lie-zhi-yi-bu-xue-feng-jie-ou/"/>
+      <url>/2024/02/17/wei-shi-me-yao-yin-ru-xiao-xi-dui-lie-zhi-yi-bu-xue-feng-jie-ou/</url>
+      
+        <content type="html"><![CDATA[<p>消息队列其实就是用一个队列存储消息，我们可以从中获取消息并处理。</p><h2 id="1-消息队列的三大用处"><a href="#1-消息队列的三大用处" class="headerlink" title="1. 消息队列的三大用处"></a>1. 消息队列的三大用处</h2><p><em><strong>异步、削峰、解耦</strong></em>。</p><blockquote><ol><li>异步处理提高系统性能（减少响应时间）</li><li>削峰：就是限流</li><li>解耦：降低系统耦合性，更好维护，拓展性更高</li></ol></blockquote><h3 id="1-1-异步"><a href="#1-1-异步" class="headerlink" title="1.1. 异步"></a>1.1. 异步</h3><ol><li><em>为什么要异步</em>？</li></ol><p>传统场景下，客户端发起某个请求，假如说是下单吧，那负责下单的系统，不仅要进程支付功能的调用，更新库存，还要发送下单成功通知等。最后再返回一个状态说我都做完了，你可以做其他事了。用户这边体验就很差，下个单要等这么久。</p><p>如果全交给这一个系统做这一连串的事，那就很慢。</p><ol start="2"><li><em>加入消息队列怎么解决</em>？</li></ol><p>其实就是负责下单的系统接收到请求后，就发送消息到消息队列，那其他订阅了这个消息队列的系统就可以进行<strong>消费</strong>，然后做自己该干的事，而发送消息的系统直接就返回给用户说明下单成功。这样看来，用户的体验就很快。</p><blockquote><p>比如下单后，要过一段时间才会收到短信提醒。</p></blockquote><h2 id="2-削峰"><a href="#2-削峰" class="headerlink" title="2. 削峰"></a>2. 削峰</h2><p>简单来说就是拿消息队列做一层<strong>类似缓冲的作用</strong>，大量请求来到就先存在消息队列，然后消费者再慢慢吸收这些消息，<strong>防止大量请求打到数据库</strong>，Mysql 数据库一般 QPS 两千就差不多了，如果再多可能就崩了。</p><h2 id="3-解耦"><a href="#3-解耦" class="headerlink" title="3. 解耦"></a>3. 解耦</h2><ol><li><em>为啥需要解耦捏</em>？</li></ol><p>传统场景下，一个系统要给多个系统发送”消息”的时候，需要考虑下面几个问题。</p><ul><li>每个系统是不是都需要这个消息，假如又有新系统也要这个数据怎么办？再重发一次嘛？还是说要存一下，那也太消耗空间了。</li><li>如果消费者系统挂了，要不要重发？</li><li>……</li></ul><blockquote><p>所以对于一个系统来说，压力太大，耦合度太高，万一这个系统也崩了，那整个项目也就寄的差不多了。</p></blockquote><ol start="2"><li><em>引入消息队列后怎么解决的</em>。</li></ol><p>简单来说的话，就是生产者系统<strong>只需要关注消息的发送</strong>，而不用考虑后续出现的问题，比如一个系统想向其他系统发送消息，只需要把消息送到消息队列，然后就不管了，接下来与这个业务相关的系统就可以从消息队列中自行读取。</p><p>通过消息队列中的<strong>订阅-发布模式</strong>就可以让订阅了这个队列的消费者接收到请求并进行处理，也就实现了解耦。</p><ol start="3"><li>结合自己的项目</li></ol><ul><li><input checked="" disabled="" type="checkbox"> #task 结合自己的项目考虑为什么要引入消息队列 🔽 ✅ 2024-01-31</li></ul><p>参考：<a href="../../4%20%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0%E7%9B%92/%E7%9F%AD%E9%93%BE%E6%8E%A5shortlink/%E9%A1%B9%E7%9B%AE%E4%BA%AE%E7%82%B9%E5%AE%9E%E7%8E%B0%E6%80%BB%E7%BB%93/%E5%BC%95%E5%85%A5%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%8C%E9%87%8D%E6%9E%84%E7%9F%AD%E9%93%BE%E6%8E%A5%E9%87%8D%E5%AE%9A%E5%90%91%E6%97%B6%E8%AE%BF%E9%97%AE%E8%BE%83%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E6%B5%81%E9%87%8F%E5%89%8A%E5%B3%B0%EF%BC%89.md">引入消息队列，重构短链接重定向时访问较慢的问题（流量削峰）</a> </p><blockquote><p><strong>面试技巧</strong>：你需要去考虑一下你负责的系统中是否有类似的场景，就是一个系统或者一个模块，调用了多个系统或者模块，互相之间的调用很复杂，维护起来很麻烦。但是其实这个调用是不需要直接同步调用接口的，如果用 MQ 给它异步化解耦，也是可以的，你就需要去考虑在你的项目里，是不是可以运用这个 MQ 去进行系统的解耦。在简历中体现出来这块东西，用 MQ 作解耦。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 框架/中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 消息队列 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>对Synchronized锁升级，锁消除的理解</title>
+      <link href="/2024/02/17/dui-synchronized-suo-sheng-ji-suo-xiao-chu-de-li-jie/"/>
+      <url>/2024/02/17/dui-synchronized-suo-sheng-ji-suo-xiao-chu-de-li-jie/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Synchronized 锁升级放下这么久了，今天打算好好学一下。主要方式是通过读<u>《Java 并发编程的艺术》</u>来进行学习。</p><p><mark style="background: #FFFF00;">Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级锁。锁一旦升级就不能进行降级</mark>。</p><h2 id="先从-Synchronized-锁对对象的影响开始"><a href="#先从-Synchronized-锁对对象的影响开始" class="headerlink" title="先从 Synchronized 锁对对象的影响开始"></a>先从 Synchronized 锁对对象的影响开始</h2><p>先看一下用来判断一个对象是什么的对象头（Mark Word）。</p><table><thead><tr><th>锁状态</th><th>25bit</th><th>4 bit</th><th>1 bit 用来判断是否为偏向锁</th><th>2bit 锁标识</th></tr></thead><tbody><tr><td>无锁状态</td><td>hashCode</td><td>对象分代年龄</td><td>0</td><td>01</td></tr></tbody></table><p>如表所示，这是一个”未被锁的对象”，其对象头存储了 hashCode ，也就是调用 &#x3D;&#x3D; 时判断对象是否为同一个对象的时候用到的值，原来对象在新建的时候就已经设置好了 hashcode，不是用到的时候再计算的。</p><p>然后就是 4 bit, 我们都知道 GC 垃圾回收过程中，一般对象刚分配会分到新生代 Eden，在多次存活后（先放到 Suvivor 区），<u>当年龄达到后，就会移交到老年代</u>，这样就能减少对新生代进行垃圾回收时的性能消耗。每次存活对象的年龄都会增加，原来就是存储在这里啊。</p><p>然后就是判断偏向锁的标识，很明显就是判断是否给当前对象加了偏向锁，最后的锁标识则是用来标识当前对象被锁的状态到底是什么锁，是偏向锁还是、轻量级锁或者重量级锁。</p><h2 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h2><p><strong>大多数情况下，锁不仅不存在多线程竞争，而且总是由同一个线程获得</strong>。为了减少线程获取锁以及释放锁带来的性能消耗，引入了偏向锁。</p><blockquote><p>意思很明显，就是让这个对象偏向于被某个线程加锁。</p></blockquote><p>实现原理：</p><table><thead><tr><th>锁状态</th><th>23bit</th><th>2bit</th><th>4bit</th><th>1bit 是否是偏向锁</th><th>2bit 锁标识位</th></tr></thead><tbody><tr><td>偏向锁</td><td>偏向线程 ID</td><td>偏向时间戳</td><td>对象分代年龄</td><td>1</td><td>01</td></tr></tbody></table><p>当一个线程访问对象获取锁的时候，会判断这个对象的对象头中的偏向锁标识是否为 1</p><ul><li>如果为 0，则说明未被加锁，于是设置为 1，并把偏向线程 ID 设置为自己的 ID。执行完后不释放锁，下次再访问到这个代码块的时候，判断这个线程 ID 是否是自己的 ID，如果是，<strong>由于没有释放锁，则直接执行代码块</strong>。</li><li>如果为 1，说明被加锁，判断是偏向锁 ID 是否为自己的 ID，如果是则直接执行，因为自己已经获取了锁。如果不是自己的 ID，则尝试用 CAS 修改线程 ID 为自己的。</li></ul><p>此时重点来了，线程尝试修改 CAS 修改线程 ID 为自己的 ID 时，修改失败。也就是说明其他线程还用着呢，你怎么就要获取了，这里就发生了<mark style="background: #FFFF00;">锁的竞争</mark>。</p><p>因此会<strong>发生偏向锁的撤销（偏向锁标识设置为 0，锁标识不变，因为无锁和偏向锁标识一样），然后进一步升级为轻量级锁</strong>。</p><p>画了个流程图：</p><p><img src="/images/%E5%81%8F%E5%90%91%E9%94%81.png"></p><h2 id="轻量级锁（自旋锁）"><a href="#轻量级锁（自旋锁）" class="headerlink" title="轻量级锁（自旋锁）"></a>轻量级锁（自旋锁）</h2><p>既然已经到了轻量级锁，说明出现了竞争。</p><p>从加锁和解锁两部分说明。</p><ol><li>加锁<br>线程通过 CAS 修改对象头内的锁标识</li></ol><ul><li>如果当前锁标识为无锁状态，则直接获取锁，并修改标识为有锁状态。</li><li>如果锁标识为有锁，则等待其他线程释放锁，并频繁的进行”自旋操作”尝试获取锁。</li></ul><ol start="2"><li>释放锁<br>设置标识为无锁状态。</li></ol><p>这样有什么问题？</p><ul><li>造成其他线程一直空转（不执行任务，但占用 CPU）并进行自旋操作，造成资源浪费，如果一直获取不到就会一直等待。</li></ul><p>因此轻量级锁适合于锁竞争不激烈的情况，如果锁竞争太过激烈（<mark style="background: #FFFF00;">比如自旋次数超过 10 次</mark>），就需要升级为重量级锁。</p><h2 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h2><p>其他线程在获取锁失败时发现是重量级锁，则<strong>不会等待，而是直接挂起，等待获取锁的线程执行完之后进行唤醒</strong>，其他线程才继续开始获取锁，并执行代码。</p><p>由此可以看到重量级锁，避免了线程空转，减少了 CPU 消耗，但是想对的，线程被阻塞，性能变慢。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 锁 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Synchronized </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>为什么说线程创建的方式只有一种</title>
       <link href="/2024/02/14/wei-shi-me-shuo-xian-cheng-chuang-jian-de-fang-shi-zhi-you-yi-chong/"/>
       <url>/2024/02/14/wei-shi-me-shuo-xian-cheng-chuang-jian-de-fang-shi-zhi-you-yi-chong/</url>
@@ -151,6 +201,33 @@
         <tags>
             
             <tag> 项目/重复消费 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ConcurrentHashMap实现线程安全的方式</title>
+      <link href="/2024/01/12/concurrenthashmap-shi-xian-xian-cheng-an-quan-de-fang-shi/"/>
+      <url>/2024/01/12/concurrenthashmap-shi-xian-xian-cheng-an-quan-de-fang-shi/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>衍生问题：</p><ul><li>ConcurrentHashMap 和 HashTable 的区别；</li><li>ConcurrentHashMap 和 HashMap 的区别；</li></ul></blockquote><p>本文介绍 ConcurrentHashMap 是怎么实现线程安全的，主要根据其在不同 JDK 版本下的实现。</p><blockquote><p>源码解析：<a href="https://mp.weixin.qq.com/s/AHWzboztt53ZfFZmsSnMSw">还不懂 ConcurrentHashMap ？这份源码分析了解一下 (qq.com)</a></p></blockquote><h2 id="ConcurrentHashMap-的底层数据结构以及线程安全实现"><a href="#ConcurrentHashMap-的底层数据结构以及线程安全实现" class="headerlink" title="ConcurrentHashMap 的底层数据结构以及线程安全实现"></a>ConcurrentHashMap 的底层数据结构以及线程安全实现</h2><p>在 JDK 1.7 时，采用<strong>分段 Segment 数组+链表</strong>实现。JDK 1.8 以后采用和 HashMap 1.8 时的一样，都是<strong>数组 + 链表&#x2F;红黑树</strong>。但是这个数组的节点是一个一个的 Node 节点。</p><h3 id="JDK-1-8-之前："><a href="#JDK-1-8-之前：" class="headerlink" title="JDK 1.8 之前："></a>JDK 1.8 之前：</h3><p><img src="/images/ConcurrentHashMap%E5%AE%9E%E7%8E%B0%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8JDK1.8%E4%B9%8B%E5%89%8D.png"></p><p><mark style="background: #FFFF00;">实现原理</mark>：指对数据进行分段，对每一部分数据分别加一个<strong>分段锁 Segment</strong>，每一个段对应一个 <strong>HashEntry 数组</strong>，这个数组采用 key-value 结构存储键值对数据，值的类型为链表。当需要对某个 HashEntry 数组进行修改时，会先获取对应的 Segment 锁。</p><blockquote><p>多线程对于同一段的操作会造成堵塞，不同段可以并发。</p></blockquote><p><strong>Segment</strong> ：继承了 ReentrantLock 锁，所以是一种<strong>可重入锁</strong>，由于实现方式的底层是一个 Segment 数组，所以<strong>段的个数是不可改变的</strong>（默认大小 16）。</p><blockquote><p>可重入锁不清楚了可以参考：<a href="../../%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8BJUC/JUC--%E6%B0%B8%E4%B9%85%E7%AC%94%E8%AE%B0--AQS%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8%E4%B8%8EReentrantLock%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81.md">JUC–永久笔记–AQS队列同步器与ReentrantLock可重入锁</a> </p></blockquote><h3 id="JDK-1-8-之后"><a href="#JDK-1-8-之后" class="headerlink" title="JDK 1.8 之后"></a>JDK 1.8 之后</h3><p><img src="/images/ConcurrentHashMap%E5%AE%9E%E7%8E%B0%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8JDK1.8%E5%90%8E.png"></p><p>通过 <strong>Node 数组 + CAS + synchronized</strong> 实现并发安全；结构为<strong>数组 + 链表&#x2F;红黑树</strong>。</p><p>与 JDK 1.8 之前的实现方式对比：</p><ol><li><strong>数据结构不同</strong> </li><li><strong>锁的粒度更细</strong>，改用了 Node 作为锁的对象</li><li>优化了出现 Hash 冲突时的数据存储，和 HashMap 1.8 之后类似，数组和链表超过一定长度会转换为红黑树。</li><li>由于是使用 Node 数组，节点个数更多，所以并发度更高。</li></ol><h2 id="和-HashTable-的区别"><a href="#和-HashTable-的区别" class="headerlink" title="和 HashTable 的区别"></a>和 HashTable 的区别</h2><p>底层数据结构：</p><ol><li>HashTable 底层是由桶数组 + 链表实现</li><li>ConcurrentHashMap 1.8 之前是 Segment 数组+链表。1.8 之后是 Node 数组+链表&#x2F;红黑树。</li></ol><p>实现线程安全的方式不同:</p><ol><li>HashTable 是通过 Synchronized 进行加锁，当进行锁的时候会锁住整个桶数组，其他线程不能进行元素的修改和读取，竞争很激烈，因此效率较低。</li><li>ConcurrentHashMap 1.7 的时候，当修改某个 entry 数组下的元素时，会把 entry 所在的 Segment 段加锁，其他线程如果也想访问到同一个 Segment 下的元素，就必须等待锁的释放。此时其实已经比 HashTable 的效率高很多了，但是仍然会发生线程竞争问题。因此 1.8 之后采用了 Node 数组+链表&#x2F;红黑树实现，和 HashMap 的结构类似，一个 Node 数组对应一个链表或者红黑树，每次只需要锁住某个 Node 节点即可实现线程安全问题，这时锁的粒度更细，也就减少了线程竞争访问问题。</li></ol><p>容量问题：</p><ol><li>HashTable 在初始化之后，Segment 数组就不能进行扩容了，是固定的，不够灵活。</li><li>Node 数组由于是链表节点，因此可以无限扩容。</li></ol><p>确实是链表节点。<br><img src="/images/Node%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JUC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JUC </tag>
+            
+            <tag> 并发编程 </tag>
             
         </tags>
       
