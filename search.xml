@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>消息队列怎么保证消息不丢失的</title>
+      <link href="/2024/02/18/xiao-xi-dui-lie-zen-me-bao-zheng-xiao-xi-bu-diu-shi-de/"/>
+      <url>/2024/02/18/xiao-xi-dui-lie-zen-me-bao-zheng-xiao-xi-bu-diu-shi-de/</url>
+      
+        <content type="html"><![CDATA[<ul><li><input checked="" disabled="" type="checkbox"> #task 消息队列怎么保证消息不丢失的 ✅ 2024-02-18</li></ul><h2 id="为什么会发生消息丢失"><a href="#为什么会发生消息丢失" class="headerlink" title="为什么会发生消息丢失"></a>为什么会发生消息丢失</h2><p>可能因为网络问题导致消息丢失，以及存储时消息队列宕机了等情况。具体发生位置如下。</p><p>还是画个简单的流程图吧，比较清晰：<br><img src="/images/%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E8%BF%87%E7%A8%8B.png"></p><h2 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h2><p>可以从生产者、消息队列本身、消费者解决。</p><h3 id="生产者保证消息不丢失"><a href="#生产者保证消息不丢失" class="headerlink" title="生产者保证消息不丢失"></a>生产者保证消息不丢失</h3><ol><li>事务管理：当发送一条消息后，开启事务，等待消息队列传送回消息处理成功之后才继续发送消息。</li><li>生产者确认机制：开启生产者确认机制，只要消息成功发送到交换机之后 RabbitMQ 就会发送一个 ack 给生产者（即使消息没有 Queue 接收，也会发送 ack）。如果消息没有成功发送到交换机，就会发送一条 nack 消息，提示发送失败。</li></ol><p>当服务端确定一条或多条消息后就会调用生产者提供的回调方法来提醒生产者自己是否成功接收到了消息并处理。</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">&#x2F;&#x2F; 消息是否成功发送到Exchangefinal RabbitTemplate.ConfirmCallback confirmCallback &#x3D; (CorrelationDatacorrelationData, boolean ack, String cause) -&gt; &#123;log.info(&quot;correlationData: &quot; + correlationData);log.info(&quot;ack: &quot; + ack);if(!ack) &#123;log.info(&quot;异常处理....&quot;);&#125;&#125;;rabbitTemplate.setConfirmCallback(confirmCallback)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h3 id="路由交换机-Exchange-保证消息不丢失"><a href="#路由交换机-Exchange-保证消息不丢失" class="headerlink" title="路由交换机 Exchange 保证消息不丢失"></a>路由交换机 Exchange 保证消息不丢失</h3><p>生产者只会保证消息到达路由不会丢失，而不能保证从交换机到达某个消息队列，然后从消息队列到达消费者不丢失消息。</p><p><strong>解决方法</strong>：</p><p>开启 <code>Return 消息机制</code>。当从交换机到消息队列 queue 时，如果失败则会调用 return 方法，告诉生产者消息发送失败。</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">final RabbitTemplate.ReturnCallback returnCallback &#x3D; (Message message, int replyCode, String replyText, String exchange, String routingKey) -&gt;log.info(&quot;return exchange: &quot; + exchange + &quot;, routingKey: &quot;+ routingKey + &quot;, replyCode: &quot; + replyCode + &quot;, replyText: &quot;+ replyText);rabbitTemplate.setReturnCallback(returnCallback);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><h3 id="消费者消费失败导致消息丢失的问题"><a href="#消费者消费失败导致消息丢失的问题" class="headerlink" title="消费者消费失败导致消息丢失的问题"></a>消费者消费失败导致消息丢失的问题</h3><p>因为<strong>消费者默认采用自动 ack</strong>，所以当消费者收到消息后，还没有执行完，MQ 宕机了，但是由于是自动 ack，所以消费者收到消息后，直接就返回 ack，消息队列收到后就把这条消息从消息队列中删除了。</p><p>最终消息没有消费成功，但是却返回了 ack，并导致消息丢失。</p><p><strong>解决方法</strong>：</p><p>开启手动发送 ack。</p><p>配置：<code>spring.rabbitmq.listener.simple.acknowledge-mode=manual</code>  </p><p>样例：总之就是执行完自己的处理逻辑再返回 ack。</p><pre class="line-numbers language-java" data-language="java"><code class="language-java">@RabbitListener(queues &#x3D; RabbitMqConfig.MAIL_QUEUE)public void onMessage(Message message, Channel channel) throws IOException &#123;try &#123;Thread.sleep(5000);&#125; catch (InterruptedException e) &#123;e.printStackTrace();&#125;long deliveryTag &#x3D; message.getMessageProperties().getDeliveryTag();&#x2F;&#x2F;总之就是执行完自己的处理逻辑再返回ack。channel.basicAck(deliveryTag, true);System.out.println(&quot;mail listener receive: &quot; + newString(message.getBody()));&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h3 id="开启消息队列持久化"><a href="#开启消息队列持久化" class="headerlink" title="开启消息队列持久化"></a>开启消息队列持久化</h3><p>如果不开启持久化，RabbitMQ 异常重启的时候，就会导致消息丢失，因为不能从其他地方恢复数据。</p><p><strong>开启消息队列持久化后，就可以以一定的规则把消息队列的数据同步到磁盘上或者远程服务器上，以保证消息持久化</strong>。</p><blockquote><ul><li><p>具体就是，生产者每发送一条消息到交换机以及消息队列，他们就会把消息存储到各自的持久化日志中。接下来，每当一个消息消息消费成功返回 ack 的时候，就从持久化中删除这个消息。</p></li><li><p>一旦服务宕机，就可以从持久化日志中进行恢复未完成的消息。</p></li></ul></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 消息队列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 消息队列 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>为什么要引入消息队列之异步削峰解耦</title>
       <link href="/2024/02/17/wei-shi-me-yao-yin-ru-xiao-xi-dui-lie-zhi-yi-bu-xue-feng-jie-ou/"/>
       <url>/2024/02/17/wei-shi-me-yao-yin-ru-xiao-xi-dui-lie-zhi-yi-bu-xue-feng-jie-ou/</url>
@@ -86,6 +111,31 @@
             <tag> JUC </tag>
             
             <tag> 并发编程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>对Redolog持久化的底层理解</title>
+      <link href="/2024/02/08/dui-redolog-chi-jiu-hua-de-di-ceng-li-jie/"/>
+      <url>/2024/02/08/dui-redolog-chi-jiu-hua-de-di-ceng-li-jie/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>RedoLog 如何保证事务特性中的持久性的，之前学习的是只知道是缓存中更新数据，然后刷新到磁盘，这个过程中也知道借助了 Redolog 来实现，但是不知道更细节的层面，比如存储引擎数据页层面。</p><p>所以呢就补充了一点内容记录一下。</p><h2 id="1-Redo-log-保证持久性"><a href="#1-Redo-log-保证持久性" class="headerlink" title="1. Redo log 保证持久性"></a>1. Redo log 保证持久性</h2><p>#redolog</p><p>Redo log，重做日志，记录“<strong>事务提交时数据页的物理修改</strong>”，用来实现事务持久性。</p><blockquote><p>该日志文件由两部分组成: 重做日志缓冲 (redo log buffer)以及重做日志文件 (redo log file), 前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中，用于在<strong>刷新脏页到磁盘, 发生错误时，进行数据恢复使用</strong>。</p></blockquote><p>下面根据有无 redo log 日志文件分别区分持久化问题：</p><h3 id="1-1-假设没有-redo-log-日志，正常的持久化过程。"><a href="#1-1-假设没有-redo-log-日志，正常的持久化过程。" class="headerlink" title="1.1. 假设没有 redo log 日志，正常的持久化过程。"></a>1.1. 假设没有 redo log 日志，正常的持久化过程。</h3><blockquote><p>首先要知道 InnoDB 引擎内部的存储结构：一个内存结构和一个磁盘结构；<br><img src="/images/%E4%BA%8B%E5%8A%A1%E6%8C%81%E4%B9%85%E5%8C%96%E8%BF%87%E7%A8%8B.png"></p></blockquote><p>在进行一系列更新和删除操作前，Mysql 首先会从磁盘里读取相应的待修改数据到 <code>buffer pool</code> 内存中，这样一系列操作就会对内存中的这些数据进行修改，在事务提交前，内存中的数据就是所谓的脏数据。事务提交后会将脏数据刷新到磁盘完成持久化。</p><p>但是如果在刷新的过程中出错了，<strong>脏数据没有刷新到磁盘，但是事务已经提交</strong>，持久性就没法保证了。<br><img src="/images/%E8%84%8F%E6%95%B0%E6%8D%AE%E5%88%B7%E6%96%B0%E5%A4%B1%E8%B4%A5.png"></p><h3 id="1-2-使用-redo-log，保证持久性的过程"><a href="#1-2-使用-redo-log，保证持久性的过程" class="headerlink" title="1.2. 使用 redo log，保证持久性的过程"></a>1.2. 使用 redo log，保证持久性的过程</h3><p>先贴图：<br><img src="/images/redolog%E4%BF%9D%E8%AF%81%E4%BA%8B%E5%8A%A1%E6%8C%81%E4%B9%85%E6%80%A7.png"><br>具体顺序已用序号标出：</p><ol><li>在对内存中读取到的数据执行更新操作时，会同时将修改的数据存储到 <code>redo log buffer</code> 缓冲中</li><li>并且可以根据一定的策略，将 <u>redo log buffer 的数据同步到本地磁盘上的 redo log 文件</u>中，然后再将修改后的数据同步到磁盘中.（这个应该是在<strong>事务提交之后</strong>，记录全部的数据更新）。</li><li>假如此时数据库宕机（<strong>脏数据刷盘失败</strong>），那数据库重启之后会判断修改的数据是否真正同步到了磁盘，如果没有，那就通过 redo log 在本地磁盘上进行数据的”再”同步。从而实现持久化（并且这个过程是顺序 IO，速度很快）。</li></ol><h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><blockquote><p>有个问题：<em>redo log buffer 同步到 redo log 到底是事务提交前还是事务提交后？</em>。<br><a href="https://cloud.tencent.com/developer/article/1945809">字节一面：事务还没提交的时候，redolog 能不能被持久化到磁盘呢？-腾讯云开发者社区-腾讯云 (tencent.com)</a> </p></blockquote><blockquote><p>T 2：<em>为什么不直接在页更新之后，就立即刷盘？</em> </p><ul><li>假如我们在页更新之后，也就是数据库对 <code> buffer pool</code> 内的数据更新后, 哪怕只是<u>更新几个字节的数据，那也要把这一整页的 16 kb 数据都同步到磁盘</u>，那语句多了，同步次数也多，性能也就下降了。</li><li>且执行一条 sql 语句，也有可能导致磁盘上的数据进行多次页分配，这个过程是随机 IO，寻址过程比较占内存。</li><li>通过 redo log 的话，由于是顺序写入的 redo log 文件，所以速度会很快。</li></ul></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Mysql/redolog </tag>
             
         </tags>
       
