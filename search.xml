@@ -17,6 +17,25 @@
     
     
     <entry>
+      <title>一批大量的 redis 请求都过来, 怎么优化（批处理优化问题）</title>
+      <link href="/2024/02/24/yi-pi-da-liang-de-redis-qing-qiu-du-guo-lai-zen-me-you-hua-pi-chu-li-you-hua-wen-ti/"/>
+      <url>/2024/02/24/yi-pi-da-liang-de-redis-qing-qiu-du-guo-lai-zen-me-you-hua-pi-chu-li-you-hua-wen-ti/</url>
+      
+        <content type="html"><![CDATA[<p>小黑盒面试问到一千条 redis 命令来到，怎么进行优化，来减少处理时间。</p><p>之前没了解过，然后想的一些方案并不是这么有效，所以下来自己总结一下。</p><h1 id="单机模式下"><a href="#单机模式下" class="headerlink" title="单机模式下"></a>单机模式下</h1><blockquote><p>暂时先讲单机模式下的批处理优化。</p></blockquote><h2 id="通信携带命令条数不同导致效率不同"><a href="#通信携带命令条数不同导致效率不同" class="headerlink" title="通信携带命令条数不同导致效率不同"></a>通信携带命令条数不同导致效率不同</h2><ol><li>如果一次客户端到 redis 服务端的通信中只携带一条 redis 指令，那大概的总耗时就是：1 个来回时间 + 1 个 redis 处理命令时间。N 次就是 N 个来回时间 + N 条命令处理时间。</li></ol><p>画个图吧：<br><img src="/images/n%E6%AC%A1%E9%80%9A%E4%BF%A1.png"></p><ol start="2"><li>一次通信携带多条指令，减少总的通信次数。</li></ol><p>这样的 N 条命令的总耗时就为：N&#x2F;M 个来回时间，N 个处理时间。（M 代指每次携带的命令条数）。</p><p>图就不画了，应该能想象出来，不是重点。</p><ol start="3"><li>总之：<mark style="background: #FFFF00;">通信时间在 Redis 的使用过程中占大头，所以减少通信次数就是批处理优化的一个主要攻克点</mark>。</li></ol><h2 id="Redis-中怎么操作"><a href="#Redis-中怎么操作" class="headerlink" title="Redis 中怎么操作"></a>Redis 中怎么操作</h2><blockquote><p>我当时想到了列表 List 数据类型，但是列表好像并不算是一个批处理命令，然后就扯其他的了。</p></blockquote><p>现在才醒悟，对啊，<code>mset </code> 和 <code>hmset</code>。就是专门用来做批处理的命令，怎么没想到类比 Mysql 分批插入大量数据呢。也就是一次把多个 redis 命令封装在一起作为一次通信发给 Redis 客户端。</p><p><strong>语法</strong> </p><pre class="line-numbers language-java" data-language="java"><code class="language-java">mset key1 value1 [ key2 value2]hmset key field1 value1 [field2 value2]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre><p><strong>代码示例</strong> </p><p>如上，可以通过数组传递需要设置的批量 redis 命令，设置 String 类型的。并且 key 可以不变。而对于 hash 数据类型，其批量插入只能指定一个键。Set 类型的批量插入命令（SADD）也是有局限的（只能指定一个 set 的键）。</p><p>MSET 命令，数组批量插入示例：<br><img src="/images/hset%E5%91%BD%E4%BB%A4.png" alt="|500"></p><h2 id="PipeLine-优化批处理执行"><a href="#PipeLine-优化批处理执行" class="headerlink" title="PipeLine 优化批处理执行"></a>PipeLine 优化批处理执行</h2><p>PipeLine 不管是 Jedis 还是 Redis 都提供的有，这个<u>主要是用来把各种不同的 Redis 命令都装在一起</u>，然后统一发送到 Redis 服务端。</p><p><u>与批处理命令不同的是，这个可以装”不同的命令”，也就是说可以解决 HMSET 和 SADD 中批量插入时只能指定一个 Key 的问题</u>。你只要把多个 SADD 命令和 HMSET 命令装进来就行了。</p><p>示例：</p><ol><li>模拟 MSET<br><img src="/images/Pipeline%E6%A8%A1%E6%8B%9Fmset.png"></li></ol><p>PipeLine 的 <code>sync()</code> 命令就是发起一次通信请求到 Redis 服务端。</p><p>但是命令到达之后可能就会进入队列中等待，执行的顺序是有先后的，所以呢速度可能会比 mset 慢一些，但是好在对更多的数据类型都支持。</p><h1 id="集群模式下"><a href="#集群模式下" class="headerlink" title="集群模式下"></a>集群模式下</h1><p>在集群模式下，如果批处理命令没有分配到同一个槽位（也就是同一个 Redis 节点），就会导致执行失败。所以在集群部署下做批处理就需要其他工具了。</p><p>TODO</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Redis/批处理优化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>联合索引进行的范围查询为什么会导致索引失效</title>
       <link href="/2024/02/24/lian-he-suo-yin-jin-xing-de-fan-wei-cha-xun-wei-shi-me-hui-dao-zhi-suo-yin-shi-xiao/"/>
       <url>/2024/02/24/lian-he-suo-yin-jin-xing-de-fan-wei-cha-xun-wei-shi-me-hui-dao-zhi-suo-yin-shi-xiao/</url>
