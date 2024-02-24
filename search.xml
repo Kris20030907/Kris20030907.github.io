@@ -4,6 +4,32 @@
   
     
     <entry>
+      <title>如果不用Cookie怎么统计uv呢</title>
+      <link href="/2024/02/24/ru-guo-bu-yong-cookie-zen-me-tong-ji-uv-ni/"/>
+      <url>/2024/02/24/ru-guo-bu-yong-cookie-zen-me-tong-ji-uv-ni/</url>
+      
+        <content type="html"><![CDATA[<p>如题，小黑盒面试的时候问了这个问题，我当时没想好解决方案，事后就思考了一下。</p><blockquote><p><em>怎么不用 Cookie 来统计 uv</em>. 就在这猜测一下吧，思考过程：</p><ul><li>如果不用 cookie，那就说明用 session 也不行，因为 session 也是需要依赖 Cookie 来保存这个 session ID 嘛。</li><li>然后如果是缓存的话，还能想到<strong>浏览器的 Local Storage 存这个 uv 字段</strong>，但是呢，这样不能绝对的保证这个用户一定是新用户，因为 Local Storage 虽然不容易被删，<strong>但是也能够删掉</strong>。</li><li>想了一下，比如 b 站，哪怕我换个浏览器，登录 b 站账号之后，本应该是没有缓存嘛，但是它确实是能推送你喜欢的视频，所以嘛，我觉得它这个统计是在用户登录上面做了手脚，比如给用户信息加一些字段，来表示这个用户是新用户还是老用户。</li><li>但是呢<u>又想到这个短链接跳转它并不是只给登录用户使用，未登录也可以通过它跳转</u>。那怎么来判断是否为新还是老用户呢？</li></ul><p>然后呢我就查资料啊，问 GPT，都没有绝对的保证判断用户的新老。也就不了了之了。还是那句话，我觉得删完 Cookie，确实算为一个新用户没啥问题，<mark style="background: #FFFF00;">毕竟操作者就是用户</mark>，誰会想到闲着没事删删 Cookie 呢，笑了。</p></blockquote>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>联合索引进行的范围查询为什么会导致索引失效</title>
+      <link href="/2024/02/24/lian-he-suo-yin-jin-xing-de-fan-wei-cha-xun-wei-shi-me-hui-dao-zhi-suo-yin-shi-xiao/"/>
+      <url>/2024/02/24/lian-he-suo-yin-jin-xing-de-fan-wei-cha-xun-wei-shi-me-hui-dao-zhi-suo-yin-shi-xiao/</url>
+      
+        <content type="html"><![CDATA[<p>也是面试问的，由于不够深入底层存储结构，导致对索引的理解不够深刻。加入了 TODO，准备好好的解析底层结构。</p><p>自己想的范围查询过程貌似差不多对了。但是没说清楚索引失效原因，补充一下。</p><h2 id="到底为什么失效呢"><a href="#到底为什么失效呢" class="headerlink" title="到底为什么失效呢"></a>到底为什么失效呢</h2><p>比如有三个字段，A&#x3D;, B&gt;, C&#x3D;. 最后只会走两个索引 A 和 B 的，并不能找到唯一的记录。</p><p>看来面试的时候猜到了一点。就是三个字段先从 A 字段开始匹配，找到某个节点对应的记录后，下到第二层对应的 A 字段相等的节点上，然后 B 字段就从 B 字段这个层往后查询，因为是范围查询吗，没有机会往下走去找 C 字段（不是精确值，下不去）。所以最后能查询的数据不是唯一的，而是很多数据，这时候索引就走不全了。（B+树联合索引的存储结构得看看，还有记录在节点中的存储情况）</p><p>然后呢，由于没有查到需要的 C 字段，所以会<u>进行回表查询</u>，而且是大量的回表查询，那这时候 Mysql 不是在执行 SQL 的时候有一个优化器吗，它<mark style="background: #FFFF00;">发现走索引然后进行回表的开销，比全表扫描更大</mark>。所以它就不走索引，而是通过全表扫描来进行查询。也就是说联合索引失效了。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>消息队列怎么保证消息不丢失的</title>
       <link href="/2024/02/18/xiao-xi-dui-lie-zen-me-bao-zheng-xiao-xi-bu-diu-shi-de/"/>
       <url>/2024/02/18/xiao-xi-dui-lie-zen-me-bao-zheng-xiao-xi-bu-diu-shi-de/</url>
