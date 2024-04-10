@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>关于ThreadLocal管理资源出现内存泄漏问题的补充</title>
+      <link href="/2024/04/10/guan-yu-threadlocal-guan-li-zi-yuan-chu-xian-nei-cun-xie-lou-wen-ti-de-bu-chong/"/>
+      <url>/2024/04/10/guan-yu-threadlocal-guan-li-zi-yuan-chu-xian-nei-cun-xie-lou-wen-ti-de-bu-chong/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>之前没想过这个问题，这里带着一些小疑问整理一下。</p></blockquote><h3 id="ThreadLocal-内存泄漏问题"><a href="#ThreadLocal-内存泄漏问题" class="headerlink" title="ThreadLocal 内存泄漏问题"></a>ThreadLocal 内存泄漏问题</h3><blockquote><p>Tip：2024-04-10</p></blockquote><p><mark style="background: #FFFF00;">为什么会发生内存泄漏问题</mark>？</p><p>首先我们都知道 ThreadLocal 是通过把自身对象作为 key，要管理的资源作为 value 在线程内部 map 对象中进行存储的。</p><p>而这个 <strong>key 是弱引用，vlaue 是强引用</strong>。既然是弱引用，如果这个 ThreadLocal 对象没有被其他程序引用，那可能就会被 JVM 垃圾回收掉，那会出现什么情况？<strong>空 key</strong>！那 <strong>value 永远无法被访问到，而且也不会被清理掉，这就是内存泄漏问题</strong>。</p><p>避免方法：<u>尽量在使用完后，调用 remove 方法</u>，<u>手动删掉资源对象，避免出现内存泄漏问题</u>。</p><p>而且 threadlocal 在设计的时候也会在调用 get，set，remove 方法时判断 key 是否为 null 了，如果为 null 直接就清理掉这个键值对。</p><blockquote><p>小问题：Threadlocal 对象为什么是弱引用？咋判断的？</p><ul><li><mark style="background: #FFFF00;">设计为弱引用是为了避免内存泄漏</mark>!!?？</li></ul><p>原因在于，如果是强引用的 key，说明这个 threadlocalmap 只要用到了这个 ThreadLocal 对象作为 key，那就是强引用。这有啥问题？<u>只要线程一直活跃，那 Threadlocalmap 中就一直保留着 Threadlocal 的对象，哪怕没有被用到，也不会被回收（强引用）</u>，那不就是内存泄漏问题吗？</p><p>所以设计为弱引用，只要我们注意 remove 掉不用的资源，加上 Threadlocal 自己的优化，能尽可能的避免内存泄漏问题。</p></blockquote>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> ThreadLocal </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>跳表skipList解析</title>
       <link href="/2024/02/28/tiao-biao-skiplist-jie-xi/"/>
       <url>/2024/02/28/tiao-biao-skiplist-jie-xi/</url>
