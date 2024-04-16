@@ -269,6 +269,14 @@ mark {
     margin-top: -64px;
 }
 
+#busuanzi_container_site_pv, #busuanzi_container_site_uv {
+    display: inline !important;
+}
+
+#busuanzi_container_page_pv {
+	display: inline !important;
+}
+
 header .side-nav {
     width: 240px;
     z-index: 999;
