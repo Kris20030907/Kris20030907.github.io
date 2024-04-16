@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="分类: Mysql, KTnoobStation">
+    <meta name="keywords" content="分类: 冷热数据分离, KTnoobStation">
     <meta name="description" content="你好呀！欢迎访问我的小破站">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>分类: Mysql | KTnoobStation</title>
+    <title>分类: 冷热数据分离 | KTnoobStation</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -474,7 +474,7 @@
                 
                 <a href="/categories/Mysql/" title="Mysql: 1">
                     <span class="chip center-align waves-effect waves-light
-                             chip-active "
+                             chip-default "
                             style="background-color: #85C1E9;">Mysql
                         <span class="tag-length">1</span>
                     </span>
@@ -510,7 +510,7 @@
                 
                 <a href="/categories/%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%88%86%E7%A6%BB/" title="冷热数据分离: 1">
                     <span class="chip center-align waves-effect waves-light
-                             chip-default "
+                             chip-active "
                             style="background-color: #FFF;">冷热数据分离
                         <span class="tag-length">1</span>
                     </span>
@@ -530,35 +530,37 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/">
+                    <a href="/2024/04/16/xiang-mu-you-hua-leng-re-shu-ju-fen-chi/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Mysql--谈谈自己对索引的理解">
+                            <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="项目优化--冷热数据分离">
                             
-                            <span class="card-title">Mysql--谈谈自己对索引的理解</span>
+                            <span class="card-title">项目优化--冷热数据分离</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                从下面几点回答：
+                                
+不一定做，毕竟比较复杂，暂时想点方案。
 
-索引是什么？ （是单独存储在磁盘上的一种数据库结构。能加快数据查询的速度）
-索引的底层数据结构包括 B+树索引，B 树索引，还有哈希索引等。在不同的存储引擎中的存储形式是不同的。而且存储引擎也不一定支持所有的索引类型。
+为什么要做
+其实做冷热分离是为了提高性能，降低存储成本的一种存储数据的策略。
 
+单日访问统计表，也就是 t_stats_today  表，没必要做分表，因为这个场景是用户想查询某一天该数据的访问记
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-01-30
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-16
                             </span>
                             <span class="publish-author">
                                 
                                 <i class="fas fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/Mysql/" class="post-category">
-                                    Mysql
+                                <a href="/categories/%E5%86%B7%E7%83%AD%E6%95%B0%E6%8D%AE%E5%88%86%E7%A6%BB/" class="post-category">
+                                    冷热数据分离
                                 </a>
                                 
                                 
@@ -569,12 +571,8 @@
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93-%E7%B4%A2%E5%BC%95/">
-                            <span class="chip bg-color">数据库/索引</span>
-                        </a>
-                        
-                        <a href="/tags/%E7%B4%A2%E5%BC%95%E6%98%AF%E4%BB%80%E4%B9%88/">
-                            <span class="chip bg-color">索引是什么</span>
+                        <a href="/tags/%E5%86%B7%E7%83%AD%E5%88%86%E7%A6%BB/">
+                            <span class="chip bg-color">冷热分离</span>
                         </a>
                         
                     </div>
