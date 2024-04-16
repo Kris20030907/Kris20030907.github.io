@@ -360,83 +360,77 @@
     <div id="main-content" class="col s12 m12 l9">
         <!-- 文章内容详情 -->
 <div id="artDetail">
-    <div class="card">
-        <div class="card-content article-info">
-            <div class="row tag-cate">
-                <div class="col s7">
-                    
-                    <div class="article-tag">
-                        
-                            <a href="/tags/JVM-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91GC/">
-                                <span class="chip bg-color">JVM/什么时候触发GC</span>
-                            </a>
-                        
-                    </div>
-                    
-                </div>
-                <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/JVM/" class="post-category">
-                                JVM
-                            </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-
-            <div class="post-info">
-                
-                <div class="post-date info-break-policy">
-                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-01-28
-                </div>
-                
-
-                
-                <div class="post-date info-break-policy">
-                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-02-05
-                </div>
-                
-
-                
-                <div class="info-break-policy">
-                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    507
-                </div>
-                
-
-                
-                <div class="info-break-policy">
-                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
-                </div>
-                
-
-                
-                    <div id="busuanzi_container_page_pv" class="info-break-policy">
-                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
-                        <span id="busuanzi_value_page_pv"></span>
-                    </div>
-				
-            </div>
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/JVM-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91GC/">
+              <span class="chip bg-color">JVM/什么时候触发GC</span>
+            </a>
+            
+          </div>
+          
         </div>
-        <hr class="clearfix">
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/JVM/" class="post-category">
+              JVM
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
 
+      <div class="post-info">
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2024-01-28
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2024-02-05
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 507
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          1 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
         
+      </div>
+    </div>
+    <hr class="clearfix" />
 
-        
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
 
-        <div class="card-content article-card-content">
-            <div id="articleContent">
-                <p>首先这个 GC 主要是针对堆内存的。</p>
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <p>首先这个 GC 主要是针对堆内存的。</p>
 <p>而 HotPot 虚拟机会把堆分为新生代 <code>Eden </code>和老年代以及<code>survivor</code>幸存区。</p>
 <blockquote>
 <p>为什么需要 <code>survivor </code>区，主要是因为如果没有这个区，只有新生代和老年代的话。</p>
@@ -460,12 +454,11 @@
 <li><strong>增加新生代或老年代的内存大小</strong>，能装的对象多了，也就能够减少触发的机会。</li>
 <li>一般老年代使用的垃圾回收算法是‘‘<strong>标记-整理</strong>’‘，就是把存活的对象移到内存的一侧，这样能够流出足够的空间存放其他对象，从而减少 GC。</li>
 </ol>
+ 
+      </div>
+      <hr />
 
-                
-            </div>
-            <hr/>
-
-            
+      
 
     <div class="reprint" id="reprint-statement">
         
@@ -519,20 +512,29 @@
 
 
 
-            <div class="tag_share" style="display: block;">
-                <div class="post-meta__tag-list" style="display: inline-block;">
-                    
-                        <div class="article-tag">
-                            
-                                <a href="/tags/JVM-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91GC/">
-                                    <span class="chip bg-color">JVM/什么时候触发GC</span>
-                                </a>
-                            
-                        </div>
-                    
-                </div>
-                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
-                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/JVM-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91GC/">
+              <span class="chip bg-color">JVM/什么时候触发GC</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
 <div id="article-share">
 
     
@@ -544,10 +546,9 @@
 
 </div>
 
-                </div>
-            </div>
-            
-                <div id="reward">
+        </div>
+      </div>
+       <div id="reward">
     <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
 
     <!-- Modal Structure -->
@@ -578,21 +579,11 @@
         $('.tabs').tabs();
     });
 </script>
-
-            
-        </div>
+ 
     </div>
+  </div>
 
-    
-
-    
-
-    
-
-    
-
-    
-        <style>
+       <style>
     .valine-card {
         margin: 1.5rem auto;
     }
@@ -858,17 +849,7 @@
 <!--酷Q推送-->
 
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+       
 
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
@@ -978,9 +959,7 @@
 
 </div>
 
-
-
-<!-- 代码块功能依赖 -->
+ <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 
@@ -1093,8 +1072,7 @@
 
 
     <footer class="page-footer bg-color">
-    
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+   <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
 <style>
     .aplayer .aplayer-lrc p {
         
@@ -1145,94 +1123,139 @@
 </div>
 
 <script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="/libs/aplayer/Meting.min.js"></script>
-    
+<script src="/libs/aplayer/Meting.min.js"></script> 
 
-    <div class="container row center-align" style="margin-bottom: 15px !important;">
-        <div class="col s12 m8 l8 copy-right">
-            Copyright&nbsp;&copy;
-            
-                <span id="year">2021-2024</span>
-            
-            <a href="/about" target="_blank">KTpro</a>
-            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-
-            <br>
-            
-                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">57.6k</span>
-            
-            
-                
-      <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div
+    class="container row center-align"
+    style="margin-bottom: 15px !important;"
+  >
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year"
+        >2021-2024</span
+      >
       
-        <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-      
-      
-        <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
-      
-    
-            <br>
+      <a href="/about" target="_blank"
+        >KTpro</a
+      >
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a
+        href="https://github.com/blinkfox/hexo-theme-matery"
+        target="_blank"
+        >Matery</a
+      >
 
-            <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "7";
-                        var startDate = "21";
-                        var startHour = "9";
-                        var startMinute = "7";
-                        var startSecond = "26";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+      <br />
+       &nbsp;<i
+        class="fas fa-chart-area"
+      ></i
+      >&nbsp;站点总字数:&nbsp;<span class="white-color"
+        >57.6k</span
+      >
+        
+      <script
+        async
+        src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+      ></script>
+      
+      <span
+        id="busuanzi_container_site_pv"
+        style="display: inline"
+        class="white-color"
+        >总访问量<span id="busuanzi_value_site_pv"></span>次</span
+      >
+       
+      <span
+        id="busuanzi_container_site_uv"
+        style="display: inline"
+        class="white-color"
+        >总访客数<span id="busuanzi_value_site_uv"></span>人</span
+      >
+       
+      <br />
 
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(
+            startYear,
+            startMonth,
+            startDate,
+            startHour,
+            startMinute,
+            startSecond
+          );
+          var t2 = Date.UTC(
+            todayYear,
+            todayMonth,
+            todayDate,
+            todayHour,
+            todayMinute,
+            todaySecond
+          );
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor(diff / days - diffYears * 365);
 
-                    calcSiteTime();
-                </script>
-            
-            <br>
-            
-        </div>
-        <div class="col s12 m4 l4 social-link ">
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip =
+              "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML =
+              startYear + " - " + todayYear;
+            var yearsAndDaysTip =
+              "This site has been running for " +
+              diffYears +
+              " years and " +
+              diffDays +
+              " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip =
+                "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip =
+                "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
     <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
@@ -1259,11 +1282,13 @@
 
 
 
-</div>
+
     </div>
+  </div>
 </footer>
 
 <div class="progress-bar"></div>
+
 
     <!-- 搜索遮罩框 -->
 <div id="searchModal" class="modal">

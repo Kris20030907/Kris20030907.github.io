@@ -361,87 +361,81 @@ singletonObjects： 当一个">
     <div id="main-content" class="col s12 m12 l9">
         <!-- 文章内容详情 -->
 <div id="artDetail">
-    <div class="card">
-        <div class="card-content article-info">
-            <div class="row tag-cate">
-                <div class="col s7">
-                    
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E5%8E%9F%E7%90%86/">
-                                <span class="chip bg-color">原理</span>
-                            </a>
-                        
-                            <a href="/tags/Spring/">
-                                <span class="chip bg-color">Spring</span>
-                            </a>
-                        
-                    </div>
-                    
-                </div>
-                <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/Spring/" class="post-category">
-                                Spring
-                            </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-
-            <div class="post-info">
-                
-                <div class="post-date info-break-policy">
-                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-11-11
-                </div>
-                
-
-                
-                <div class="post-date info-break-policy">
-                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-11-11
-                </div>
-                
-
-                
-                <div class="info-break-policy">
-                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    854
-                </div>
-                
-
-                
-                <div class="info-break-policy">
-                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
-                </div>
-                
-
-                
-                    <div id="busuanzi_container_page_pv" class="info-break-policy">
-                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
-                        <span id="busuanzi_value_page_pv"></span>
-                    </div>
-				
-            </div>
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E5%8E%9F%E7%90%86/">
+              <span class="chip bg-color">原理</span>
+            </a>
+            
+            <a href="/tags/Spring/">
+              <span class="chip bg-color">Spring</span>
+            </a>
+            
+          </div>
+          
         </div>
-        <hr class="clearfix">
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/Spring/" class="post-category">
+              Spring
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
 
+      <div class="post-info">
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2023-11-11
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2023-11-11
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 854
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          3 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
         
+      </div>
+    </div>
+    <hr class="clearfix" />
 
-        
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
 
-        <div class="card-content article-card-content">
-            <div id="articleContent">
-                <blockquote>
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <blockquote>
 <p>忘了就可以回顾一下黑马的：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15b4y117RJ?p=184&vd_source=1ffd466ed0c5135e3f1bc07afebf6213">框架篇-51-循环依赖_一级缓存作用_哔哩哔哩_bilibili</a> </p>
 </blockquote>
 <p>主要用于<mark style="background: #FFFF00;">解决 Bean 的循环依赖和重复创建问题</mark>。<br><img src="/images/Bean%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png"></p>
@@ -473,12 +467,11 @@ singletonObjects： 当一个">
 <p>解决过程如下：<br><img src="/images/Bean%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98-1.png"></p>
 <p>解决方法实际上就是通过三级缓存存储 ObjectFactory 对象（这个对象可以创建某个对象的<strong>代理对象或普通对象</strong>），当创建 A 对象的时候会先把它的 ObjectFactory 比如 Fa 对象放进三级缓存中，然后查询 B，发现没有 B，就去创建 B，同样放进一个 Fb 对象到缓存，然后发现需要 A 的对象，结果找到了 A 的工厂对象 Fa，这个工厂对象就看你<strong>是不是发生了循环依赖</strong>，如果是就会创建代理对象给 B，否则就给普通对象。剩下的过程略。</p>
 <p>所以使用这种三级缓存就可以解决<strong>代理失效</strong>问题，完全解决循环依赖问题。</p>
+ 
+      </div>
+      <hr />
 
-                
-            </div>
-            <hr/>
-
-            
+      
 
     <div class="reprint" id="reprint-statement">
         
@@ -532,24 +525,33 @@ singletonObjects： 当一个">
 
 
 
-            <div class="tag_share" style="display: block;">
-                <div class="post-meta__tag-list" style="display: inline-block;">
-                    
-                        <div class="article-tag">
-                            
-                                <a href="/tags/%E5%8E%9F%E7%90%86/">
-                                    <span class="chip bg-color">原理</span>
-                                </a>
-                            
-                                <a href="/tags/Spring/">
-                                    <span class="chip bg-color">Spring</span>
-                                </a>
-                            
-                        </div>
-                    
-                </div>
-                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
-                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E5%8E%9F%E7%90%86/">
+              <span class="chip bg-color">原理</span>
+            </a>
+            
+            <a href="/tags/Spring/">
+              <span class="chip bg-color">Spring</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
 <div id="article-share">
 
     
@@ -561,10 +563,9 @@ singletonObjects： 当一个">
 
 </div>
 
-                </div>
-            </div>
-            
-                <div id="reward">
+        </div>
+      </div>
+       <div id="reward">
     <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
 
     <!-- Modal Structure -->
@@ -595,21 +596,11 @@ singletonObjects： 当一个">
         $('.tabs').tabs();
     });
 </script>
-
-            
-        </div>
+ 
     </div>
+  </div>
 
-    
-
-    
-
-    
-
-    
-
-    
-        <style>
+       <style>
     .valine-card {
         margin: 1.5rem auto;
     }
@@ -875,17 +866,7 @@ singletonObjects： 当一个">
 <!--酷Q推送-->
 
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+       
 
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
@@ -999,9 +980,7 @@ singletonObjects： 当一个">
 
 </div>
 
-
-
-<!-- 代码块功能依赖 -->
+ <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 
@@ -1114,8 +1093,7 @@ singletonObjects： 当一个">
 
 
     <footer class="page-footer bg-color">
-    
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+   <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
 <style>
     .aplayer .aplayer-lrc p {
         
@@ -1166,94 +1144,139 @@ singletonObjects： 当一个">
 </div>
 
 <script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="/libs/aplayer/Meting.min.js"></script>
-    
+<script src="/libs/aplayer/Meting.min.js"></script> 
 
-    <div class="container row center-align" style="margin-bottom: 15px !important;">
-        <div class="col s12 m8 l8 copy-right">
-            Copyright&nbsp;&copy;
-            
-                <span id="year">2021-2024</span>
-            
-            <a href="/about" target="_blank">KTpro</a>
-            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-
-            <br>
-            
-                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">57.6k</span>
-            
-            
-                
-      <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div
+    class="container row center-align"
+    style="margin-bottom: 15px !important;"
+  >
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year"
+        >2021-2024</span
+      >
       
-        <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-      
-      
-        <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
-      
-    
-            <br>
+      <a href="/about" target="_blank"
+        >KTpro</a
+      >
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a
+        href="https://github.com/blinkfox/hexo-theme-matery"
+        target="_blank"
+        >Matery</a
+      >
 
-            <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "7";
-                        var startDate = "21";
-                        var startHour = "9";
-                        var startMinute = "7";
-                        var startSecond = "26";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+      <br />
+       &nbsp;<i
+        class="fas fa-chart-area"
+      ></i
+      >&nbsp;站点总字数:&nbsp;<span class="white-color"
+        >57.6k</span
+      >
+        
+      <script
+        async
+        src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+      ></script>
+      
+      <span
+        id="busuanzi_container_site_pv"
+        style="display: inline"
+        class="white-color"
+        >总访问量<span id="busuanzi_value_site_pv"></span>次</span
+      >
+       
+      <span
+        id="busuanzi_container_site_uv"
+        style="display: inline"
+        class="white-color"
+        >总访客数<span id="busuanzi_value_site_uv"></span>人</span
+      >
+       
+      <br />
 
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(
+            startYear,
+            startMonth,
+            startDate,
+            startHour,
+            startMinute,
+            startSecond
+          );
+          var t2 = Date.UTC(
+            todayYear,
+            todayMonth,
+            todayDate,
+            todayHour,
+            todayMinute,
+            todaySecond
+          );
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor(diff / days - diffYears * 365);
 
-                    calcSiteTime();
-                </script>
-            
-            <br>
-            
-        </div>
-        <div class="col s12 m4 l4 social-link ">
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip =
+              "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML =
+              startYear + " - " + todayYear;
+            var yearsAndDaysTip =
+              "This site has been running for " +
+              diffYears +
+              " years and " +
+              diffDays +
+              " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip =
+                "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip =
+                "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
     <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
@@ -1280,11 +1303,13 @@ singletonObjects： 当一个">
 
 
 
-</div>
+
     </div>
+  </div>
 </footer>
 
 <div class="progress-bar"></div>
+
 
     <!-- 搜索遮罩框 -->
 <div id="searchModal" class="modal">

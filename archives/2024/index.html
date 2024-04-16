@@ -1242,8 +1242,7 @@ Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级�
 
 
     <footer class="page-footer bg-color">
-    
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+   <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
 <style>
     .aplayer .aplayer-lrc p {
         
@@ -1294,94 +1293,139 @@ Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级�
 </div>
 
 <script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="/libs/aplayer/Meting.min.js"></script>
-    
+<script src="/libs/aplayer/Meting.min.js"></script> 
 
-    <div class="container row center-align" style="margin-bottom: 15px !important;">
-        <div class="col s12 m8 l8 copy-right">
-            Copyright&nbsp;&copy;
-            
-                <span id="year">2021-2024</span>
-            
-            <a href="/about" target="_blank">KTpro</a>
-            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
-            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
-
-            <br>
-            
-                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">57.6k</span>
-            
-            
-                
-      <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div
+    class="container row center-align"
+    style="margin-bottom: 15px !important;"
+  >
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year"
+        >2021-2024</span
+      >
       
-        <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-      
-      
-        <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
-      
-    
-            <br>
+      <a href="/about" target="_blank"
+        >KTpro</a
+      >
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a
+        href="https://github.com/blinkfox/hexo-theme-matery"
+        target="_blank"
+        >Matery</a
+      >
 
-            <!-- 运行天数提醒. -->
-            
-                <span id="sitetime"> Loading ...</span>
-                <script>
-                    var calcSiteTime = function () {
-                        var seconds = 1000;
-                        var minutes = seconds * 60;
-                        var hours = minutes * 60;
-                        var days = hours * 24;
-                        var years = days * 365;
-                        var today = new Date();
-                        var startYear = "2021";
-                        var startMonth = "7";
-                        var startDate = "21";
-                        var startHour = "9";
-                        var startMinute = "7";
-                        var startSecond = "26";
-                        var todayYear = today.getFullYear();
-                        var todayMonth = today.getMonth() + 1;
-                        var todayDate = today.getDate();
-                        var todayHour = today.getHours();
-                        var todayMinute = today.getMinutes();
-                        var todaySecond = today.getSeconds();
-                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
-                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
-                        var diff = t2 - t1;
-                        var diffYears = Math.floor(diff / years);
-                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+      <br />
+       &nbsp;<i
+        class="fas fa-chart-area"
+      ></i
+      >&nbsp;站点总字数:&nbsp;<span class="white-color"
+        >57.6k</span
+      >
+        
+      <script
+        async
+        src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+      ></script>
+      
+      <span
+        id="busuanzi_container_site_pv"
+        style="display: inline"
+        class="white-color"
+        >总访问量<span id="busuanzi_value_site_pv"></span>次</span
+      >
+       
+      <span
+        id="busuanzi_container_site_uv"
+        style="display: inline"
+        class="white-color"
+        >总访客数<span id="busuanzi_value_site_uv"></span>人</span
+      >
+       
+      <br />
 
-                        var language = 'zh-CN';
-                        if (startYear === String(todayYear)) {
-                            document.getElementById("year").innerHTML = todayYear;
-                            var daysTip = 'This site has been running for ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                daysTip = '本站已运行 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                daysTip = '本站已運行 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = daysTip;
-                        } else {
-                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and ' + diffDays + ' days';
-                            if (language === 'zh-CN') {
-                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            } else if (language === 'zh-HK') {
-                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
-                            }
-                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
-                        }
-                    }
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(
+            startYear,
+            startMonth,
+            startDate,
+            startHour,
+            startMinute,
+            startSecond
+          );
+          var t2 = Date.UTC(
+            todayYear,
+            todayMonth,
+            todayDate,
+            todayHour,
+            todayMinute,
+            todaySecond
+          );
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor(diff / days - diffYears * 365);
 
-                    calcSiteTime();
-                </script>
-            
-            <br>
-            
-        </div>
-        <div class="col s12 m4 l4 social-link ">
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip =
+              "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML =
+              startYear + " - " + todayYear;
+            var yearsAndDaysTip =
+              "This site has been running for " +
+              diffYears +
+              " years and " +
+              diffDays +
+              " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip =
+                "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip =
+                "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
     <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
         <i class="fab fa-github"></i>
     </a>
@@ -1408,11 +1452,13 @@ Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级�
 
 
 
-</div>
+
     </div>
+  </div>
 </footer>
 
 <div class="progress-bar"></div>
+
 
     <!-- 搜索遮罩框 -->
 <div id="searchModal" class="modal">

@@ -1931,6 +1931,7 @@ p.search-result-summary{
         word-break: keep-all;
         float: left;
         width: 50%;
+		display: inline;
     }
 }
 
