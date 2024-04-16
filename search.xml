@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title></title>
+      <link href="/2024/04/16/xiang-mu-you-hua-leng-re-shu-ju-fen-chi/"/>
+      <url>/2024/04/16/xiang-mu-you-hua-leng-re-shu-ju-fen-chi/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>不一定做，毕竟比较复杂，暂时想点方案。</p></blockquote><h2 id="为什么要做"><a href="#为什么要做" class="headerlink" title="为什么要做"></a>为什么要做</h2><blockquote><p>其实做冷热分离是为了<u>提高性能，降低存储成本</u>的一种存储数据的策略。</p></blockquote><p>单日访问统计表，也就是 <code>t_stats_today</code>  表，没必要做分表，因为这个场景是用户想查询某一天该数据的访问记录或者该分组下所有数据的访问记录，这个实际上用到的可能性很小（因为我们默认的查询区间是最近一个星期的访问记录，对于之前的某一天的访问记录，一般用不到）。</p><p>那我们可以做个优化，也就是<mark style="background: #FFFF00;">冷热数据分离</mark>，把最近一段时间的单日访问记录存到数据表中，但是更早的数据可以通过备份表（用一个 back 标识为单日访问记录的备份表）存储到适合大容量存储的数据库但是查询效率相比于热库较低，比如 Postgresql 等。如果用户真要访问这种冷门的数据再从冷库中查询。</p><p>同时也是为了适应取消 gid 之后，减少查询当日访问统计记录的关联查询次数。那这样我们那个绑定表导致的笛卡尔积问题就不用考虑了。<a href="../%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/4%20%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98--%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E7%9B%B8%E5%90%8C%E5%88%86%E7%89%87%E9%94%AE%E4%BD%BF%E7%94%A8left%20join%E4%BC%9A%E5%87%BA%E7%8E%B0%E7%AC%9B%E5%8D%A1%E5%B0%94%E7%A7%AF.md">4 项目问题–分库分表相同分片键使用left join会出现笛卡尔积</a> </p><h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><h3 id="怎么实施冷热数据分离"><a href="#怎么实施冷热数据分离" class="headerlink" title="怎么实施冷热数据分离"></a>怎么实施冷热数据分离</h3><blockquote><p>可以看字节的方案：字节跳动技术团队-冷热数据分分离方案: <a href="https://mp.weixin.qq.com/s/ZKRkZP6rLHuTE1wvnqmAPQ">https://mp.weixin.qq.com/s/ZKRkZP6rLHuTE1wvnqmAPQ</a> </p></blockquote><p>实习的时候就有这种场景，把大量的推荐以及推送日志冷热分离，减少对线上数据库的存储压力。（具体还在研究如何实现）</p><ul><li><input disabled="" type="checkbox"> #task 如何实施冷热分离？ 🔽</li></ul><p>应该要结合项目考虑。</p><h3 id="冷热分离有什么问题"><a href="#冷热分离有什么问题" class="headerlink" title="冷热分离有什么问题"></a>冷热分离有什么问题</h3><ol><li>首先你的代码复杂度会提高很多，你划分冷热数据，在比较复杂的场景下很难实行。如果<strong>划分不够好，导致频繁的访问冷库数据</strong>，性能会降低很多。</li><li>还有问题就是<strong>冷热数据的同步</strong>，以及<strong>数据一致性问题</strong>，你打算什么时候进行热库同步数据到冷库呢。</li><li><strong>高可用性</strong>，对于不同的数据库，你维护的方式也不同，不管是冷库还是热库挂掉或者性能下降都会导致系统问题。</li></ol><p>… 大概想到这么点，可能会再补充吧。</p><h3 id="怎么定义冷数据和热数据的"><a href="#怎么定义冷数据和热数据的" class="headerlink" title="怎么定义冷数据和热数据的"></a>怎么定义冷数据和热数据的</h3><p>冷数据一般就是线上环境中<strong>对于一些实时性要求较低的功能</strong>，比如支付，你不可能交给冷库来做，因为性能不够高，而且它的数据是由热库按照一定规则同步过来的，可能会有一些延迟。</p><blockquote><p>冷数据是不经常访问的数据。它可以<u>存储在更便宜、更慢速的存储介质</u>上，如高容量硬盘驱动器或者云存储服务的冷数据层。</p></blockquote><p>热数据相反，<strong>就是对于实时性以及计算要求高的需求</strong>，需要用热库快速查询和返回数据，并且保证数据的准确性。</p><blockquote><p>gpt 参考：- <strong>热数据</strong>：指的是<mark style="background: #FFFF00;">经常被访问和修改的数据</mark>。这类数据应该<u>存储在快速、低延迟的存储系统</u>上，以便快速访问。例如，活跃的数据库记录或者需要实时处理的数据。</p></blockquote>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 冷热分离 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>关于ThreadLocal管理资源出现内存泄漏问题的补充</title>
       <link href="/2024/04/10/guan-yu-threadlocal-guan-li-zi-yuan-chu-xian-nei-cun-xie-lou-wen-ti-de-bu-chong/"/>
       <url>/2024/04/10/guan-yu-threadlocal-guan-li-zi-yuan-chu-xian-nei-cun-xie-lou-wen-ti-de-bu-chong/</url>
