@@ -4,13 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="买卖股票IV--状态机DP, KTpro">
+    <meta name="keywords" content="Prometheus + Grafana监控搞定了, KTpro">
     <meta name="description" content="
-本文包括 ACWing 提高课一题以及力扣上的一题变式Acwing: 1057. 股票买卖 IV - AcWing题库Leetcode: 123. 买卖股票的最佳时机 III - 力扣（LeetCode） 
+这篇文章只是碎碎念，格式不太好请见谅，今天好好的做了些自己的事情，之后可能就很少有时间自己做了。
 
-题目描述 
-解题思路
-划分当">
+今天上午把本地的 Prometheus + Grafana 监控搞定了，然后下午就尝试在服务器上部署，然后把前端页面改了一下，搞了个弹窗用">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -22,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>买卖股票IV--状态机DP | KTpro</title>
+    <title>Prometheus + Grafana监控搞定了 | KTpro</title>
     <link rel="icon" type="image/png" href="/medias/logoofmine.png">
     
 
@@ -280,7 +278,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">买卖股票IV--状态机DP</h1>
+                    <h1 class="description center-align post-title">Prometheus + Grafana监控搞定了</h1>
                 </div>
             </div>
         </div>
@@ -304,12 +302,8 @@
           
           <div class="article-tag">
             
-            <a href="/tags/%E7%AE%97%E6%B3%95/">
-              <span class="chip bg-color">算法</span>
-            </a>
-            
-            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
-              <span class="chip bg-color">动态规划</span>
+            <a href="/tags/%E9%A1%B9%E7%9B%AE%E4%BC%98%E5%8C%96/">
+              <span class="chip bg-color">项目优化</span>
             </a>
             
           </div>
@@ -320,8 +314,8 @@
           <div class="post-cate">
             <i class="fas fa-bookmark fa-fw icon-category"></i>
             
-            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
-              算法
+            <a href="/categories/%E9%A1%B9%E7%9B%AE/" class="post-category">
+              项目
             </a>
             
           </div>
@@ -332,20 +326,20 @@
       <div class="post-info">
         
         <div class="post-date info-break-policy">
-          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2023-10-03
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2024-07-14
         </div>
          
         <div class="post-date info-break-policy">
-          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2023-10-05
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2024-07-14
         </div>
          
         <div class="info-break-policy">
-          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 948
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 739
         </div>
          
         <div class="info-break-policy">
           <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-          4 分
+          2 分
         </div>
          
         <div
@@ -372,102 +366,34 @@
     <div class="card-content article-card-content">
       <div id="articleContent">
         <blockquote>
-<p>本文包括 ACWing 提高课一题以及力扣上的一题变式<br>Acwing: <a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/description/1059/">1057. 股票买卖 IV - AcWing题库</a><br>Leetcode: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/description/?envType=daily-question&envId=2023-10-03">123. 买卖股票的最佳时机 III - 力扣（LeetCode）</a> </p>
+<p>这篇文章只是碎碎念，格式不太好请见谅，今天好好的做了些自己的事情，之后可能就很少有时间自己做了。</p>
 </blockquote>
-<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p><img src="/images/%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8IV--%E7%8A%B6%E6%80%81%E6%9C%BADP.png"> </p>
-<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><ol>
-<li><p>划分当前持有股票状态有和无</p>
-</li>
-<li><p>如果只是定义 DP 数组位 dp[i][j], 则只能说明前 i 天共有 j 次交易，区分不出状态</p>
-</li>
-<li><p>因此多加一个属性，第 i 天在进行第 j 次交易时，当前是否持有股票，如 dp[i][j][0]; 无股票</p>
-</li>
-<li><p>根据状态转换，<mark>dp[i][j][0] &#x3D; max (dp[i-1][j][0], dp[i-1][j][1] + w[i]);</mark><br> 解释：<br> 第 i 天如果没有持有股票，则由前一天状态过来后，j 次交易的最大利润和是”前一天没股票，<br> 则今天也无法获得收益（因为不持有股票）”   以及<br> “前一天有股票，今天需要卖出股票才能达成 dp[i][j][0]的状态，因此是 dp[i-1][j][1] + w[i]” 中的最大值</p>
-</li>
-</ol>
+<p>今天上午把本地的 Prometheus + Grafana 监控搞定了，然后下午就尝试在服务器上部署，然后把前端页面改了一下，搞了个弹窗用来提示 Grafana 监控功能上线，然后导航栏也加了个按钮。</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>目前的效果是能看到下面这种数据监控情况：<br><img src="/images/Prometheus%20+%20Grafana%E7%9B%91%E6%8E%A7%E6%90%9E%E5%AE%9A%E4%BA%86.png"></p>
+<p>其实感觉还挺有用的，我暂时还没设置报警，这个功能可以在后续监控到响应时间不正常的接口进行报警和通知，通知的形式有很多种，包括邮箱，飞书 bot 等。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>然后嘞，我提供了两个版本：</p>
 <ul>
-<li>同理： dp[i][j][1] ,如果前一天没股票，需要购买当前股票，则 dp[i-1][j-1][0] - w[i]; (买入算一次交易),有的话就不变，因为不能一天内同时进行多笔交易，则 dp[i-1][j][1]; 取 max   </li>
-<li>初始化，刚开始是无货的，j &#x3D;&#x3D; 0 时，f[i][j][0] &#x3D; 0 和 f[i][j][1] &#x3D; -INF（因为没进行交易不可能有货）;  可以先将所有状态都初始化为 -INF, 然后再将 f[i][0][0]都更新为 0</li>
+<li>快照版本：也就是某个时间段的数据，这个主要是为了避免访客在使用时看不到数据，还得自己去调接口从而拿到数据的情况。</li>
+<li>实时更新版本：这个就是正常的选择最近的时间范围了，比如几个小时之内，几十分钟之内啊，或者具体的某一天的统计情况，这个就看你自己的选择了，你也可以适当的压测一些接口（虽然我做了限流就是说😏，你可以试一下短链接跳转多来那么个几百上千次访问没问题的）。</li>
 </ul>
-<blockquote>
-<p>最后因为空间问题，设置 dp 为 dp[2][N][M];  但分析还是上述的</p>
-</blockquote>
-<h4 id="JAVA-版本"><a href="#JAVA-版本" class="headerlink" title="JAVA 版本"></a>JAVA 版本</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java">import java.util.*;
-import java.io.*;
-
-
-class Main&#123;
-    static int N &#x3D; 100010, M &#x3D; 110, INF &#x3D; 0x3f3f3f3f;
-    
-    static int[][][] dp &#x3D; new int [2][N][M];
-    static int[] w &#x3D; new int[N];
-    
-    public static void main(String[] args) throws IOException&#123;
-        Scanner scan &#x3D; new Scanner(System.in);
-        BufferedReader bf &#x3D; new BufferedReader(new InputStreamReader(System.in));
-        
-        String[] t &#x3D; bf.readLine().split(&quot; &quot;);
-        int n &#x3D; Integer.parseInt(t[0]);
-        int k &#x3D; Integer.parseInt(t[1]);
-        
-        String[] str &#x3D; bf.readLine().split(&quot; &quot;);
-        
-        for(int i &#x3D; 1; i &lt;&#x3D; n;i++)&#123;
-            w[i] &#x3D; Integer.parseInt(str[i-1]);
-        &#125; 
-        
-        &#x2F;&#x2F;初始化状态
-        for (int i &#x3D; 0; i &lt; 2; i ++)
-            for (int j &#x3D; 0; j &lt;&#x3D; n; j ++)
-                Arrays.fill(dp[i][j], -0x3f3f3f3f);
-        
-        for(int i &#x3D; 0; i &lt;&#x3D; n;i++) dp[0][i][0] &#x3D; 0;  &#x2F;&#x2F;j为0，前 i 天 0 次交易，如果无货则为利润0;
-        
-        for(int i &#x3D; 1; i &lt;&#x3D; n; i++)&#123;
-            for(int j &#x3D; 1; j &lt;&#x3D; k; j++)&#123;
-                dp[0][i][j] &#x3D; Math.max(dp[0][i-1][j], dp[1][i-1][j] + w[i]); &#x2F;&#x2F;后面的是卖出
-                dp[1][i][j] &#x3D; Math.max(dp[1][i-1][j], dp[0][i-1][j-1] - w[i]); &#x2F;&#x2F;后面的是买入,算一次交易
-            &#125;
-        &#125;
-        int ans &#x3D; 0;   &#x2F;&#x2F;最多进行k次交易，不一定交易笔数越多，利润越高，枚举最大值
-        for(int i &#x3D; 0 ; i &lt;&#x3D; k; i++)&#123;
-            ans &#x3D; Math.max(dp[0][n][i], ans);
-        &#125;
-        
-        System.out.println(ans);
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="力扣题目描述"><a href="#力扣题目描述" class="headerlink" title="力扣题目描述"></a>力扣题目描述</h3><p><img src="/images/%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8IV--%E7%8A%B6%E6%80%81%E6%9C%BADP-%E5%8A%9B%E6%89%A3.png"> </p>
-<h4 id="C-版本"><a href="#C-版本" class="headerlink" title="C++版本"></a>C++版本</h4><pre class="line-numbers language-C" data-language="C"><code class="language-C">class Solution &#123;
-
-public:
-    static const int N &#x3D; 100010, M &#x3D; 5;
-    
-    int maxProfit(vector&lt;int&gt;&amp; prices) &#123;
-        int n &#x3D; prices.size(); int k &#x3D; 2;
-        int dp[N][M][2];
-        memset(dp,-0x3f, sizeof dp);
-
-        &#x2F;&#x2F;初始化0次交易0利润
-        for(int i &#x3D; 0; i &lt;&#x3D; n;i++)&#123;
-            dp[i][0][0] &#x3D; 0;
-        &#125;
-        for(int i &#x3D; 1;i &lt;&#x3D; n;i++)&#123;
-            for(int j &#x3D; 1; j &lt;&#x3D; k; j++)&#123;
-                dp[i][j][0] &#x3D; max(dp[i-1][j][1] + prices[i-1], dp[i-1][j][0]);
-                dp[i][j][1] &#x3D; max(dp[i-1][j-1][0] - prices[i-1], dp[i-1][j][1]);
-            &#125;
-        &#125;
-        &#x2F;&#x2F;最多两笔交易，但是可能不会发生交易，万一亏本呢
-        int ans &#x3D; 0;
-        for(int i &#x3D; 0; i &lt;&#x3D; k; i++)&#123;
-            ans &#x3D; max(ans, dp[n][i][0]);  &#x2F;&#x2F;最后一定要是交易完成的结果
-        &#125;
-        return ans;  
-    &#125;
-&#125;;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这两个版本都需要进行登录，我专门创建了一个访客用户，你可以访问这些数据：</p>
+<ul>
+<li>用户名：<code>visitor</code> </li>
+<li>密码：<code>wzc123</code></li>
+</ul>
+<h2 id="关于部署教程"><a href="#关于部署教程" class="headerlink" title="关于部署教程"></a>关于部署教程</h2><p>很抱歉，目前只有一篇我自己在做重构的时候输出的步骤文章，但是暂时没办法细细优化，总不能拿一篇水文来给各位。所以呢这个计划就暂时搁置了，之后会找时间整理一下，争取输出一篇高质量的文章，帮你避免很多坑的那种（主要是我也踩坑很多）。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>还是决定把项目地址公布出来了，也希望大家能帮我找出更多的问题，也能让我有所准备并解决。</p>
+<ul>
+<li>项目部署地址： <a target="_blank" rel="noopener" href="http://www.ktpro.ink/login">http://www.ktpro.ink/login</a></li>
+</ul>
+<p>其中也包括了 Grafana 监控的提示，你可以自行查看！</p>
+<p>还有一件事也蛮开心的，换成 consul 之后，整个项目 + 中间件的内存占用才不到 3g，之前用 nacos 不加监控就已经达到 3.6g。因此还要强调一次：注重项目结构的搭建和中间件选用，最大程度的在满足功能的前提下节省成本。</p>
+<p>实际上，这个和 AutoMQ 的理念不谋而合，都是以实用为主，最大程度的提高资源利用率和效率。</p>
+<p>祝大家生活愉快！</p>
+<p>好想去旅行….<br><img src="/images/Snipaste_2024-05-07_19-52-55.png"></p>
+<hr>
+<p>害，好多计划搁置了：<br><img src="/images/1-2.png"></p>
+<p><img src="/images/2-3.png"></p>
  
       </div>
       <hr />
@@ -493,7 +419,7 @@ public:
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/">http://example.com/2023/10/03/mai-mai-gu-piao-iv-zhuang-tai-ji-dp/</a>
+                    <a href="http://example.com/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/">http://example.com/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -531,12 +457,8 @@ public:
           
           <div class="article-tag">
             
-            <a href="/tags/%E7%AE%97%E6%B3%95/">
-              <span class="chip bg-color">算法</span>
-            </a>
-            
-            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">
-              <span class="chip bg-color">动态规划</span>
+            <a href="/tags/%E9%A1%B9%E7%9B%AE%E4%BC%98%E5%8C%96/">
+              <span class="chip bg-color">项目优化</span>
             </a>
             
           </div>
@@ -872,17 +794,18 @@ public:
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/10/04/you-hui-quan/">
+                <a href="/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="优惠券">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Prometheus + Grafana监控搞定了">
                         
-                        <span class="card-title">优惠券</span>
+                        <span class="card-title">Prometheus + Grafana监控搞定了</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -892,30 +815,27 @@ public:
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-10-04
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
-                                    框架/中间件
+                            <a href="/categories/%E9%A1%B9%E7%9B%AE/" class="post-category">
+                                    项目
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/redis/">
-                        <span class="chip bg-color">redis</span>
-                    </a>
-                    
-                    <a href="/tags/%E9%A1%B9%E7%9B%AE/">
-                        <span class="chip bg-color">项目</span>
+                    <a href="/tags/%E9%A1%B9%E7%9B%AE%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">项目优化</span>
                     </a>
                     
                 </div>
@@ -929,13 +849,13 @@ public:
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/09/30/shuang-xie-yi-zhi/">
+                <a href="/2024/07/13/hen-kai-xin-huan-diao-nacos-hou-fu-wu-qi-nei-cun-sheng-xia-hen-duo/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="双写一致">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="很开心，换掉 Nacos 后服务器内存省下很多！">
                         
-                        <span class="card-title">双写一致</span>
+                        <span class="card-title">很开心，换掉 Nacos 后服务器内存省下很多！</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -946,14 +866,14 @@ public:
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-30
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-13
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%A1%86%E6%9E%B6-%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="post-category">
-                                    框架/中间件
+                            <a href="/categories/%E9%A1%B9%E7%9B%AE/" class="post-category">
+                                    项目
                                 </a>
                             
                             
@@ -963,8 +883,8 @@ public:
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/redis/">
-                        <span class="chip bg-color">redis</span>
+                    <a href="/tags/%E9%A1%B9%E7%9B%AE%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">项目优化</span>
                     </a>
                     
                 </div>

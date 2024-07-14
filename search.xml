@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Prometheus + Grafana监控搞定了</title>
+      <link href="/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/"/>
+      <url>/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>这篇文章只是碎碎念，格式不太好请见谅，今天好好的做了些自己的事情，之后可能就很少有时间自己做了。</p></blockquote><p>今天上午把本地的 Prometheus + Grafana 监控搞定了，然后下午就尝试在服务器上部署，然后把前端页面改了一下，搞了个弹窗用来提示 Grafana 监控功能上线，然后导航栏也加了个按钮。</p><h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>目前的效果是能看到下面这种数据监控情况：<br><img src="/images/Prometheus%20+%20Grafana%E7%9B%91%E6%8E%A7%E6%90%9E%E5%AE%9A%E4%BA%86.png"></p><p>其实感觉还挺有用的，我暂时还没设置报警，这个功能可以在后续监控到响应时间不正常的接口进行报警和通知，通知的形式有很多种，包括邮箱，飞书 bot 等。</p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>然后嘞，我提供了两个版本：</p><ul><li>快照版本：也就是某个时间段的数据，这个主要是为了避免访客在使用时看不到数据，还得自己去调接口从而拿到数据的情况。</li><li>实时更新版本：这个就是正常的选择最近的时间范围了，比如几个小时之内，几十分钟之内啊，或者具体的某一天的统计情况，这个就看你自己的选择了，你也可以适当的压测一些接口（虽然我做了限流就是说😏，你可以试一下短链接跳转多来那么个几百上千次访问没问题的）。</li></ul><p>这两个版本都需要进行登录，我专门创建了一个访客用户，你可以访问这些数据：</p><ul><li>用户名：<code>visitor</code> </li><li>密码：<code>wzc123</code></li></ul><h2 id="关于部署教程"><a href="#关于部署教程" class="headerlink" title="关于部署教程"></a>关于部署教程</h2><p>很抱歉，目前只有一篇我自己在做重构的时候输出的步骤文章，但是暂时没办法细细优化，总不能拿一篇水文来给各位。所以呢这个计划就暂时搁置了，之后会找时间整理一下，争取输出一篇高质量的文章，帮你避免很多坑的那种（主要是我也踩坑很多）。</p><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>还是决定把项目地址公布出来了，也希望大家能帮我找出更多的问题，也能让我有所准备并解决。</p><ul><li>项目部署地址： <a href="http://www.ktpro.ink/login">http://www.ktpro.ink/login</a></li></ul><p>其中也包括了 Grafana 监控的提示，你可以自行查看！</p><p>还有一件事也蛮开心的，换成 consul 之后，整个项目 + 中间件的内存占用才不到 3g，之前用 nacos 不加监控就已经达到 3.6g。因此还要强调一次：注重项目结构的搭建和中间件选用，最大程度的在满足功能的前提下节省成本。</p><p>实际上，这个和 AutoMQ 的理念不谋而合，都是以实用为主，最大程度的提高资源利用率和效率。</p><p>祝大家生活愉快！</p><p>好想去旅行….<br><img src="/images/Snipaste_2024-05-07_19-52-55.png"></p><hr><p>害，好多计划搁置了：<br><img src="/images/1-2.png"></p><p><img src="/images/2-3.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 项目 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 项目优化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>很开心，换掉 Nacos 后服务器内存省下很多！</title>
       <link href="/2024/07/13/hen-kai-xin-huan-diao-nacos-hou-fu-wu-qi-nei-cun-sheng-xia-hen-duo/"/>
       <url>/2024/07/13/hen-kai-xin-huan-diao-nacos-hou-fu-wu-qi-nei-cun-sheng-xia-hen-duo/</url>
