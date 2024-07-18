@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>日常 PR</title>
+      <link href="/2024/07/18/ri-chang-pr/"/>
+      <url>/2024/07/18/ri-chang-pr/</url>
+      
+        <content type="html"><![CDATA[<p>这周做了一个 FP，主要是实现了腾讯云 COS 和华为云对象存储 OBS 的 CredentialsProvider。</p><p>（仓库是私有的，好像看不到具体的我的提交）<br><img src="/images/pr1.png"></p><p><img src="/images/pr2.png"></p><p>我简单解释一下就是：</p><ul><li>一种获取 AK 和 SK 的方式是静态的，也就是我们直接指定凭证去操作对象存储。</li><li>第二种是以 IAM 角色绑定服务器实例，通过服务器内请求远端 Imdsendpoint 得到临时凭证，之后就可以利用这个临时凭证去操作对象存储。</li></ul><p>至于<strong>为什么要获取临时凭证</strong>，这个主要是考虑到之后 AutoMQ 商业版会作为 Saas 服务提供给客户，客户只需要说：我需要换掉 Kafka 接入 AutoMQ，你们告诉我该怎么做。</p><p>我们直接提供商业版安装包，里面的逻辑都是封装好的，且在开源版的基础上增加了更多的实用功能，满足不同的需求。因此嘞，你只需要修改一下我们给的 terraform 配置文件，以及 ansible 等工具的配置，来完成自动化的部署，由于底层兼容了各大云厂商的 Api 以及 IMDS，所以你只需要照着说明来理解。</p><p>至于其他的一些逻辑，我之后做到了或者理解了会发一部分内容，尽情期待。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> push </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Prometheus + Grafana监控搞定了</title>
       <link href="/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/"/>
       <url>/2024/07/14/prometheus-grafana-xiang-mu-jian-kong-gao-ding-liao/</url>
