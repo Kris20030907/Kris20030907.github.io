@@ -331,12 +331,12 @@
         </div>
          
         <div class="info-break-policy">
-          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 3.5k
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 4.5k
         </div>
          
         <div class="info-break-policy">
           <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-          12 分
+          19 分
         </div>
          
         <div
@@ -385,27 +385,109 @@
 </li>
 </ul>
 <h2 id="部署-AutoMQ、Prometheus-以及夜莺监控"><a href="#部署-AutoMQ、Prometheus-以及夜莺监控" class="headerlink" title="部署 AutoMQ、Prometheus 以及夜莺监控"></a>部署 AutoMQ、Prometheus 以及夜莺监控</h2><h3 id="部署-AutoMQ"><a href="#部署-AutoMQ" class="headerlink" title="部署 AutoMQ"></a>部署 AutoMQ</h3><p>参考 AutoMQ 文档：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/IyXrw3lHriVPdQkQLDvcPGQdnNh">集群方式部署 | AutoMQ</a> [5] 。在部署启动前，添加如下配置参数以开启 Prometheu 的拉取接口。通过以下参数启动 AutoMQ 集群以后，每个节点将会额外开放一个 HTTP 接口供我们拉取 AutoMQ 的监控指标。这些指标的格式均遵循 Prometheus Metrics 的格式。</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">bin&#x2F;kafka-server-start.sh ...\
+--override  s3.telemetry.metrics.exporter.type&#x3D;prometheus \
+--override  s3.metrics.exporter.prom.host&#x3D;0.0.0.0 \
+--override  s3.metrics.exporter.prom.port&#x3D;8890 \
+....<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>当启用 AutoMQ 监控指标后，可以在任意一台节点上通过 HTTP 协议拉取到 Prometheus 格式的监控指标，地址为：<code>http://&#123;node_ip&#125;:8890</code>，响应结果示例如下：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">....
+kafka_request_time_mean_milliseconds&#123;otel_scope_name&#x3D;&quot;io.opentelemetry.jmx&quot;,type&#x3D;&quot;DescribeDelegationToken&quot;&#125; 0.0 1720520709290
+kafka_request_time_mean_milliseconds&#123;otel_scope_name&#x3D;&quot;io.opentelemetry.jmx&quot;,type&#x3D;&quot;CreatePartitions&quot;&#125; 0.0 1720520709290
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>关于指标介绍，可以参考 AutoMQ 官网文档：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/ArHpwR9zsiLbqwkecNzcqOzXn4b">Metrics | AutoMQ</a> [6] 。</p>
 <h3 id="部署-Prometheus"><a href="#部署-Prometheus" class="headerlink" title="部署 Prometheus"></a>部署 Prometheus</h3><p>Prometheus 可以通过下载二进制包部署，也可以通过 Docker 方式部署。以下是这两种部署方式的介绍。</p>
 <h4 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h4><p>为了方便使用，你可以新建一个脚本，并根据需要修改 Prometheus 的下载版本，最后执行脚本即可完成部署。首先，新建脚本：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;home
+vim install_prometheus.sh
+# !!! 粘贴下面的脚本内容 并保存退出
+# 授予权限
+chmod +x install_prometheus.sh
+# 执行脚本
+.&#x2F;install_prometheus.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>脚本内容如下：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">version&#x3D;2.45.3
+filename&#x3D;prometheus-$&#123;version&#125;.linux-amd64
+mkdir -p &#x2F;opt&#x2F;prometheus
+wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;prometheus&#x2F;releases&#x2F;download&#x2F;v$&#123;version&#125;&#x2F;$&#123;filename&#125;.tar.gz
+tar xf $&#123;filename&#125;.tar.gz
+cp -far $&#123;filename&#125;&#x2F;*  &#x2F;opt&#x2F;prometheus&#x2F;
+
+# config as a service 
+cat &lt;&lt;EOF &gt;&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;prometheus.service
+[Unit]
+Description&#x3D;&quot;prometheus&quot;
+Documentation&#x3D;https:&#x2F;&#x2F;prometheus.io&#x2F;
+After&#x3D;network.target
+
+[Service]
+Type&#x3D;simple
+
+ExecStart&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;prometheus --config.file&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml --storage.tsdb.path&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;data --web.enable-lifecycle --web.enable-remote-write-receiver
+
+Restart&#x3D;on-failure
+SuccessExitStatus&#x3D;0
+LimitNOFILE&#x3D;65536
+StandardOutput&#x3D;syslog
+StandardError&#x3D;syslog
+SyslogIdentifier&#x3D;prometheus
+
+
+[Install]
+WantedBy&#x3D;multi-user.target
+EOF
+
+systemctl enable prometheus
+systemctl restart prometheus
+systemctl status prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>随后修改 Prometheus 的配置文件，<strong>增加采集 AutoMQ 可观测数据的任务</strong>，并<strong>重启</strong> Prometheus，执行命令：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># config 配置文件内容填下面的
+vim &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml
+# 重启 Prometheus
+systemctl restart prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p><strong>配置文件内容参考如下</strong>，请将下列中的<code>client_ip</code>修改为 AutoMQ 开放的可观测数据暴露地址：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+scrape_configs:
+  # The job name is added as a label &#96;job&#x3D;&lt;job_name&gt;&#96; to any timeseries scraped from this config.
+  - job_name: &quot;prometheus&quot;
+    static_configs:
+      - targets: [&quot;localhost:9090&quot;]
+      
+  - job_name: &quot;automq&quot;
+    static_configs:
+      - targets: [&quot;&#123;client_ip&#125;:8890&quot;]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>部署完成后，我们可以通过浏览器访问 Prometheus，查看是否真正采集到了 AutoMQ 的 Metrics数据，访问<code>http://&#123;client_ip&#125;:9090/targets</code>：</p>
 <p><img src="/images/Prometheus.png"></p>
 <h4 id="Docker-部署"><a href="#Docker-部署" class="headerlink" title="Docker 部署"></a>Docker 部署</h4><p>如果你已经有一个在运行的 Prometheus Docker 容器，请先执行命令删除该容器：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">docker stop prometheus
+docker rm prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
 <p>新建配置文件，并在 Docker 启动时进行挂载：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;opt&#x2F;prometheus
+vim &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml
+# 配置内容参考上述 “二进制部署” 中的配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <p>启动 Docker 容器：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">docker run -d \
+  --name&#x3D;prometheus \
+  -p 9090:9090 \
+  -v &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml:&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml \
+  -m 500m \
+  prom&#x2F;prometheus \
+  --config.file&#x3D;&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml \
+  --enable-feature&#x3D;otlp-write-receiver \
+  --web.enable-remote-write-receiver<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>这样你便得到了一个采集 AutoMQ Metrics 的 Prometheus 服务，关于更多 AutoMQ Metrics 与 Prometheus 集成的介绍，可以参考：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/automq/observability/integrating-metrics-with-prometheus">将 Metrics 集成到 Prometheus | AutoMQ</a> [7]。</p>
 <h3 id="部署夜莺监控"><a href="#部署夜莺监控" class="headerlink" title="部署夜莺监控"></a>部署夜莺监控</h3><p>夜莺监控可以通过下面三种方式进行部署，关于更详细的部署说明可以参考<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/install/intro/">官方文档</a> [8]：</p>
 <ul>
@@ -418,17 +500,76 @@
 </ul>
 <p>接下来我将采用二进制的方式进行部署。</p>
 <h4 id="下载夜莺"><a href="#下载夜莺" class="headerlink" title="下载夜莺"></a>下载夜莺</h4><p>请在夜莺 <a target="_blank" rel="noopener" href="https://github.com/ccfos/nightingale">Github releases</a> [9] 页中选择合适的版本进行下载，这里我们采用的版本是<code>v7.0.0-beta.14</code>。如果你是 amd 架构的机器，可直接执行如下命令：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;home
+# 下载
+wget https:&#x2F;&#x2F;github.com&#x2F;ccfos&#x2F;nightingale&#x2F;releases&#x2F;download&#x2F;v7.0.0-beta.14&#x2F;n9e-v7.0.0-beta.14-linux-amd64.tar.gz
+mkdir -p &#x2F;home&#x2F;flashcat
+# 解压文件到 &#x2F;home&#x2F;flashcat 文件夹
+tar -xzf &#x2F;home&#x2F;n9e-v7.0.0-beta.14-linux-amd64.tar.gz -C &#x2F;home&#x2F;flashcat
+# 进入主目录
+cd &#x2F;home&#x2F;flashcat<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="配置依赖环境"><a href="#配置依赖环境" class="headerlink" title="配置依赖环境"></a>配置依赖环境</h4><p>夜莺依赖 MySQL 和 Redis，因此需要提前安装这两个环境。你可以通过 Docker 方式部署，也可以通过执行命令进行安装，参考命令如下：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># install mysql
+yum -y install mariadb*
+systemctl enable mariadb
+systemctl restart mariadb
+mysql -e &quot;SET PASSWORD FOR &#39;root&#39;@&#39;localhost&#39; &#x3D; PASSWORD(&#39;1234&#39;);&quot;
+
+# install redis
+yum install -y redis
+systemctl enable redis
+systemctl restart redis<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>这里 Redis 设置的是无密码的。并且这里指定 MySQL 数据库的密码为<code>1234</code>，<strong>如果你需要更改为其他的密码</strong>，要在夜莺的配置文件中进行配置，以保证夜莺能连接到你的数据库。修改夜莺配置文件：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vim &#x2F;home&#x2F;flashcat&#x2F;etc&#x2F;config.toml
+
+修改 [DB] 下的用户名和密码：
+[DB]
+# postgres: host&#x3D;%s port&#x3D;%s user&#x3D;%s dbname&#x3D;%s password&#x3D;%s sslmode&#x3D;%s
+# postgres: DSN&#x3D;&quot;host&#x3D;127.0.0.1 port&#x3D;5432 user&#x3D;root dbname&#x3D;n9e_v6 password&#x3D;1234 sslmode&#x3D;disable&quot;
+# sqlite: DSN&#x3D;&quot;&#x2F;path&#x2F;to&#x2F;filename.db&quot;
+DSN &#x3D; &quot;&#123;username&#125;:&#123;password&#125;@tcp(127.0.0.1:3306)&#x2F;n9e_v6?charset&#x3D;utf8mb4&amp;parseTime&#x3D;True&amp;loc&#x3D;Local&amp;allowNativePasswords&#x3D;true&quot;
+# enable debug mode or not<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="导入数据库表"><a href="#导入数据库表" class="headerlink" title="导入数据库表"></a>导入数据库表</h4><p>执行如下命令：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mysql -uroot -p1234 &lt; n9e.sql<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>请通过数据库工具检测是否成功导入数据库表：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| n9e_v6             |
++--------------------+
+
+&gt; show tables;
++-----------------------+
+| Tables_in_n9e_v6      |
++-----------------------+
+| alert_aggr_view       |
+| alert_cur_event       |
+| alert_his_event       |
+| alert_mute            |
+| alert_rule            |
+| alert_subscribe       |
+| alerting_engines      |
+| board                 |
+| board_busigroup       |
+| board_payload         |
+| builtin_cate          |
+| builtin_components    |
+| builtin_metrics       |
+······<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="修改夜莺配置文件"><a href="#修改夜莺配置文件" class="headerlink" title="修改夜莺配置文件"></a>修改夜莺配置文件</h4><p>你需要修改夜莺的配置文件，进行 Prometheus 数据源的设置：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vim &#x2F;home&#x2F;flashcat&#x2F;etc&#x2F;config.toml
+
+# 修改 [[Pushgw.Writers]] 部分的内容为
+[[Pushgw.Writers]]
+# Url &#x3D; &quot;http:&#x2F;&#x2F;127.0.0.1:8480&#x2F;insert&#x2F;0&#x2F;prometheus&#x2F;api&#x2F;v1&#x2F;write&quot;
+Url &#x3D; &quot;http:&#x2F;&#x2F;&#123;client_ip&#125;:9090&#x2F;api&#x2F;v1&#x2F;write&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="启动夜莺"><a href="#启动夜莺" class="headerlink" title="启动夜莺"></a>启动夜莺</h4><p>在夜莺的根目录 <code>/home/flashcat</code>下执行：<code>./n9e</code>。成功启动后，可在浏览器中访问 <code>http://&#123;client_ip&#125;:17000</code>，默认的登录账号和密码为：</p>
 <ul>
 <li><p>账号：<code>root</code></p>
@@ -449,7 +590,8 @@
 <p>同时你也可以自定义一些指标，并利用表达式对指标进行聚合：</p>
 <p><img src="/images/%E8%81%9A%E5%90%88.png"></p>
 <h3 id="警报功能"><a href="#警报功能" class="headerlink" title="警报功能"></a>警报功能</h3><p>选择左侧边栏警报 -&gt; 警报规则 -&gt; 新建规则。比如我们可以给 <code>kafka_network_io_bytes_total</code>设置报警，这个指标的意义是 Kafka Broker 节点通过网络发送或接收的字节总数，通过对这个指标设置表达式，就能够计算 Kafka Broker 节点的入站网络 I&#x2F;O 速率。表达式为：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-none"><code class="language-none">sum by(job, instance) (rate(kafka_network_io_bytes_total&#123;direction&#x3D;&quot;in&quot;&#125;[1m]))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>设置警报规则：</p>
 <p><img src="/images/alertrule.png"></p>
 <p>Data preview：</p>
@@ -457,7 +599,77 @@
 <p>同时你也可以设置发生警报时会通知到的群组：</p>
 <p><img src="/images/group.png"></p>
 <p>创建完告警后，让我们来模拟高并发的消息处理场景：短时间内总共<code>2500000</code>条消息被发送到 AutoMQ 节点，我采用的方式是通过 Kafka SDK 的方式进行消息发送，一次共 50 个 Topic ，给每个 Topic 发送 500 条消息，共 100 次。示例如下：</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class KafkaTest &#123;
+
+    private static final String BOOTSTRAP_SERVERS &#x3D; &quot;http:&#x2F;&#x2F;&#123;&#125;:9092&quot;; &#x2F;&#x2F; your automq broker ip
+    private static final int NUM_TOPICS &#x3D; 50;
+    private static final int NUM_MESSAGES &#x3D; 500;
+
+    public static void main(String[] args) throws Exception &#123;
+        KafkaTest test &#x3D; new KafkaTest();
+        &#x2F;&#x2F; test.createTopics();    &#x2F;&#x2F; create 50 topics
+        for(int i &#x3D; 0; i &lt; 100; i++)&#123;
+            test.sendMessages();   &#x2F;&#x2F; 25,000 messages will be sent each time, and 500 messages will be sent to each of 50 topics.
+        &#125;
+    &#125;
+    
+    public void createTopics() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+
+        try (AdminClient adminClient &#x3D; AdminClient.create(props)) &#123;
+            List&lt;NewTopic&gt; topics &#x3D; new ArrayList&lt;&gt;();
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                topics.add(new NewTopic(&quot;Topic-&quot; + i, 1, (short) 1));
+            &#125;
+            adminClient.createTopics(topics).all().get();
+            System.out.println(&quot;Topics created successfully&quot;);
+        &#125; catch (InterruptedException | ExecutionException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+
+    public void sendMessages() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        try (KafkaProducer&lt;String, String&gt; producer &#x3D; new KafkaProducer&lt;&gt;(props)) &#123;
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                String topic &#x3D; &quot;Topic-&quot; + i;
+                for (int j &#x3D; 1; j &lt;&#x3D; NUM_MESSAGES; j++) &#123;
+                    String key &#x3D; &quot;key-&quot; + j;
+                    String value &#x3D; &quot;&#123;\&quot;userId\&quot;: &quot; + j + &quot;, \&quot;action\&quot;: \&quot;visit\&quot;, \&quot;timestamp\&quot;: &quot; + System.currentTimeMillis() + &quot;&#125;&quot;;
+                    ProducerRecord&lt;String, String&gt; record &#x3D; new ProducerRecord&lt;&gt;(topic, key, value);
+                    producer.send(record, (RecordMetadata metadata, Exception exception) -&gt; &#123;
+                        if (exception &#x3D;&#x3D; null) &#123;
+                            System.out.printf(&quot;Sent message to topic %s partition %d with offset %d%n&quot;, metadata.topic(), metadata.partition(), metadata.offset());
+                        &#125; else &#123;
+                            exception.printStackTrace();
+                        &#125;
+                    &#125;);
+                &#125;
+            &#125;
+            System.out.println(&quot;Messages sent successfully&quot;);
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>随后我们可以在夜莺控制台看到报警信息：</p>
 <p><img src="/images/alert2.png"></p>
 <p>告警详细信息：</p>
@@ -1173,7 +1385,7 @@
         class="fas fa-chart-area"
       ></i
       >&nbsp;站点总字数:&nbsp;<span class="white-color"
-        >69.4k</span
+        >70.4k</span
       >
         
       <script
