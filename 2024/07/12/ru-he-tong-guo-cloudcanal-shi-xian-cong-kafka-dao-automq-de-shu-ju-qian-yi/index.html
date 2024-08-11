@@ -1,0 +1,1624 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="如何通过 CloudCanal 实现从 Kafka 到 AutoMQ 的数据迁移, KTpro">
+    <meta name="description" content="前言实习过程中，接触到了 Kafka 数据迁移，了解到了好多的数据迁移工具，比如 CloudCanal，DataX等。其实我觉得这些对于开发人员来说也是要会的一件事，因为我们自己开发过程中可能会用到将数据从 Mysql 直接同步到消息队列的">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>如何通过 CloudCanal 实现从 Kafka 到 AutoMQ 的数据迁移 | KTpro</title>
+    <link rel="icon" type="image/png" href="/medias/logoofmine.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logoofmine.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">KTpro</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logoofmine.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">KTpro</div>
+        <div class="logo-desc">
+            
+            你好呀！欢迎访问我的小破站
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">如何通过 CloudCanal 实现从 Kafka 到 AutoMQ 的数据迁移</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/AutoMQ/">
+              <span class="chip bg-color">AutoMQ</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/AutoMQ/" class="post-category">
+              AutoMQ
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="post-info">
+        
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2024-07-12
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2024-07-12
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 3.6k
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          15 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
+        
+      </div>
+    </div>
+    <hr class="clearfix" />
+
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
+
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>实习过程中，接触到了 Kafka 数据迁移，了解到了好多的数据迁移工具，比如 CloudCanal，DataX等。<br>其实我觉得这些对于开发人员来说也是要会的一件事，因为我们自己开发过程中可能会用到将数据从 Mysql 直接同步到消息队列的Topic中，也就是直接模拟日志入队来验证某些功能是否能正常工作，提前发现问题，并且呢这类迁移数据的工具非常的多，且支持很多的源数据源和目标数据源，能解决我们大多数的数据迁移问题。</p>
+<p>所以顺便写了篇文档，希望也能对你有所帮助！</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h2><p>随着大数据技术的飞速发展，Apache Kafka 作为一种高吞吐量、低延迟的分布式消息系统，已经成为企业实时数据处理的核心组件。然而，随着业务的扩展和技术的发展，企业面临着不断增加的存储成本和运维复杂性问题。为了更好地优化系统性能和降低运营成本，企业开始寻找更具优势的消息系统解决方案。其中，<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/HSiEwHVfdiO7rWk34vKcVvcvn2Z">AutoMQ</a> [1] 作为一种基于云重新设计的消息系统，凭借其显著的成本优势和弹性能力，成为了企业的理想选择。</p>
+<h3 id="AutoMQ-概述"><a href="#AutoMQ-概述" class="headerlink" title="AutoMQ 概述"></a><strong>AutoMQ 概述</strong></h3><p>AutoMQ 基于云重新设计了 Kafka，将存储分离至对象存储，在保持与 Apache Kafka 100% 兼容的前提下，为用户提供高达10倍的成本优势和百倍的弹性优势。AutoMQ 通过构建在S3上的流存储库 S3Stream，将存储卸载至云厂商提供的共享云存储 EBS 和 S3，提供低成本、低延时、高可用、高可靠和无限容量的流存储能力。与传统的Shared Nothing 架构相比，AutoMQ 采用了 Shared Storage 架构，显著降低了存储和运维的复杂性，同时提升了系统的弹性和可靠性。</p>
+<p>AutoMQ 的设计理念和技术优势使其成为替换企业现有 Kafka 集群的理想选择。通过采用 AutoMQ，企业可以显著降低存储成本，简化运维，并实现集群的自动扩缩容和流量自平衡，从而更高效地应对业务需求的变化。</p>
+<p><img src="/images/a3128234-2cc4-4e0a-9561-2f8c5654e2ec.gif"></p>
+<h3 id="CloudCanal-概述"><a href="#CloudCanal-概述" class="headerlink" title="CloudCanal 概述"></a><strong>CloudCanal 概述</strong></h3><p><a target="_blank" rel="noopener" href="https://www.clougence.com/?src=cc-doc">CloudCanal</a> [2] 是一款数据同步、迁移工具，帮助企业构建高质量数据管道，具备实时高效、精确互联、稳定可拓展、一站式、混合部署、复杂数据转换等优点。CloudCanal 支持数据迁移、数据同步、结构迁移和同步、数据校验和订正等功能，能够满足企业在数据管理过程中对于数据质量和稳定性的高要求。通过消费源端数据源的增量操作日志，CloudCanal 可以准实时地在对端数据源重放操作，以达到数据同步的目的。</p>
+<h3 id="数据迁移的必要性"><a href="#数据迁移的必要性" class="headerlink" title="数据迁移的必要性"></a><strong>数据迁移的必要性</strong></h3><p>在企业的日常运营中，数据系统的升级和迁移是不可避免的。例如，当企业的电商平台面临流量激增和数据量爆炸式增长时，现有的 Kafka 集群可能无法满足需求，导致性能瓶颈和存储成本的显著增加。为了应对这些挑战，企业可能决定迁移到更具成本效益和弹性的 AutoMQ 系统。</p>
+<p>在这种迁移过程中，全量同步和增量同步都是关键步骤。全量同步可以将 Kafka 中的所有现有数据迁移到 AutoMQ，确保基础数据的完整性。增量同步则在全量同步完成后，实时捕捉和同步 Kafka 中的新增和变更数据，确保在迁移过程中，两个系统之间的数据保持一致。接下来，我将以增量同步为例，详细介绍如何使用 CloudCanal 实现从 Kafka 到 AutoMQ 的数据迁移，确保数据在迁移过程中保持一致和完整。</p>
+<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>在进行数据迁移之前，需要确保以下前提条件已经满足。本文将以一个 Kafka 节点和一个 AutoMQ 节点为例，演示增量同步的过程。</p>
+<ol>
+<li><p><strong>Kafka</strong> <strong>节点</strong>：一个已部署并运行的 Kafka 节点，确保 Kafka 节点能够正常接收和处理消息，Kafka节点的网络配置允许与 CloudCanal 服务通信。</p>
+</li>
+<li><p><strong>AutoMQ 节点</strong>：一个已部署并运行的 AutoMQ 节点，确保 AutoMQ 节点能够正常接收和处理消息，AutoMQ 节点的网络配置允许与 CloudCanal 服务通信。</p>
+</li>
+<li><p><strong>CloudCanal 服务</strong>: 已部署和配置好的 CloudCanal 服务。</p>
+</li>
+</ol>
+<h2 id="部署-AutoMQ、kafka-以及-CloudCanal"><a href="#部署-AutoMQ、kafka-以及-CloudCanal" class="headerlink" title="部署 AutoMQ、kafka 以及 CloudCanal"></a>部署 AutoMQ、kafka 以及 CloudCanal</h2><h3 id="部署-AutoMQ"><a href="#部署-AutoMQ" class="headerlink" title="部署 AutoMQ"></a>部署 AutoMQ</h3><p>参考 AutoMQ 官网文档: <a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g">QuickStart | AutoMQ</a> [3]</p>
+<h3 id="部署-Kafka"><a href="#部署-Kafka" class="headerlink" title="部署 Kafka"></a>部署 Kafka</h3><p>参考 Apache Kafka 官方文档：<a target="_blank" rel="noopener" href="https://kafka.apache.org/quickstart">QuickStart | Kafka</a> [4]</p>
+<h3 id="部署-CloudCanal"><a href="#部署-CloudCanal" class="headerlink" title="部署 CloudCanal"></a>部署 CloudCanal</h3><h4 id="安装与启动"><a href="#安装与启动" class="headerlink" title="安装与启动"></a>安装与启动</h4><ol>
+<li>安装基础工具</li>
+</ol>
+<pre class="line-numbers language-YAML" data-language="YAML"><code class="language-YAML">## ubuntu
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+sudo apt-get install -y lsof
+sudo apt-get install -y bc
+sudo apt-get install -y p7zip-full<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol start="2">
+<li>下载安装包</li>
+</ol>
+<p>登录 <a target="_blank" rel="noopener" href="https://www.clougence.com/?src=cc-doc-install-linux">CloudCanal 官方网站</a> [5]，点击下载私有部署版按钮，获取软件包下载链接。下载并解压到文件夹<code>/opt/</code></p>
+<pre class="line-numbers language-Bash" data-language="Bash"><code class="language-Bash">cd &#x2F;opt
+# 下载
+wget -cO cloudcanal.7z &quot;$&#123;软件包下载链接&#125;&quot;
+# 解压
+7z x cloudcanal.7z -o.&#x2F;cloudcanal_home
+cd cloudcanal_home&#x2F;install_on_docker<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>install_on_docker</code>目录内容包括</p>
+<ul>
+<li><strong>镜像</strong>: images 目录下四个 tar 结尾的压缩文件</li>
+<li><strong>docker 容器编排文件</strong>: docker-compose.yml 文件</li>
+<li><strong>脚本</strong>：一些管理 CloudCanal 容器以及维护的脚本</li>
+</ul>
+<ol start="3">
+<li>准备 Docker 环境</li>
+</ol>
+<p>请确保以下端口未被占用</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>组件</td>
+<td>端口</td>
+<td>用途</td>
+</tr>
+<tr>
+<td>cloudcanal-mysql</td>
+<td>25000</td>
+<td>元数据库 mysql 对外映射端口</td>
+</tr>
+<tr>
+<td>cloudcanal-prometheus</td>
+<td>19090</td>
+<td>prometheuse 监控指标查询端口</td>
+</tr>
+<tr>
+<td>cloudcanal-console</td>
+<td>7007</td>
+<td>console 和 sidecar 通信端口</td>
+</tr>
+<tr>
+<td>cloudcanal-console</td>
+<td>8111</td>
+<td>console web控制台端口</td>
+</tr>
+<tr>
+<td>cloudcanal-sidecar</td>
+<td>18787</td>
+<td>任务 debug 端口（e.g.,自定义代码 debug）</td>
+</tr>
+</tbody></table>
+<p>如果你没有 docker 和 docker compose 环境，可参考 <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">Docker 官方文档</a> [6] (版本 <strong>17.x.x</strong> 及以上)。也可直接使用目录中提供的脚本进行安装：</p>
+<pre class="line-numbers language-YAML" data-language="YAML"><code class="language-YAML">## ubuntu,进入 install_on_docker 目录
+bash .&#x2F;support&#x2F;install_ubuntu_docker.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ol start="4">
+<li>启动 CloudCanal，执行安装脚本以启动：</li>
+</ol>
+<pre class="line-numbers language-YAML" data-language="YAML"><code class="language-YAML">## ubuntu
+bash install.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>出现如下标识即安装成功<br><img src="/images/sucess.png"></p>
+<h4 id="激活-CloudCanal"><a href="#激活-CloudCanal" class="headerlink" title="激活 CloudCanal"></a>激活 CloudCanal</h4><p>安装成功后，你可以通过 <code>http://&#123;ip&#125;:8111</code> 在浏览器中访问 CloudCanal 的控制台。注意，如果无法正常访问页面，可以尝试通过脚本更新当前 CloudCanal 的版本，可使用如下命令：</p>
+<pre class="line-numbers language-YAML" data-language="YAML"><code class="language-YAML"># 进入安装目录
+cd &#x2F;opt&#x2F;cloudcanal_home&#x2F;install_on_docker
+# 停止当前 CloudCanal
+sudo bash stop.sh
+# 更新并启动新的 CloudCanal
+sudo bash upgrade.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol>
+<li>进入登录界面后，通过试用账号登录<ul>
+<li>账号: <code>test@clougence.com</code></li>
+<li>密码: <code>clougence2021</code></li>
+<li>默认验证码: 777777</li>
+</ul>
+</li>
+<li>登录成功，需要激活 CloudCanal 账号即可正常使用。申请免费许可证并激活: <a target="_blank" rel="noopener" href="https://www.clougence.com/cc-doc/license/license_use">许可证获取 | CloudCanal</a> [7]，激活成功后，主界面状态为：<br><img src="/images/home.png"></li>
+</ol>
+<h2 id="数据迁移过程"><a href="#数据迁移过程" class="headerlink" title="数据迁移过程"></a>数据迁移过程</h2><h3 id="准备源端-Kafka-数据"><a href="#准备源端-Kafka-数据" class="headerlink" title="准备源端 Kafka 数据"></a>准备源端 Kafka 数据</h3><p>可以选择如下方式：</p>
+<ul>
+<li><p>CloudCanal 提供的 Mysql-&gt;Kafka 数据同步过程，参考：<a target="_blank" rel="noopener" href="https://www.clougence.com/cc-doc/bestPractice/mysql_kafka_sync">MySQL 到 Kafka 同步 | CloudCanal</a> [8]</p>
+</li>
+<li><p>通过 Kafka SDK 准备数据</p>
+</li>
+<li><p>通过 Kafka 提供的脚本手动生产消息</p>
+</li>
+</ul>
+<p>这里我将通过 Kafka SDK 的方式进行数据准备，下面是参考代码：</p>
+<pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class KafkaTest &#123;
+
+    private static final String BOOTSTRAP_SERVERS &#x3D; &quot;$&#123;kafka_broker_ip:port&#125;&quot;; &#x2F;&#x2F;修改为你自己的 Kafka 节点地址
+    private static final int NUM_TOPICS &#x3D; 50;
+    private static final int NUM_MESSAGES &#x3D; 500;
+
+    public static void main(String[] args) throws Exception &#123;
+        KafkaTest test &#x3D; new KafkaTest();
+        test.createTopics();
+        test.sendMessages();
+    &#125;
+    
+    &#x2F;&#x2F; 创建50个 Topic，格式为 Topic-n
+    public void createTopics() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+
+        try (AdminClient adminClient &#x3D; AdminClient.create(props)) &#123;
+            List&lt;NewTopic&gt; topics &#x3D; new ArrayList&lt;&gt;();
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                topics.add(new NewTopic(&quot;Topic-&quot; + i, 1, (short) 1));
+            &#125;
+            adminClient.createTopics(topics).all().get();
+            System.out.println(&quot;Topics created successfully&quot;);
+        &#125; catch (InterruptedException | ExecutionException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+    &#x2F;&#x2F; 为50个 Topic-n 分别发送序号从1到1000共一千条消息，消息格式为 Json格式
+    public void sendMessages() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        try (KafkaProducer&lt;String, String&gt; producer &#x3D; new KafkaProducer&lt;&gt;(props)) &#123;
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                String topic &#x3D; &quot;Topic-&quot; + i;
+                for (int j &#x3D; 1; j &lt;&#x3D; NUM_MESSAGES; j++) &#123;
+                    String key &#x3D; &quot;key-&quot; + j;
+                    String value &#x3D; &quot;&#123;\&quot;userId\&quot;: &quot; + j + &quot;, \&quot;action\&quot;: \&quot;visit\&quot;, \&quot;timestamp\&quot;: &quot; + System.currentTimeMillis() + &quot;&#125;&quot;;
+                    ProducerRecord&lt;String, String&gt; record &#x3D; new ProducerRecord&lt;&gt;(topic, key, value);
+                    producer.send(record, (RecordMetadata metadata, Exception exception) -&gt; &#123;
+                        if (exception &#x3D;&#x3D; null) &#123;
+                            System.out.printf(&quot;Sent message to topic %s partition %d with offset %d%n&quot;, metadata.topic(), metadata.partition(), metadata.offset());
+                        &#125; else &#123;
+                            exception.printStackTrace();
+                        &#125;
+                    &#125;);
+                &#125;
+            &#125;
+            System.out.println(&quot;Messages sent successfully&quot;);
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>创建完成后，可以通过各种可视化工具查看 Kafka 节点状态，比如 <a target="_blank" rel="noopener" href="https://redpanda.com/redpanda-console-kafka-ui">Redpanda Console</a> [9]、<a target="_blank" rel="noopener" href="https://github.com/obsidiandynamics/kafdrop">Kafdrop</a> [10] 等。这里我选择 Redpanda Console，可以看到当前已经有了 50 个Topic，并且每个 Topic 下有500条初始消息。<br><img src="/images/50.png"></p>
+<p>其中消息的格式为 Json：</p>
+<pre class="line-numbers language-JSON" data-language="JSON"><code class="language-JSON">&#123;
+    &quot;action&quot;: &quot;INSERT&#x2F;UPDATE&#x2F;DELETE&quot;,
+    &quot;bid&quot;: 1,
+    &quot;before&quot;: [],
+    &quot;data&quot;: [&#123;
+        &quot;id&quot;:&quot;string data&quot;,
+        &quot;username&quot;:&quot;string data&quot;,
+        &quot;user_id&quot;:&quot;string data&quot;,
+        &quot;ip&quot;:&quot;string data&quot;,
+        &quot;request_time&quot;:&quot;1608782968300&quot;,&quot;request_type&quot;:&quot;string data&quot;&#125;],
+    &quot;db&quot;: &quot;access_log_db&quot;,
+    &quot;schema&quot;: &quot;&quot;,
+    &quot;table&quot;:&quot;access_log&quot;,
+    &quot;dbValType&quot;: &#123;
+        &quot;id&quot;:&quot;INT&quot;,
+        &quot;username&quot;:&quot;VARCHAR&quot;,
+        &quot;user_id&quot;:&quot;INT&quot;,
+        &quot;ip&quot;:&quot;VARCHAR&quot;,
+        &quot;request_time&quot;:&quot;TIMESTAMP&quot;,
+        &quot;request_type&quot;:&quot;VARCHAR&quot;,&#125;,
+    &quot;jdbcType&quot;: &#123;
+        &quot;id&quot;:&quot;0&quot;,
+        &quot;username&quot;:&quot;0&quot;,
+        &quot;user_id&quot;:&quot;0&quot;,
+        &quot;ip&quot;:&quot;0&quot;,
+        &quot;request_time&quot;:&quot;0&quot;,
+        &quot;request_type&quot;:&quot;0&quot;,&#125;,
+    &quot;entryType&quot;: &quot;ROWDATA&quot;,
+    &quot;isDdl&quot;: false,
+    &quot;pks&quot;: [&quot;id&quot;],
+    &quot;execTs&quot;: 0,
+    &quot;sendTs&quot;: 0,
+    &quot;sql&quot;: &quot;&quot;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>并且，AutoMQ 节点当前并无任何数据：<br><img src="/images/automq.png"></p>
+<h3 id="添加-CloudCanal-数据源"><a href="#添加-CloudCanal-数据源" class="headerlink" title="添加 CloudCanal 数据源"></a>添加 CloudCanal 数据源</h3><p>CloudCanal 界面上方 数据源管理 -&gt; 新增数据源<br><img src="/images/datasource.png"></p>
+<p>同理增加 Kafka 数据源，并对两个节点都进行连接测试，可以得到如下结果：<br><img src="/images/23.png"></p>
+<h3 id="创建数据迁移任务"><a href="#创建数据迁移任务" class="headerlink" title="创建数据迁移任务"></a>创建数据迁移任务</h3><ol>
+<li><p>CloudCanal 界面上方 同步任务-&gt;创建任务<br><img src="/images/task.png"></p>
+</li>
+<li><p>选择任务规格，这取决于你需要迁移的数据量大小：<br><img src="/images/2-2.png"></p>
+</li>
+<li><p>选择需要进行数据迁移的 Topics：<br><img src="/images/topic.png"></p>
+</li>
+<li><p>任务确定<br><img src="/images/task2.png"></p>
+</li>
+<li><p>任务创建完成后默认自动启动，会跳转到任务列表，你还需要更改源数据源配置以开启心跳配置，能及时更新任务状态，步骤为 任务详情-&gt;源数据源配置-&gt;修改配置-&gt;生效配置：<br><img src="/images/5-2.png"></p>
+</li>
+<li><p>随后等待任务重启完成，即可看到如下情况：<br><img src="/images/6-1.png"></p>
+</li>
+<li><p>验证 AutoMQ 中是否已经正确创建了 Topic 结构<br><img src="/images/7-1.png"></p>
+</li>
+</ol>
+<h3 id="准备增量数据"><a href="#准备增量数据" class="headerlink" title="准备增量数据"></a>准备增量数据</h3><p>任务已经正常运行，接下来我们需要准备增量数据，使得迁移任务能够将增量数据同步到 AutoMQ。这里我们仍然通过 Kafka SDK 新增数据。新增数据之后，我们可以通过 <strong>任务详情-&gt;增量同步-&gt;查看日志-&gt;任务运行日志</strong> 中查看任务执行情况：</p>
+<pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">2024-07-11 17:16:45.995 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.995 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.996 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.996 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.996 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.997 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.997 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.997 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.998 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.998 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.998 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64
+2024-07-11 17:16:45.999 [incre-fetch-from-buffer-14-thd-0] INFO  c.c.c.mq.worker.reader.kafka.KafkaIncreEventBroker - getWithoutAck successfully, batch:64, real:64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="验证迁移结果"><a href="#验证迁移结果" class="headerlink" title="验证迁移结果"></a>验证迁移结果</h2><p>验证AutoMQ是否正确同步到消息：<br><img src="/images/11-1.png"></p>
+<p><img src="/images/12-1.png"></p>
+<p>多次新增数据后依旧正常完成迁移：<br><img src="/images/13.png"></p>
+<p>可以看到在增量同步任务执行期间对 Kafka 新增的数据都已经同步到了 AutoMQ 中。至此，我们的迁移过程已经全部完成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>随着企业数据规模的不断扩大和业务需求的多样化，数据迁移和同步变得尤为重要。通过本文的介绍，我们详细探讨了如何利用 CloudCanal 实现从 Kafka 到 AutoMQ 的增量同步数据迁移，以应对存储成本和运维复杂性的问题。在迁移过程中，增量同步技术确保了数据的一致性和业务的连续性，为企业提供了一个高效、可靠的解决方案。</p>
+<p>希望本文能够为你在数据迁移和同步方面提供有价值的参考和指导，帮助实现系统的平滑过渡和性能优化!</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>[1] AutoMQ: <a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/HSiEwHVfdiO7rWk34vKcVvcvn2Z">https://docs.automq.com/zh/docs/automq-opensource/HSiEwHVfdiO7rWk34vKcVvcvn2Z</a><br>[2] CloudCanal: <a target="_blank" rel="noopener" href="https://www.clougence.com/?src=cc-doc">https://www.clougence.com/?src=cc-doc</a><br>[3] QuickStart | AutoMQ: <a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g">https://docs.automq.com/zh/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g</a><br>[4] QuickStart | Kafka: <a target="_blank" rel="noopener" href="https://kafka.apache.org/quickstart">https://kafka.apache.org/quickstart</a><br>[5] CloudCanal 官方网站: <a target="_blank" rel="noopener" href="https://www.clougence.com/?src=cc-doc-install-linux">https://www.clougence.com/?src=cc-doc-install-linux</a><br>[6] Docker 官方文档: <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">https://docs.docker.com/engine/install/</a><br>[7] 许可证获取 | CloudCanal: <a target="_blank" rel="noopener" href="https://www.clougence.com/cc-doc/license/license_use">https://www.clougence.com/cc-doc/license/license_use</a><br>[8] MySQL 到 Kafka 同步 | CloudCanal: <a target="_blank" rel="noopener" href="https://www.clougence.com/cc-doc/bestPractice/mysql_kafka_sync">https://www.clougence.com/cc-doc/bestPractice/mysql_kafka_sync</a><br>[9] Redpanda Console: <a target="_blank" rel="noopener" href="https://redpanda.com/redpanda-console-kafka-ui">https://redpanda.com/redpanda-console-kafka-ui</a><br>[10] Kafdrop: <a target="_blank" rel="noopener" href="https://github.com/obsidiandynamics/kafdrop">https://github.com/obsidiandynamics/kafdrop</a><br>[11] FAQ 索引 | CloudCanal: <a target="_blank" rel="noopener" href="https://www.clougence.com/cc-doc/faq/cloudcanal_faq_list">https://www.clougence.com/cc-doc/faq/cloudcanal_faq_list</a></p>
+ 
+      </div>
+      <hr />
+
+      
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">KTpro</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://example.com/2024/07/12/ru-he-tong-guo-cloudcanal-shi-xian-cong-kafka-dao-automq-de-shu-ju-qian-yi/">http://example.com/2024/07/12/ru-he-tong-guo-cloudcanal-shi-xian-cong-kafka-dao-automq-de-shu-ju-qian-yi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">KTpro</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/AutoMQ/">
+              <span class="chip bg-color">AutoMQ</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+        </div>
+      </div>
+       <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的认可是我前进的动力！</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+ 
+    </div>
+  </div>
+
+       <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '10qGqhzFmq9j8dAQmPyXKA0M-gzGzoHsz',
+        appKey: 'E4NvM3qSDAgTYtSIx2yMBOzF',
+        serverURLs: '',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'any commits！'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+       
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2024/07/13/hen-kai-xin-huan-diao-nacos-hou-fu-wu-qi-nei-cun-sheng-xia-hen-duo/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="很开心，换掉 Nacos 后服务器内存省下很多！">
+                        
+                        <span class="card-title">很开心，换掉 Nacos 后服务器内存省下很多！</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-07-13
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E9%A1%B9%E7%9B%AE/" class="post-category">
+                                    项目
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%A1%B9%E7%9B%AE%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">项目优化</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2024/07/06/ru-he-tong-guo-san-chong-fang-shi-bu-shu-redpanda/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="如何通过三种方式部署 Redpanda？">
+                        
+                        <span class="card-title">如何通过三种方式部署 Redpanda？</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            KTpro
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Redpanda/">
+                        <span class="chip bg-color">Redpanda</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+ <!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+   
+    <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8785731632"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script> 
+  
+
+  <div class="container row center-align" style="margin-bottom: 15px !important;">
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year">2021-2024</span>
+      
+      <a href="/about" target="_blank">KTpro</a>
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+
+      <br />
+       
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">70.4k</span>
+       
+       
+      
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+          <span id="busuanzi_container_site_pv" style="display: inline" class="white-color">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+         
+        
+          <span id="busuanzi_container_site_uv" style="display: inline" class="white-color">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+         
+      
+      <br />
+
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(startYear, startMonth - 1, startDate, startHour, startMinute, startSecond); // 修正月份减1
+          var t2 = Date.UTC(todayYear, todayMonth - 1, todayDate, todayHour, todayMinute, todaySecond); // 修正月份减1
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor((diff % years) / days); // 修正天数计算
+
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip = "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+            var yearsAndDaysTip = "This site has been running for " + diffYears + " years and " + diffDays + " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip = "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip = "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
+    <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:3185633428@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3185633428" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 3185633428" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+
+</html>

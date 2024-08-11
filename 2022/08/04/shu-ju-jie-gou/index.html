@@ -1,0 +1,2330 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="ACWing数据结构, KTpro">
+    <meta name="description" content="数据结构单链表
+本部分用数组模拟单链表 
+几个常用的操作，初始化，删除下标为k-1的元素，在头结点插入元素，在下标为k-1的元素后面插入一个元素 。
+
+
+模板：
+&amp;#x2F;&amp;#x2F; head存储链表头，e[]存储节点的值，ne[]存储">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>ACWing数据结构 | KTpro</title>
+    <link rel="icon" type="image/png" href="/medias/logoofmine.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logoofmine.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">KTpro</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logoofmine.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">KTpro</div>
+        <div class="logo-desc">
+            
+            你好呀！欢迎访问我的小破站
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ACWing数据结构</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E7%AE%97%E6%B3%95/">
+              <span class="chip bg-color">算法</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-category">
+              数据结构
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="post-info">
+        
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2022-08-04
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2023-09-11
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 8.2k
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          37 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
+        
+      </div>
+    </div>
+    <hr class="clearfix" />
+
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
+
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><blockquote>
+<p>本部分用数组模拟<code>单链表</code> </p>
+<p>几个常用的操作，初始化，删除下标为k-1的元素，在头结点插入元素，在下标为k-1的元素后面插入一个元素 。</p>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\marktext\images\2023-01-10-22-04-52-image.png"></p>
+<blockquote>
+<p>模板：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F; head存储链表头，e[]存储节点的值，ne[]存储节点的next指针，idx表示当前用到了哪个节点
+int head, e[N], ne[N], idx;
+
+&#x2F;&#x2F; 初始化
+void init()
+&#123;
+    head &#x3D; -1;
+    idx &#x3D; 0;
+&#125;
+
+&#x2F;&#x2F; 在链表头插入一个数a
+void add_head(int a)
+&#123;
+    e[idx] &#x3D; a, ne[idx] &#x3D; head, head &#x3D; idx ++ ;
+&#125;
+
+&#x2F;&#x2F;在下标为k-1的元素后插入一个元素
+void insert(int k,int x)
+&#123;
+    e[idx]&#x3D;x;
+    ne[idx]&#x3D;ne[k];
+    ne[k]&#x3D;idx;
+    idx++;
+&#125;
+
+&#x2F;&#x2F; 将头结点删除，需要保证头结点存在
+void remove()
+&#123;
+    head &#x3D; ne[head];
+&#125;
+&#x2F;&#x2F;如果删除头结点，即：k为0时，直接head&#x3D;ne[head]即可，需要特判<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+</blockquote>
+<p>题目链接[单链表](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/828/">826. 单链表 - AcWing题库</a>)</p>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;数组模拟单链表      常用于：邻接表存储图和树
+
+#include&lt;bits&#x2F;stdc++.h&gt;
+using namespace std;
+const int N &#x3D;100010;
+
+&#x2F;&#x2F;head表示头指针，e存元素值，ne存next指针，idx指向当前操作的结点
+int e[N],ne[N],idx,head;
+
+&#x2F;&#x2F;初始化
+void init() &#123;
+    head&#x3D;-1;   &#x2F;&#x2F;头指针指向空
+    idx&#x3D;0;     表示从第一个结点开始使用
+&#125;
+
+&#x2F;&#x2F;插入到头结点位置
+void add_head(int x) &#123;
+    e[idx]&#x3D;x;         待插入结点的准备
+    ne[idx]&#x3D;head;
+    head&#x3D;idx;        头指针重新指向头结点
+    idx++;           开始处理下一个位置
+&#125;
+
+&#x2F;&#x2F;将元素插入到下标为k的后面  即：在idx下标为k-1的点的后面加一个元素
+void add(int k,int x) &#123;
+
+    e[idx]&#x3D;x;            idx在每次插入后都会后移到最后一个元素的下一个位置，所以不用担心会误修改
+    ne[idx]&#x3D;ne[k];       先指向k的下一个结点，前面再接上k
+    ne[k]&#x3D;idx;
+    idx++;
+
+&#125;
+
+&#x2F;&#x2F;删除下标为k的点的后一个点  即：删除idx下标为k-1的点
+void del(int k) &#123;
+    ne[k]&#x3D;ne[ne[k]];
+&#125;
+
+注意idx就算插入元素后再删除该元素，idx也不会回溯，而是一直往后，这样就完成了题目要求的第k个数（第k个插入的数）
+
+int main() &#123;
+    int m;
+    cin&gt;&gt;m;
+
+    init(); &#x2F;&#x2F;初始化
+    while(m--) &#123;
+        int k,x;
+        char c;
+        cin&gt;&gt;c;
+        if(c&#x3D;&#x3D;&#39;H&#39;) &#123;
+            cin&gt;&gt;x;
+            add_head(x);
+        &#125; else if(c&#x3D;&#x3D;&#39;D&#39;) &#123;
+            cin&gt;&gt;k;
+            if(!k)  head&#x3D;ne[head];    特判，当删除头结点时，head指针直接指向头结点的下一个指针即可
+            del(k-1);
+        &#125; else if(c&#x3D;&#x3D;&#39;I&#39;) &#123;
+            cin&gt;&gt;k&gt;&gt;x;
+            add(k-1,x);
+        &#125;
+    &#125;
+    &#x2F;&#x2F;遍历，从头结点开始走
+    for(int i&#x3D;head; i!&#x3D;-1; i&#x3D;ne[i]) &#123;
+        cout&lt;&lt;e[i]&lt;&lt;&quot; &quot;;
+    &#125;
+    cout&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="双链表"><a href="#双链表" class="headerlink" title="双链表"></a>双链表</h3><blockquote>
+<p>    为省事，将存放元素的数组e的0和1下标对应位置分别存放头和尾指针，这样的话<strong>idx就从2开始存元素，因此第k个插入的元素下标对应k+1</strong> .这点要谨记。</p>
+<p> 模板：</p>
+<blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;e存元素value，l存左指针，r存右指针,idx指向当前操作结点
+int e[N],l[N],r[N],idx;
+
+&#x2F;&#x2F;初始化
+void init()&#123;
+    &#x2F;&#x2F;为省事，0表示左端点head，1表示右端点tail
+    r[0]&#x3D;1; l[1]&#x3D;0;   两端点head和tail分别为对方的左右指针,形成初始闭环
+    idx&#x3D;2;            0和1已经用于头尾指针了，从2开始存元素
+&#125;
+
+&#x2F;&#x2F;在下标为k的点的右边插入一个数x
+void add(int k,int x)&#123;
+    e[idx]&#x3D;x;
+
+    &#x2F;&#x2F;改四条指针的指向
+    l[idx]&#x3D;k;           将新结点的左指针指向k
+    r[idx]&#x3D;r[k];        将当前元素的右指针指向k的下一个元素
+    l[r[k]]&#x3D;idx;        将原本k右边的数的左指针指向新插入的结点
+    r[k]&#x3D;idx;
+    idx++;
+
+&#125;
+&#x2F;&#x2F;如果在k的左边插入一个点，可以直接调用add([l[k]]) ;  即：在k的前一个元素的右边插入一个元素
+
+&#x2F;&#x2F;删除第k个元素
+void remove(int k)&#123;
+    &#x2F;&#x2F;令其左边的元素的右指针指向其右边的元素，将右边的元素的左指针指向其左边的元素
+    r[l[k]]&#x3D;r[k];
+    l[r[k]]&#x3D;l[k];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>其中需要注意的是：</p>
+<p>1.插入操作函数，默认为在下标为k+1的元素的右边插入一个元素，如果需要在其左侧插入一个元素，使用&lt;add(l[k+1]);&gt;即在其左边的数的右边插入该数。</p>
+<p>2.元素从2开始存，所以第k个插入的数的下标对应k+1，如果将尾指针放在数组尾部，其实可以实现k下标对应k，但是废空间，可以视情况而定（待元素个数很多时，将尾指针定义到尾部）</p>
+<p>3.插入元素到左右端，也是可以根据关系在0的右边和1的左边插入元素  </p>
+<p>    对应&lt;**add(0,x);   add(l[1],x**);&gt;</p>
+</blockquote>
+<p>题目链接[双链表](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/829/">827. 双链表 - AcWing题库</a>) </p>
+<p>完整代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;string&gt;
+using namespace std;
+const int N &#x3D;100010;
+
+&#x2F;&#x2F;e存元素value，l存左指针，r存右指针,idx指向当前操作结点
+int e[N],l[N],r[N],idx;
+
+&#x2F;&#x2F;初始化
+void init()&#123;
+    &#x2F;&#x2F;为省事，0表示左端点head，1表示右端点tail
+    r[0]&#x3D;1; l[1]&#x3D;0;   &#x2F;&#x2F;两端点head和tail分别为对方的左右指针,形成初始闭环
+    idx&#x3D;2;          &#x2F;&#x2F;0和1已经用于头尾指针了，从2开始存元素
+&#125;
+
+&#x2F;&#x2F;在下标为k的点的右边插入一个数x
+void add(int k,int x)&#123;
+    e[idx]&#x3D;x;
+
+    &#x2F;&#x2F;改四条指针的指向
+    l[idx]&#x3D;k;           &#x2F;&#x2F;将新结点的左指针指向k
+    r[idx]&#x3D;r[k];        &#x2F;&#x2F;将当前元素的右指针指向k的下一个元素
+    l[r[k]]&#x3D;idx;        &#x2F;&#x2F;将原本k右边的数的左指针指向新插入的结点
+    r[k]&#x3D;idx;
+    idx++;
+
+&#125;
+&#x2F;&#x2F;如果在k的左边插入一个点，可以直接调用add([l[k]]) ;  即：在k的前一个元素的右边插入一个元素
+
+&#x2F;&#x2F;删除第k个元素
+void remove(int k)&#123;
+    &#x2F;&#x2F;令其左边的元素的右指针指向其右边的元素，将右边的元素的左指针指向其左边的元素
+    r[l[k]]&#x3D;r[k];
+    l[r[k]]&#x3D;l[k];
+&#125;
+
+&#x2F;&#x2F;在最左端插入一个数    发现就是在0的右边插入一个数  ,在最右侧插入同理在1的左边插入
+&#x2F;&#x2F; void add_l(int x)&#123;
+&#x2F;&#x2F;     e[idx]&#x3D;x;
+
+&#x2F;&#x2F;     r[idx]&#x3D;r[0];
+&#x2F;&#x2F;     l[idx]&#x3D;0;
+&#x2F;&#x2F;     l[r[0]]&#x3D;idx;
+&#x2F;&#x2F;     r[0]&#x3D;idx++;
+&#x2F;&#x2F; &#125;
+
+int main()&#123;
+
+    init();
+    int m;
+    cin&gt;&gt;m;
+    while(m--)&#123;
+        string c;
+        int k,x;
+        cin&gt;&gt;c;
+
+        if(c&#x3D;&#x3D;&quot;L&quot;)&#123;
+            cin&gt;&gt;x;
+            add(0,x);
+        &#125;else if(c&#x3D;&#x3D;&quot;R&quot;)&#123;
+            cin&gt;&gt;x;
+            add(l[1],x);   &#x2F;&#x2F;在最右端插入一个元素相当于在1的左边元素的右边插入一个元素
+        &#125;else if(c&#x3D;&#x3D;&quot;D&quot;)&#123;
+            cin&gt;&gt;k;
+            remove(k+1);            &#x2F;&#x2F;这里注意第k个插入的点的下标应该是k+1，因为第一个插入的点在下标为2的位置
+        &#125;else if(c&#x3D;&#x3D;&quot;IL&quot;)&#123;
+                cin&gt;&gt;k&gt;&gt;x;
+                &#x2F;&#x2F; cout&lt;&lt;l[k+1]&lt;&lt;&quot;---------&quot;&lt;&lt;endl;
+                add(l[k+1],x);         &#x2F;&#x2F;k+1同理对应第k个数
+            &#125;else if(c&#x3D;&#x3D;&quot;IR&quot;)&#123;
+                cin&gt;&gt;k&gt;&gt;x;
+                add(k+1,x);
+            &#125;
+        &#125;
+    &#x2F;&#x2F;遍历双链表      从0头结点的下一个结点开始出发，直到遇到右尾结点1
+    for(int i&#x3D;r[0];i!&#x3D;1;i&#x3D;r[i])&#123;
+        cout&lt;&lt;e[i]&lt;&lt;&quot; &quot;;
+    &#125;
+    cout&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="栈和队列"><a href="#栈和队列" class="headerlink" title="栈和队列"></a>栈和队列</h3><blockquote>
+<p>看模板吧</p>
+</blockquote>
+<h3 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h3><h4 id="开放寻址法（最常用）"><a href="#开放寻址法（最常用）" class="headerlink" title="开放寻址法（最常用）"></a>开放寻址法（最常用）</h4><blockquote>
+<p>定义一个一维数组,大小一般开题目要求的2–3倍（2e5,3e5—）；</p>
+<p>1.插入：利用哈希函数得到映射后的k，在数组的对应k位置插入该元素，如果位置已经存在一个元素了，就依次找空的位置插入。</p>
+<p>2.查找：看第映射后的第k个位置，是不是有元素</p>
+<blockquote>
+<p>（1）有元素，并且等于x    （找到）</p>
+<p>（2）有元素，但是不等于x  ，则继续往后找      （如果不为空但是不等于x，可能是被占位了，x则被存在后面的位置或者不存在）</p>
+<p>（3）无元素，则不存在x （因为如果当前为空，说明没有数映射到这个位置）</p>
+</blockquote>
+<p>3.删除：并不是实际删除，而是用一个标记.(0x3f3f3f3f)(大于1e9的数，不在范围内)</p>
+<p>主要部分find</p>
+<blockquote>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\marktext\images\2023-01-15-15-43-19-image.png"></p>
+<img title="" src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-15-15-40-06-image.png" alt="" width="459">
+
+<p><img src="C:\Users\Lenovo\AppData\Roaming\marktext\images\2023-01-15-15-43-37-image.png"></p>
+<p>当前位置不等于空位置时，并且不等于该元素时，找下一个可以插入的位置k++（注意k的最大取值，需要判断是否超过数组最大范围）</p>
+<p>如果该位置为空，则返回可以插入的位置，即当前位置</p>
+</blockquote>
+</blockquote>
+<p>例题：<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/842/">840. 模拟散列表 - AcWing题库</a> </p>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;cstring&gt;
+#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;200003,null&#x3D;0x3f3f3f3f;
+
+int h[N];
+
+int find(int x)&#123;
+    int k&#x3D;(x%N+N)%N;
+    while(h[k]!&#x3D;null &amp;&amp; h[k]!&#x3D;x)&#123;    &#x2F;&#x2F;如果该位置不是空的并且不是x，则往后找
+        k++;
+        if(k&#x3D;&#x3D;N) k&#x3D;0;
+    &#125;
+    return k;
+&#125;
+
+int main()&#123;
+    int n;
+    cin&gt;&gt;n;
+
+        &#x2F;&#x2F;数组该位置为0x3f时 就认为空，因为不在数据范围内
+    memset(h,0x3f,sizeof h);
+        memset 以字节set，并且int类型，则4*0x3f 足以超过1e9
+
+    while(n--)&#123;
+        char c;int x;
+        cin&gt;&gt;c;
+        if(c&#x3D;&#x3D;&#39;I&#39;)&#123;
+            cin&gt;&gt;x;
+            int k&#x3D;find(x);
+            h[k]&#x3D;x;
+        &#125;else &#123;
+            cin&gt;&gt;x;
+            int k&#x3D;find(x);
+
+            if(h[k]!&#x3D;null) cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;
+            else cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;
+        &#125;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="拉链法（类似邻接表）"><a href="#拉链法（类似邻接表）" class="headerlink" title="拉链法（类似邻接表）"></a>拉链法（类似邻接表）</h4><blockquote>
+<p>以数组h的每个元素为每个链表的头指针，如果某些数的k值相同，则插入到同一个h[k]的子链表上，最后在该链表上查询目标元素。</p>
+</blockquote>
+<p>题目链接<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/842/">模拟散列表</a>         注：保存过题解</p>
+<p>代码如下：（附set做法）</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">### set<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;unordered_map&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+#include&lt;set&gt;
+using namespace std;
+
+int main() &#123;
+    set&lt;int&gt; s;
+    int n;
+    cin&gt;&gt;n;
+    while(n--) &#123;
+        char c;
+        int x;
+        cin&gt;&gt;c;
+        if(c&#x3D;&#x3D;&#39;I&#39;) &#123;
+            cin&gt;&gt;x;
+            s.insert(x);
+        &#125; else &#123;
+            cin&gt;&gt;x;
+            if(s.find(x)!&#x3D;s.end()) cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;
+            else cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;
+        &#125;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">### 哈希函数法<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;cstring&gt;
+#include&lt;iostream&gt;
+#include&lt;unordered_map&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;100010;
+
+int h[N],e[N],ne[N],idx; &#x2F;&#x2F;类似于邻接表，在哈希函数处理后放入对应位置的链表上，最后查询即可
+
+void insert(int x) &#123;
+    int k&#x3D;(x%N+N)%N; &#x2F;&#x2F;确保余数是正数，否则越界，因为x不一定是正数
+
+
+    e[idx]&#x3D;x;
+    ne[idx]&#x3D;h[k];    &#x2F;&#x2F;若k相同。则会从头部插入k对应的单链表
+    h[k]&#x3D;idx++;
+
+
+&#125;
+
+bool find(int x) &#123;
+    int k&#x3D;(x%N+N)%N;
+
+    for(int i&#x3D;h[k]; i!&#x3D;-1; i&#x3D;ne[i]) &#123;
+        if(x&#x3D;&#x3D;e[i]) return true;             &#x2F;&#x2F;遍历当前k的链表
+    &#125;
+    return false;
+
+
+&#125;
+
+int main() &#123;
+    int n;
+    cin&gt;&gt;n;
+
+&#x2F;&#x2F;单链表指针指向为空时默认为-1；
+    memset(h,-1,sizeof h);
+
+    while(n--) &#123;
+        char c;
+        int x;
+        cin&gt;&gt;c;
+        if(c&#x3D;&#x3D;&#39;I&#39;) &#123;
+            cin&gt;&gt;x;
+            insert(x);
+        &#125; else &#123;
+            cin&gt;&gt;x;
+            if(find(x)) cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;
+            else cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;
+        &#125;
+    &#125;
+    return 0;
+
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="字符串hash-字符串前缀hash法"><a href="#字符串hash-字符串前缀hash法" class="headerlink" title="字符串hash (字符串前缀hash法)"></a>字符串hash (字符串前缀hash法)</h4><blockquote>
+<p>好处：用O(1)的时间复杂度求出任一子字符串的哈希值</p>
+<p>            <strong><mark>对于某些复杂的KMP问题可以用此方法水过去</mark></strong> </p>
+<p>    预处理前缀字符串，假设字符串为p进制的数，求出它的10进制数并对q取模，则可得到所有前缀的哈希值；如h[1]&#x3D;”A”,h[2]&#x3D;”AB”;……其中h[0]规定为0,表示前0个字符为空,且存的不是字符串(“A”,”AB”等)，而是p进制的对应哈希值。</p>
+<p>一般的：p进制取131  或 13331 时，冲突的概率较低</p>
+<p>                q一般取2^64 （类型：unsigned long long）  (此时就可以省去取模的运算，更快)</p>
+<p>结果：将每个前缀字符串映射成一个在[0 , 2^64-1] 范围内的整数</p>
+<p>假如有一个字符串 abcdefs;</p>
+<p>其中abc的哈希值为 hash(abc), 那么abcd的哈希值就为 hash(abc)*131+4 ;  &#x2F;&#x2F;根据计算10进制过程推出，并且由于mod(q)的原因，不用担心hash值大小</p>
+<p>则得出预处理公式：&lt; <mark>**hash(i)&#x3D;hash(i-1)*131+str[i];**</mark> &gt;    <u>hash[0]&#x3D;0;</u> </p>
+<p>&#x2F;&#x2F;str存输入的字符串,需要变为对应的序号，如果是全小写字符，则 <strong>str[i]-‘a’+1;</strong> </p>
+<blockquote>
+<p><strong>纠正：只要str[i]不是0就可以，所以也没必要-‘a’+1，所以就不用担心字符是否为大写小写字母或数字了</strong> </p>
+</blockquote>
+<p><mark>求任一子字符串的哈希值 </mark>   (前提：求出预处理前缀字符串的哈希值)</p>
+<p>    求[L,R]的哈希值，<mark>*<em>h(L–R)   &#x3D; h[R]-h[L-1]<em>131^(R-L+1);</em></em> </mark>     即：在求字符串abcd的子串cd 哈希值的时候，可以用hash(abcd)减去hash(ab)*131^2; 这样就可求出。</p>
+<p>而131的次方 提前预处理存入p[N]数组中, p[i] 对应131^i <mark>*<em>p[i]&#x3D;p[i-1]<em>base</em></em>;  </mark>  </p>
+<p>    又如：区间和公式的理解: ABCDE 与 ABC 的前三个字符值是一样，只差两位，<br>乘上 P2 把 ABC 变为 ABC00，再用 ABCDE - ABC00 得到 DE 的哈希值。</p>
+<blockquote>
+<img src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-15-21-52-10-image.png" title="" alt="" width="502">
+
+<img src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-15-22-07-59-image.png" title="" alt="" width="583">
+</blockquote>
+</blockquote>
+<p>例题：[兔子与兔子](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/140/">138. 兔子与兔子 - AcWing题库</a>)    注意：此题字符串仅有小写字母</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+using namespace std;
+const int N &#x3D;1000010,base&#x3D;131;
+typedef unsigned long long ull;
+char str[N];
+int m;
+ull h[N];   &#x2F;&#x2F;存放前缀字符串的哈希值
+ull p[N];   &#x2F;&#x2F;存放计算10进制时的131次方,可以理解为从个位数往前按位数乘的131次方
+
+ull get(int l,int r)&#123;
+    return h[r]-h[l-1]*p[r-l+1];           &#x2F;&#x2F;得出l到r区间的hash值
+&#125;
+
+int main()&#123;
+    scanf(&quot;%s&quot;,str+1);   
+
+    int n&#x3D;strlen(str+1);             &#x2F;&#x2F;加头文件string.h
+
+    h[0]&#x3D;0;         &#x2F;&#x2F;初始化0位置
+    p[0]&#x3D;1;         &#x2F;&#x2F;初始化个位数*的次方
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;
+        h[i]&#x3D;h[i-1]*base + str[i]-&#39;a&#39;+1; 
+        p[i]&#x3D;p[i-1]*base;
+    &#125;
+
+    cin&gt;&gt;m;
+    while(m--)&#123;
+        int l1,r1,l2,r2;
+        scanf(&quot;%d%d%d%d&quot;,&amp;l1,&amp;r1,&amp;l2,&amp;r2);
+
+        if(get(l1,r1)&#x3D;&#x3D;get(l2,r2)) puts(&quot;Yes&quot;);
+        else puts(&quot;No&quot;);
+        &#x2F;&#x2F; printf(&quot;%llu\n&quot;,get(l,r));
+    &#125;
+    &#x2F;&#x2F; for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;
+    &#x2F;&#x2F;     printf(&quot;%llu\n&quot;,h[i]);         &#x2F;&#x2F;测试hash值        
+    &#x2F;&#x2F; &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>注：这种方法可以过全部样例，如果时间有限，用string的<strong>substr(pos,n)</strong> 可以过一定的样例骗点分，但是还是多用哈希这种方法，还是很容易熟悉的。</p>
+</blockquote>
+<blockquote>
+<p>substr从第pos个位置，开始拿出n个字符组成的字符串</p>
+</blockquote>
+<p>例题2:[字符串哈希](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/843/">841. 字符串哈希 - AcWing题库</a>) </p>
+<blockquote>
+<p>该题与上题的不同在于 字符串中不止小写字母，还有大写字母和数字。</p>
+<p>但是纠正后，str[i]只要不等于0都可以。所以方法相同。</p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;100010,base&#x3D;131;
+typedef unsigned long long ull;
+
+char str[N];
+int n,m;
+ull h[N];
+ull p[N];
+
+ull get(int l,int r)&#123;
+    return h[r]-h[l-1]*p[r-l+1];           &#x2F;&#x2F;得出l到r区间的hash值
+&#125;
+
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    scanf(&quot;%s&quot;,str+1);
+
+    h[0]&#x3D;0;
+    p[0]&#x3D;1;     &#x2F;&#x2F;忘记初始化了
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;
+        h[i]&#x3D;h[i-1]*base + str[i];
+        p[i]&#x3D;p[i-1]*base;
+    &#125;
+    while(m--)&#123;
+        int l1,r1,l2,r2;
+        scanf(&quot;%d%d%d%d&quot;,&amp;l1,&amp;r1,&amp;l2,&amp;r2);
+
+        if(get(l1,r1)&#x3D;&#x3D;get(l2,r2)) puts(&quot;Yes&quot;);
+        else puts(&quot;No&quot;);
+        &#x2F;&#x2F; printf(&quot;%llu  %llu\n&quot;,get(l1,r1),get(l2,r2));
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Trie字典树-检索"><a href="#Trie字典树-检索" class="headerlink" title="Trie字典树      (检索)"></a>Trie字典树      (检索)</h3><blockquote>
+<p>高效地存储和查找字符串集合的数据结构</p>
+<p>    存储:  星号为标记一个字符串结束     </p>
+<p>从根结点开始，只要遇到某个字符不存在就创建该结点</p>
+<img src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-19-17-16-31-image.png" title="" alt="" width="361">
+
+<p>    查找：遍历待查找字符串，从根结点开始找对应的下一字符</p>
+</blockquote>
+<h4 id="字符串统计"><a href="#字符串统计" class="headerlink" title="字符串统计"></a>字符串统计</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/837/">835. Trie字符串统计 - AcWing题库</a> </p>
+<p>插入字符串，查找字符串出现的个数</p>
+<img src="file:///C:/Users/Lenovo/Desktop/pic/字符串统计.png" title="" alt="" width="476">
+</blockquote>
+<blockquote>
+<p>用map做结果：</p>
+<p>通过了 18&#x2F;18个数据    运行时间： 111 ms    运行空间： 480 KB</p>
+<p>用Trie字典树高效存储：</p>
+<p>通过了 18&#x2F;18个数据    运行时间： 58 ms     运行空间： 10584 KB</p>
+<p><strong>空间换时间</strong> (感觉map能过就不用trie了)</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;string&gt;
+
+using namespace std;
+const int N &#x3D;100010;
+
+int son[N][26];       &#x2F;&#x2F;假如是son[1][2]&#x3D;3;说明结点1有一个结点为3的儿子c (从0开始表示a……z); 并且每个结点最多有26个分支
+int cnt[N],idx;     &#x2F;&#x2F;cnt记录某个结点作为字符串结尾的次数
+char str[N];
+
+void insert(char str[])&#123;
+    int p&#x3D;0;    &#x2F;&#x2F;类似指针，指向每一个要插入的子结点的父母
+
+    &#x2F;&#x2F;这里str[i]用了字符串特性：结尾的 &#39;&#x2F;0&#39;
+    for(int i&#x3D;0;str[i];i++)&#123;
+        int u&#x3D;str[i]-&#39;a&#39;;     &#x2F;&#x2F;将每个字符转化为数字
+        if(!son[p][u]) son[p][u]&#x3D;++idx;         &#x2F;&#x2F;如果不存在该字符,新建一个并给孩子编号
+        p&#x3D;son[p][u];     &#x2F;&#x2F;p指针移向当前结点的子结点，进行下一步插入
+    &#125;
+
+    cnt[p]++;      &#x2F;&#x2F;循环结束后，p指向的是字符串str的最后一个结点
+&#125;
+
+&#x2F;&#x2F;查询，返回字符串出现的次数
+int query(char str[])&#123;
+    int p&#x3D;0;
+    for(int i&#x3D;0;str[i];i++)&#123;
+        int u&#x3D;str[i]-&#39;a&#39;;
+        if(!son[p][u]) return 0;          &#x2F;&#x2F;如果当前结点p不存在相应的孩子，则说明无这个字符串，直接返回
+        &#x2F;&#x2F;否则就将结点p指向子孩子对应的结点
+        p&#x3D;son[p][u];
+    &#125;
+
+    return cnt[p];       &#x2F;&#x2F;返回以当前字符为结尾的字符串个数
+&#125;
+
+int main()&#123;
+    int n;
+    cin&gt;&gt;n;
+    while(n--)&#123;
+       char c[2];
+       scanf(&quot;%s&quot;,c);
+      if(c[0]&#x3D;&#x3D;&#39;I&#39;)&#123;
+          scanf(&quot;%s&quot;,str);
+          insert(str);
+      &#125;else &#123;
+          scanf(&quot;%s&quot;,str);
+          printf(&quot;%d\n&quot;,query(str));
+      &#125;
+
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="最大异或对"><a href="#最大异或对" class="headerlink" title="最大异或对"></a>最大异或对</h4><blockquote>
+<p> <a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/145/">143. 最大异或对 - AcWing题库</a> </p>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\marktext\images\2023-01-19-21-16-46-image.png"></p>
+<p>暴力双层循环过5&#x2F;9样例</p>
+</blockquote>
+<blockquote>
+<p>trie树做法：将每个数的二进制数插入字典树，查找时，在每一部选择上尽量选与当前位数不同的路，这样得到的结果是最大的异或数。</p>
+<p>points：</p>
+<p>1.二进制序列得到10进制数</p>
+<p>2.二进制位运算  a&gt;&gt;k&amp;1;</p>
+<p>3.选择路径</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;*&gt; 时间复杂度分析：用trie树在每一位二进制数中选择与当前目标数不同位的一条路，这样得到每一位尽可能的不同，
+最后得到的数就是最大异或数；
+这样最多10万个数，每个数最多走31条路(31次)，所以 31*1e5  大概是O(nlogn);
+*&#x2F;
+#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+#define IOS ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
+using namespace std;
+const int N &#x3D;100010;
+const int M &#x3D;N*31;    &#x2F;&#x2F;每个数的二进制数都有31位，所以要存这么多结点需要开M
+                      &#x2F;&#x2F;数据范围在2^31之内，则二进制数最多31位,则a二进制数的最左端是第30位
+
+int son[M][2],idx;
+
+void insert(int &amp;a)&#123;
+    int p&#x3D;0;
+    for(int i&#x3D;30;i&gt;&#x3D;0;i--)&#123;
+        int u&#x3D;a&gt;&gt;i&amp;1;   &#x2F;&#x2F;取a的二进制数的第30位，注意位数是从右往左0开始计数
+        if(!son[p][u]) son[p][u]&#x3D;++idx;
+        p&#x3D;son[p][u];
+    &#125;
+&#125;
+
+&#x2F;&#x2F;查询哪一个数与目标数的异或结果最大，返回该数
+int query(int a)&#123;
+    int res&#x3D;0;
+    int p&#x3D;0;
+    for(int i&#x3D;30;i&gt;&#x3D;0;i--)&#123;
+        int u &#x3D; a&gt;&gt;i&amp;1;
+
+        &#x2F;&#x2F;尽量走与当前位不同值的路   !u为非运算，x-&gt;0  0-&gt;x  （x为大于0的数）
+        &#x2F;&#x2F;如果相反的路存在，就走这条路,否则就直接走下一条
+        if(son[p][!u]) &#123;
+            p&#x3D;son[p][!u];
+            res&#x3D;res*2+!u;            
+        &#125;
+        else &#123;
+            p&#x3D;son[p][u];
+            res&#x3D;res*2+u;
+        &#125;
+    &#125;
+    return res;
+    &#x2F;*
+    这里的res&#x3D;res*2+!u&#x2F;u的运算，实际上就是2进制转10进制的运算,假如1001要接上下一位数1或0，变成10010或10011，
+    可以把1001左移一位得到10010,最后在最后一位加上u&#x2F;!u,而左移一位相当于*2。
+    这样的操作可以得到对应二进制序列代表的10进制数
+    *&#x2F;
+&#125;
+
+int main()&#123;
+    IOS;
+    int n;
+    cin&gt;&gt;n;
+    &#x2F;&#x2F;不需要实际读入，记录一下res即可    ,当然也可以存数组
+    int res&#x3D;0;
+    for(int i&#x3D;0;i&lt;n;i++) &#123;
+        int a;
+        cin&gt;&gt;a;
+        insert(a);
+        int s&#x3D;query(a);
+        res&#x3D;max(res,a^s);
+    &#125;
+    cout&lt;&lt;res&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h3><blockquote>
+<p>主要完成两个操作：       时间复杂度可以接近O(1)</p>
+<p>1.合并集合        2.询问两个数是否在同一个集合中</p>
+<p>    如果需要用到这两个操作可以使用并查集</p>
+</blockquote>
+<blockquote>
+<p>思路：将每个集合（树）的根结点作为代表结点，并将该集合的每一个结点的父结点存储下来，p[x]存储x的父结点的编号</p>
+<p><em>(1).判断树根：</em>  </p>
+<p>判断当前结点是否为树根就看当前( <mark> <strong>p[x]&#x3D;&#x3D;x</strong> </mark> )是否成立</p>
+<p><strong><u>(2).求x对应的树根编号，即得到x所在集合的编号</u></strong> </p>
+<p>从当前结点，依次往父结点靠拢，并判断是否为根结点 </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">while(p[x]!&#x3D;x)&#123;
+    x&#x3D;p[x];
+&#125;    &#x2F;&#x2F;最后x就为根结点的编号<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p><mark><strong>路径压缩优化</strong></mark> ：由于从x位置遍历到根结点，所以树层数高的时候复杂度较高</p>
+<p>在往上遍历时，直到找到根结点，就把所有路经上的结点的父结点变为根结点</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">核心递归操作
+int find(int x)&#123;   &#x2F;&#x2F;返回x的祖宗结点+路径压缩
+    if(p[x]!&#x3D;x) p[x]&#x3D;find(p[x]);
+return p[x];      &#x2F;&#x2F;直到某个结点的父结点是根结点后返回，这样就可以将路径
+                  &#x2F;&#x2F;上所有的结点的父结点变成根结点
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将两棵树中其中一颗的根结点变成另一颗树的孩子，这样就可以查找时有共同的根结点，即在一个集合中。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">假设x集合的根结点编号为a，y集合的根结点编号为b
+则  p[a]&#x3D;b;  or  p[b]&#x3D;p[a];<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</blockquote>
+<p>y总视频课笔记：参考</p>
+<blockquote>
+<img src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-22-18-15-53-image.png" title="" alt="" width="427">
+</blockquote>
+<h4 id="合并集合"><a href="#合并集合" class="headerlink" title="合并集合"></a>合并集合</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/838/">836. 合并集合 - AcWing题库</a> </p>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\marktext\images\2023-01-22-19-48-07-image.png"></p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;100010;
+
+int p[N]; &#x2F;&#x2F;存放父结点
+int n,m;
+
+int find(int x)&#123;    &#x2F;&#x2F;寻找祖宗结点+路径压缩
+    if(p[x]!&#x3D;x) p[x]&#x3D;find(p[x]);
+    return p[x];
+&#125;
+
+
+int main()&#123;
+    cin&gt;&gt;n&gt;&gt;m;
+
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;      
+        p[i]&#x3D;i;          &#x2F;&#x2F;初始化每个数独自成集合 ,注意每个数是1--n范围内
+    &#125;
+
+    while(m--)&#123;
+        char op[2];
+        scanf(&quot;%s&quot;,op);
+
+        int a,b;
+        scanf(&quot;%d%d&quot;,&amp;a,&amp;b);   
+        int c&#x3D;find(a),d&#x3D;find(b);
+
+        if(op[0]&#x3D;&#x3D;&#39;M&#39;)&#123;
+            if(c!&#x3D;d) p[c]&#x3D;d;    &#x2F;&#x2F;如果不在同一个集合，就进行合并，即将一个集合的根结点作为另一个集合的孩子
+        &#125;else &#123;
+            if(c&#x3D;&#x3D;d)
+            puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+        &#125;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="连通块中点的个数"><a href="#连通块中点的个数" class="headerlink" title="连通块中点的个数"></a>连通块中点的个数</h4><blockquote>
+<p>连通指a可以到b，b可以到a</p>
+<img src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-22-20-18-56-image.png" title="" alt="" width="574">
+</blockquote>
+<p>    实际上和集合是差不多的，只要两个数在一个集合了，就一定可以互相到达，因此只需要关注第三个操作，前两个操作都是一样的；</p>
+<p>    第三个操作：询问连通块中点的数量(集合的元素个数)</p>
+<p>定义一个cap[N]数组存储每个集合根结点的元素个数，共有两个部分</p>
+<p>1.初始化时每个集合大小都为1，且点独自为一个集合</p>
+<p>2.合并集合时，其中一个集合的根结点被当作另一个集合的孩子时，另一个集合的大小要加上这个集合  即 <mark> <strong>p[find(a)]&#x3D;find(b);   cap[find(b)]+&#x3D;cap[find(a)];</strong></mark> </p>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;100010;
+
+&#x2F;&#x2F;连通块其实类似于集合，只要在同一个集合，就可以达到连通的效果
+&#x2F;&#x2F;并且本题的前两个操作很类似集合的操作，可模仿
+&#x2F;&#x2F;第三个操作需：合并集合时，维护集合大小
+int n,m;
+int p[N];
+int cap[N];    &#x2F;&#x2F;记录每个根结点代表的集合中点的个数
+
+int find(int x)
+&#123;
+    if(p[x]!&#x3D;x) p[x]&#x3D;find(p[x]);
+    return p[x];
+&#125;
+
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++) &#123;
+        p[i]&#x3D;i;
+        cap[i]&#x3D;1;    &#x2F;&#x2F;初始化小集合和大小
+    &#125;
+
+    while(m--)&#123;
+        char op[2];
+        scanf(&quot;%s&quot;,op);
+        int a,b,c&#x3D;0,d&#x3D;0;
+
+        if(op[0]&#x3D;&#x3D;&#39;C&#39;)&#123;
+            scanf(&quot;%d%d&quot;,&amp;a,&amp;b);
+            c&#x3D;find(a),d&#x3D;find(b);
+            if(c&#x3D;&#x3D;d) continue;    &#x2F;&#x2F;如果两者已经在一个集合里了，就不要再合并了，否则集合大小有问题
+
+            cap[d]+&#x3D;cap[c];        &#x2F;&#x2F;合并集合时，注意要维护一下新的根结点对应集合的大小
+            p[c]&#x3D;d;
+        &#125;else if(op[1]&#x3D;&#x3D;&#39;1&#39;)&#123;
+            scanf(&quot;%d%d&quot;,&amp;a,&amp;b);
+            c&#x3D;find(a),d&#x3D;find(b);
+
+            if(c&#x3D;&#x3D;d) puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+
+        &#125;else if(op[1]&#x3D;&#x3D;&#39;2&#39;)&#123;
+            scanf(&quot;%d&quot;,&amp;a);
+            cout&lt;&lt;cap[find(a)]&lt;&lt;endl;
+        &#125;
+    &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="食物链"><a href="#食物链" class="headerlink" title="食物链"></a>食物链</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/242/">240. 食物链 - AcWing题库</a> </p>
+</blockquote>
+<p>话不多说了，代码含注释</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;*  思路：实际上也是集合的合并以及判定，区别在于我们需要判断是否满足与题目要求的三点相符（假话条件）
+我们可以在不同维度上(x+n,x+n+n)上额外定义某动物x的捕食域和天敌域
+根据条件得到假话个数
+*&#x2F;
+#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;2e5+10;    &#x2F;&#x2F;捕食域，天敌域分别存放在x+n和x+n+n的维度上  ,省去多开数组的麻烦
+
+int p[N];
+int n,k;
+int ans;       &#x2F;&#x2F;记录假话个数
+
+int find(int x)&#123;
+   if(p[x]!&#x3D;x) p[x]&#x3D;find(p[x]);
+   return p[x];
+&#125;
+
+&#x2F;&#x2F;需反复用到合并集合的操作，定义一个函数   此处定义的是x所在集合接到y所在集合
+void merge(int x,int y)&#123;
+    p[find(x)]&#x3D;find(y);
+&#125;
+
+int main()&#123;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;k);
+
+    for(int i&#x3D;1;i&lt;&#x3D;3*n;i++) p[i]&#x3D;i;         &#x2F;&#x2F;初始化所有域
+
+    while(k--)&#123;
+        int d,x,y;
+        scanf(&quot;%d%d%d&quot;,&amp;d,&amp;x,&amp;y);
+
+        if(x&gt;n||y&gt;n) 
+            ans++;    
+        else if(d&#x3D;&#x3D;1)&#123;               &#x2F;&#x2F;如果x和y是同类  但是y的捕食域有x，或y的天敌域有x，则是假话
+            if(find(x)&#x3D;&#x3D;find(y+n)||find(x)&#x3D;&#x3D;find(y+n+n))
+                ans++;
+            else &#123;   &#x2F;&#x2F;既然是同类，那么他们的捕食和天敌应是一样的
+                merge(x,y);
+                merge(x+n,y+n); 
+                merge(x+n+n,y+n+n);
+            &#125;
+        &#125;else &#123;           &#x2F;&#x2F;如果x捕食y  但是x和y是同一个动物、同一类动物、x的天敌域中有y、y的捕食域有x 则是假话
+            if(x&#x3D;&#x3D;y||find(x)&#x3D;&#x3D;find(y)||find(y+n)&#x3D;&#x3D;find(x))
+                ans++;
+            else &#123;
+                merge(x+n,y);        &#x2F;&#x2F;x的捕食域加入y
+                merge(x,y+n+n);      &#x2F;&#x2F;y的天敌域加入x
+                merge(x+n+n,y+n);    &#x2F;&#x2F;根据题目说明，y如果是被x吃，那么y就能吃x的天敌，则y的捕食域加入x的天敌
+            &#125;
+        &#125;
+    &#125;
+        cout&lt;&lt;ans&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h3><blockquote>
+<p>与堆有关的STL：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Bill-LHR/p/6934911.html#:~:text=%E4%BB%8B%E7%BB%8DSTL%E4%B8%AD%E4%B8%8E%E5%A0%86%E7%9B%B8%E5%85%B3%E7%9A%844%E4%B8%AA%E5%87%BD%E6%95%B0%E2%80%94%E2%80%94%E5%BB%BA%E7%AB%8B%E5%A0%86make_heap%20%28%29%EF%BC%8C%E5%9C%A8%E5%A0%86%E4%B8%AD%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AEpush_heap,%28%29%EF%BC%8C%E5%9C%A8%E5%A0%86%E4%B8%AD%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AEpop_heap%20%28%29%E5%92%8C%E5%A0%86%E6%8E%92%E5%BA%8Fsort_heap%20%28%29%EF%BC%9A">STL—heap概述及用法 - Bill_LHR - 博客园 (cnblogs.com)</a> </p>
+<p>主要是建立大根堆小根堆</p>
+<blockquote>
+<p>堆是一颗完全二叉树</p>
+<p>小根堆的概念：</p>
+<p>    每个结点小于等于它的左右孩子，则根结点就是最小值</p>
+<p>存储方式（与完全二叉树相同）：一维数组</p>
+<p>    从1开始存，1位置是根结点,x的左孩子下标为2x,右孩子下标为2x+1</p>
+<p>主要的两个操作 down(x),up(x);        调整堆为小根堆的操作</p>
+<blockquote>
+<p> down的操作是如果x变大，就要将其向下每一步与最小的孩子交换，最终重新成为小根堆；</p>
+<p>up是x变小，将其向上如果小于父结点就进行交换，最终得到新的小根堆</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h4 id="手写堆排序"><a href="#手写堆排序" class="headerlink" title="手写堆排序"></a>手写堆排序</h4><p>主要的操作：</p>
+<p>STL可支持前三个操作(但后两个可以间接实现)</p>
+<p>1.插入一个数</p>
+<p>2.求集合中的最小值</p>
+<p>3.删除最小值</p>
+<p>4.删除任意一个元素</p>
+<p>5.修改任意一个元素</p>
+<p><u>插入和删除的时间复杂度与树高度有关，则为logn</u> </p>
+<blockquote>
+<p>1.插入一个数到堆中，并调整为小根堆      插入到末尾后往上移</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">heap[++size]&#x3D;x; up(size);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>2.删除最小值</p>
+<p>将最后一个元素heap[size]覆盖根结点heap[1],后size–，再进行down(1);调整即可</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">heap[1]&#x3D;heap[size];    size--;   down(1);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>3.删除任意一个元素,删去第k个位置的数</p>
+<p> 将最后一个元素heap[size]覆盖到第k个元素heap[k]，size–;最后调整第k个位置，</p>
+<p>这里可以判断如果数变小了就上移up(k),否则变大了down(k); </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;直接上下调整一下更方便
+heap[k]&#x3D;heap[size];    size--;     down(k),up(k);
+
+&#x2F;&#x2F;或者判断一下，但是还要存temp：
+temp&#x3D;heap[k];  heap[k]&#x3D;heap[size];   size--;  
+if(temp&gt;heap[k]) up(k);    &#x2F;&#x2F;变小了
+else if(temp&lt;heap[k]) down(k);  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> 4.修改任意一个元素</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">heap[k]&#x3D;x;   down(k),up(k);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</blockquote>
+<p>[堆排序](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/840/">838. 堆排序 - AcWing题库</a>) </p>
+<blockquote>
+<p>如题。</p>
+<p><font color=#lightskyblue>本题只需要使用到down进行小根堆的生成和建立</font> </p>
+</blockquote>
+<p>代码实现：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N&#x3D;100010;
+
+int h[N];   
+int cap;     &#x2F;&#x2F;size好像有冲突，还是用cap吧 (capcity)
+int n,m;
+
+&#x2F;&#x2F;down，如果当前结点不满足小根堆条件，就和它的最小的孩子进行交换，直到不能交换为止
+void down(int u)&#123;
+    int t&#x3D;u;
+
+    &#x2F;&#x2F;如果它的左孩子存在并且大于左孩子就与左孩子交换
+    if(u * 2 &lt;&#x3D; cap &amp;&amp; h[t]&gt;h[u*2]) t&#x3D;u*2;
+
+    &#x2F;&#x2F;如果右孩子结点小于左孩子，就交换根结点与右孩子，否则就与左孩子交换
+    if(u * 2 + 1 &lt;&#x3D;cap &amp;&amp; h[t]&gt;h[u*2+1]) t&#x3D;u*2+1;
+
+    &#x2F;&#x2F;如果发生交换了，就下标对应的值交换,并且将这个数继续向下比较，直到不能交换为止
+    if(t!&#x3D;u)&#123;
+        swap(h[t],h[u]);
+        down(t);
+    &#125;
+&#125;
+
+int main()&#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    cap&#x3D;n;
+
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++) scanf(&quot;%d&quot;,&amp;h[i]);
+
+    for(int i&#x3D;n&#x2F;2; i ;i--)&#123;         &#x2F;&#x2F;树的最后一层不需要down，从倒数第二层开始进行每个元素的down即可生成小根堆
+        down(i);
+    &#125;
+
+    while(m--)&#123;
+        &#x2F;&#x2F;依次输出堆顶元素即最小值
+        printf(&quot;%d &quot;,h[1]); 
+
+        &#x2F;&#x2F;输出后删去
+        h[1]&#x3D;h[cap]; cap--; down(1);
+
+    &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ 
+      </div>
+      <hr />
+
+      
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">KTpro</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://example.com/2022/08/04/shu-ju-jie-gou/">http://example.com/2022/08/04/shu-ju-jie-gou/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">KTpro</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E7%AE%97%E6%B3%95/">
+              <span class="chip bg-color">算法</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+        </div>
+      </div>
+       <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的认可是我前进的动力！</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+ 
+    </div>
+  </div>
+
+       <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '10qGqhzFmq9j8dAQmPyXKA0M-gzGzoHsz',
+        appKey: 'E4NvM3qSDAgTYtSIx2yMBOzF',
+        serverURLs: '',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'any commits！'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+       
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2023/01/12/ji-chu-suan-fa/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="ACWing基础算法模块">
+                        
+                        <span class="card-title">ACWing基础算法模块</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/08/04/dan-lian-biao-de-ji-ben-cao-zuo-dai-ma-shi-xian/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="单链表的基本操作代码实现">
+                        
+                        <span class="card-title">单链表的基本操作代码实现</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-category">
+                                    数据结构
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                        <span class="chip bg-color">数据结构</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+ <!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+   
+    <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8785731632"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script> 
+  
+
+  <div class="container row center-align" style="margin-bottom: 15px !important;">
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year">2021-2024</span>
+      
+      <a href="/about" target="_blank">KTpro</a>
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+
+      <br />
+       
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">70.4k</span>
+       
+       
+      
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+          <span id="busuanzi_container_site_pv" style="display: inline" class="white-color">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+         
+        
+          <span id="busuanzi_container_site_uv" style="display: inline" class="white-color">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+         
+      
+      <br />
+
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(startYear, startMonth - 1, startDate, startHour, startMinute, startSecond); // 修正月份减1
+          var t2 = Date.UTC(todayYear, todayMonth - 1, todayDate, todayHour, todayMinute, todaySecond); // 修正月份减1
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor((diff % years) / days); // 修正天数计算
+
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip = "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+            var yearsAndDaysTip = "This site has been running for " + diffYears + " years and " + diffDays + " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip = "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip = "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
+    <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:3185633428@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3185633428" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 3185633428" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+
+</html>

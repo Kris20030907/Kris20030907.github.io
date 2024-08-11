@@ -1,0 +1,1685 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="AutoMQ 开源可观测性方案：夜莺 Flashcat, KTpro">
+    <meta name="description" content="碎言今天集成了夜莺观测平台，对于 Prometheus 更加熟悉了，同时发现了其实这些可观测的平台实际上都差不多的，都是采集 Metrics 数据，然后在平台上做聚合操作。比如观测云的采集工具 datakit，实际上也是采集观测数据，然后通">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>AutoMQ 开源可观测性方案：夜莺 Flashcat | KTpro</title>
+    <link rel="icon" type="image/png" href="/medias/logoofmine.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logoofmine.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">KTpro</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logoofmine.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">KTpro</div>
+        <div class="logo-desc">
+            
+            你好呀！欢迎访问我的小破站
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">AutoMQ 开源可观测性方案：夜莺 Flashcat</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/AutoMQ/">
+              <span class="chip bg-color">AutoMQ</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/AutoMQ/" class="post-category">
+              AutoMQ
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="post-info">
+        
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2024-07-19
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2024-07-19
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 4.5k
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          19 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
+        
+      </div>
+    </div>
+    <hr class="clearfix" />
+
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
+
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <h2 id="碎言"><a href="#碎言" class="headerlink" title="碎言"></a>碎言</h2><p>今天集成了夜莺观测平台，对于 Prometheus 更加熟悉了，同时发现了其实这些可观测的平台实际上都差不多的，都是采集 Metrics 数据，然后在平台上做聚合操作。比如观测云的采集工具 datakit，实际上也是采集观测数据，然后通过 token 获取数据并进行聚合查询，以及告警等。</p>
+<blockquote>
+<p>所以,,, 这些平台大同小异，在之前没了解过可能会觉得好厉害，这么多乱七八糟的数据怎么进行监控呢。现在看来就那样，但是不同的产品可能又侧重点不同，大家也都在积极的解决用户的需求，这点还是非常值得鼓励的。</p>
+</blockquote>
+<p>然后呢，夜莺平台有问题反馈的渠道，有一个是免费的知识星球，这个就很好，里面有几千位球友，如果你用这个产品出了什么问题，靠自己搜索解决不了，实际上可能早就出现在知识星球里了。所以这种方案对于快速解决用户问题以及节省人员精力的消耗是非常不错的。同时夜莺和 Open-Falcon 的创始人<strong>秦晓辉</strong>，我看他们的仓库里这位大佬已经提交了上百万行代码，何况是开源项目里的，可见其经验深厚，同时也是极客时间中一个课程《运维监控系统实战笔记》的作者。</p>
+<p>然后呢，知识星球里的文章也文笔很好并且逻辑严谨，值得学习！</p>
+<p>还是开始介绍怎么集成 AutoMQ 与夜莺监控吧，感觉现在写文档比刚开始熟练多了，也能发现逻辑问题，尽量写清楚无争议一些。可能对之后写技术文章也有帮助。之后再考虑多写技术文章，也可以发到这里来。</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在现代企业中，随着数据处理需求的不断增长，<a target="_blank" rel="noopener" href="https://www.automq.com/zh">AutoMQ</a> [1] 作为一种高效、低成本的流处理系统，逐渐成为企业实时数据处理的关键组件。然而，随着集群规模的扩大和业务复杂性的增加，确保 AutoMQ 集群的稳定性、高可用性和性能优化变得尤为重要。因此，集成一个强大而全面的监控系统对于维护 AutoMQ 集群的健康运行至关重要。<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/introduction/">夜莺监控系统</a>（Nightingale）[2] 以其高效的数据采集、灵活的告警管理和丰富的可视化能力，成为企业监控AutoMQ 集群的理想选择。通过使用夜莺监控系统，企业可以实时掌握 AutoMQ 集群的运行状态，及时发现和解决潜在问题，优化系统性能，确保业务的连续性和稳定性。</p>
+<h3 id="AutoMQ-概述"><a href="#AutoMQ-概述" class="headerlink" title="AutoMQ 概述"></a><strong>AutoMQ 概述</strong></h3><p>AutoMQ 是一种基于云重新设计的流处理系统，它在保持与 Apache Kafka 100% 兼容的前提下，通过将存储分离至对象存储，显著提升了系统的成本效益和弹性能力。具体来说，AutoMQ 通过构建在 S3 上的流存储库 S3Stream，将存储卸载至云厂商提供的共享云存储 EBS 和 S3，提供低成本、低延时、高可用、高可靠和无限容量的流存储能力。与传统的 Shared Nothing 架构相比，AutoMQ 采用了 Shared Storage 架构，显著降低了存储和运维的复杂性，同时提升了系统的弹性和可靠性。</p>
+<p>AutoMQ 的设计理念和技术优势使其成为替换企业现有 Kafka 集群的理想选择。通过采用 AutoMQ，企业可以显著降低存储成本，简化运维，并实现集群的自动扩缩容和流量自平衡，从而更高效地应对业务需求的变化。此外，AutoMQ 的架构支持高效的冷读操作和服务零中断，确保系统在高负载和突发流量情况下的稳定运行。它的存储结构如下：</p>
+<p><img src="/images/flash.png"></p>
+<h3 id="夜莺概述"><a href="#夜莺概述" class="headerlink" title="夜莺概述"></a>夜莺概述</h3><p>夜莺监控系统（Nightingale）是一款开源的云原生观测分析工具，采用 All-in-One 设计理念，集数据采集、可视化、监控告警和数据分析于一体。其主要优势包括高效的数据采集能力、灵活的告警策略和丰富的可视化功能。夜莺与多种云原生生态紧密集成，支持多种数据源和存储后端，提供低延迟、高可靠性的监控服务。通过使用夜莺，企业可以实现对复杂分布式系统的全面监控和管理，快速定位和解决问题，从而优化系统性能和提高业务连续性。</p>
+<p><img src="/images/yey.png"></p>
+<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>为了实现集群状态的监控，你需要如下环境：</p>
+<ul>
+<li><p>部署一个可用的 AutoMQ 节点&#x2F;集群，并开放 Metrics 采集端口</p>
+</li>
+<li><p>部署夜莺监控及其依赖环境</p>
+</li>
+<li><p>部署 <a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/getting_started/">Prometheus</a> [4] 以获取 Metrics 数据</p>
+</li>
+</ul>
+<h2 id="部署-AutoMQ、Prometheus-以及夜莺监控"><a href="#部署-AutoMQ、Prometheus-以及夜莺监控" class="headerlink" title="部署 AutoMQ、Prometheus 以及夜莺监控"></a>部署 AutoMQ、Prometheus 以及夜莺监控</h2><h3 id="部署-AutoMQ"><a href="#部署-AutoMQ" class="headerlink" title="部署 AutoMQ"></a>部署 AutoMQ</h3><p>参考 AutoMQ 文档：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/IyXrw3lHriVPdQkQLDvcPGQdnNh">集群方式部署 | AutoMQ</a> [5] 。在部署启动前，添加如下配置参数以开启 Prometheu 的拉取接口。通过以下参数启动 AutoMQ 集群以后，每个节点将会额外开放一个 HTTP 接口供我们拉取 AutoMQ 的监控指标。这些指标的格式均遵循 Prometheus Metrics 的格式。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">bin&#x2F;kafka-server-start.sh ...\
+--override  s3.telemetry.metrics.exporter.type&#x3D;prometheus \
+--override  s3.metrics.exporter.prom.host&#x3D;0.0.0.0 \
+--override  s3.metrics.exporter.prom.port&#x3D;8890 \
+....<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>当启用 AutoMQ 监控指标后，可以在任意一台节点上通过 HTTP 协议拉取到 Prometheus 格式的监控指标，地址为：<code>http://&#123;node_ip&#125;:8890</code>，响应结果示例如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">....
+kafka_request_time_mean_milliseconds&#123;otel_scope_name&#x3D;&quot;io.opentelemetry.jmx&quot;,type&#x3D;&quot;DescribeDelegationToken&quot;&#125; 0.0 1720520709290
+kafka_request_time_mean_milliseconds&#123;otel_scope_name&#x3D;&quot;io.opentelemetry.jmx&quot;,type&#x3D;&quot;CreatePartitions&quot;&#125; 0.0 1720520709290
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>关于指标介绍，可以参考 AutoMQ 官网文档：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/ArHpwR9zsiLbqwkecNzcqOzXn4b">Metrics | AutoMQ</a> [6] 。</p>
+<h3 id="部署-Prometheus"><a href="#部署-Prometheus" class="headerlink" title="部署 Prometheus"></a>部署 Prometheus</h3><p>Prometheus 可以通过下载二进制包部署，也可以通过 Docker 方式部署。以下是这两种部署方式的介绍。</p>
+<h4 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h4><p>为了方便使用，你可以新建一个脚本，并根据需要修改 Prometheus 的下载版本，最后执行脚本即可完成部署。首先，新建脚本：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;home
+vim install_prometheus.sh
+# !!! 粘贴下面的脚本内容 并保存退出
+# 授予权限
+chmod +x install_prometheus.sh
+# 执行脚本
+.&#x2F;install_prometheus.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>脚本内容如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">version&#x3D;2.45.3
+filename&#x3D;prometheus-$&#123;version&#125;.linux-amd64
+mkdir -p &#x2F;opt&#x2F;prometheus
+wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;prometheus&#x2F;releases&#x2F;download&#x2F;v$&#123;version&#125;&#x2F;$&#123;filename&#125;.tar.gz
+tar xf $&#123;filename&#125;.tar.gz
+cp -far $&#123;filename&#125;&#x2F;*  &#x2F;opt&#x2F;prometheus&#x2F;
+
+# config as a service 
+cat &lt;&lt;EOF &gt;&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;prometheus.service
+[Unit]
+Description&#x3D;&quot;prometheus&quot;
+Documentation&#x3D;https:&#x2F;&#x2F;prometheus.io&#x2F;
+After&#x3D;network.target
+
+[Service]
+Type&#x3D;simple
+
+ExecStart&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;prometheus --config.file&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml --storage.tsdb.path&#x3D;&#x2F;opt&#x2F;prometheus&#x2F;data --web.enable-lifecycle --web.enable-remote-write-receiver
+
+Restart&#x3D;on-failure
+SuccessExitStatus&#x3D;0
+LimitNOFILE&#x3D;65536
+StandardOutput&#x3D;syslog
+StandardError&#x3D;syslog
+SyslogIdentifier&#x3D;prometheus
+
+
+[Install]
+WantedBy&#x3D;multi-user.target
+EOF
+
+systemctl enable prometheus
+systemctl restart prometheus
+systemctl status prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>随后修改 Prometheus 的配置文件，<strong>增加采集 AutoMQ 可观测数据的任务</strong>，并<strong>重启</strong> Prometheus，执行命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># config 配置文件内容填下面的
+vim &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml
+# 重启 Prometheus
+systemctl restart prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>配置文件内容参考如下</strong>，请将下列中的<code>client_ip</code>修改为 AutoMQ 开放的可观测数据暴露地址：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+scrape_configs:
+  # The job name is added as a label &#96;job&#x3D;&lt;job_name&gt;&#96; to any timeseries scraped from this config.
+  - job_name: &quot;prometheus&quot;
+    static_configs:
+      - targets: [&quot;localhost:9090&quot;]
+      
+  - job_name: &quot;automq&quot;
+    static_configs:
+      - targets: [&quot;&#123;client_ip&#125;:8890&quot;]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>部署完成后，我们可以通过浏览器访问 Prometheus，查看是否真正采集到了 AutoMQ 的 Metrics数据，访问<code>http://&#123;client_ip&#125;:9090/targets</code>：</p>
+<p><img src="/images/Prometheus.png"></p>
+<h4 id="Docker-部署"><a href="#Docker-部署" class="headerlink" title="Docker 部署"></a>Docker 部署</h4><p>如果你已经有一个在运行的 Prometheus Docker 容器，请先执行命令删除该容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">docker stop prometheus
+docker rm prometheus<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>新建配置文件，并在 Docker 启动时进行挂载：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p &#x2F;opt&#x2F;prometheus
+vim &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml
+# 配置内容参考上述 “二进制部署” 中的配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>启动 Docker 容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">docker run -d \
+  --name&#x3D;prometheus \
+  -p 9090:9090 \
+  -v &#x2F;opt&#x2F;prometheus&#x2F;prometheus.yml:&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml \
+  -m 500m \
+  prom&#x2F;prometheus \
+  --config.file&#x3D;&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml \
+  --enable-feature&#x3D;otlp-write-receiver \
+  --web.enable-remote-write-receiver<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这样你便得到了一个采集 AutoMQ Metrics 的 Prometheus 服务，关于更多 AutoMQ Metrics 与 Prometheus 集成的介绍，可以参考：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/automq/observability/integrating-metrics-with-prometheus">将 Metrics 集成到 Prometheus | AutoMQ</a> [7]。</p>
+<h3 id="部署夜莺监控"><a href="#部署夜莺监控" class="headerlink" title="部署夜莺监控"></a>部署夜莺监控</h3><p>夜莺监控可以通过下面三种方式进行部署，关于更详细的部署说明可以参考<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/install/intro/">官方文档</a> [8]：</p>
+<ul>
+<li><p>Docker compose 方式部署</p>
+</li>
+<li><p>二进制方式部署</p>
+</li>
+<li><p>Helm 方式部署</p>
+</li>
+</ul>
+<p>接下来我将采用二进制的方式进行部署。</p>
+<h4 id="下载夜莺"><a href="#下载夜莺" class="headerlink" title="下载夜莺"></a>下载夜莺</h4><p>请在夜莺 <a target="_blank" rel="noopener" href="https://github.com/ccfos/nightingale">Github releases</a> [9] 页中选择合适的版本进行下载，这里我们采用的版本是<code>v7.0.0-beta.14</code>。如果你是 amd 架构的机器，可直接执行如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd &#x2F;home
+# 下载
+wget https:&#x2F;&#x2F;github.com&#x2F;ccfos&#x2F;nightingale&#x2F;releases&#x2F;download&#x2F;v7.0.0-beta.14&#x2F;n9e-v7.0.0-beta.14-linux-amd64.tar.gz
+mkdir -p &#x2F;home&#x2F;flashcat
+# 解压文件到 &#x2F;home&#x2F;flashcat 文件夹
+tar -xzf &#x2F;home&#x2F;n9e-v7.0.0-beta.14-linux-amd64.tar.gz -C &#x2F;home&#x2F;flashcat
+# 进入主目录
+cd &#x2F;home&#x2F;flashcat<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="配置依赖环境"><a href="#配置依赖环境" class="headerlink" title="配置依赖环境"></a>配置依赖环境</h4><p>夜莺依赖 MySQL 和 Redis，因此需要提前安装这两个环境。你可以通过 Docker 方式部署，也可以通过执行命令进行安装，参考命令如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># install mysql
+yum -y install mariadb*
+systemctl enable mariadb
+systemctl restart mariadb
+mysql -e &quot;SET PASSWORD FOR &#39;root&#39;@&#39;localhost&#39; &#x3D; PASSWORD(&#39;1234&#39;);&quot;
+
+# install redis
+yum install -y redis
+systemctl enable redis
+systemctl restart redis<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里 Redis 设置的是无密码的。并且这里指定 MySQL 数据库的密码为<code>1234</code>，<strong>如果你需要更改为其他的密码</strong>，要在夜莺的配置文件中进行配置，以保证夜莺能连接到你的数据库。修改夜莺配置文件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vim &#x2F;home&#x2F;flashcat&#x2F;etc&#x2F;config.toml
+
+修改 [DB] 下的用户名和密码：
+[DB]
+# postgres: host&#x3D;%s port&#x3D;%s user&#x3D;%s dbname&#x3D;%s password&#x3D;%s sslmode&#x3D;%s
+# postgres: DSN&#x3D;&quot;host&#x3D;127.0.0.1 port&#x3D;5432 user&#x3D;root dbname&#x3D;n9e_v6 password&#x3D;1234 sslmode&#x3D;disable&quot;
+# sqlite: DSN&#x3D;&quot;&#x2F;path&#x2F;to&#x2F;filename.db&quot;
+DSN &#x3D; &quot;&#123;username&#125;:&#123;password&#125;@tcp(127.0.0.1:3306)&#x2F;n9e_v6?charset&#x3D;utf8mb4&amp;parseTime&#x3D;True&amp;loc&#x3D;Local&amp;allowNativePasswords&#x3D;true&quot;
+# enable debug mode or not<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="导入数据库表"><a href="#导入数据库表" class="headerlink" title="导入数据库表"></a>导入数据库表</h4><p>执行如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mysql -uroot -p1234 &lt; n9e.sql<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>请通过数据库工具检测是否成功导入数据库表：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| n9e_v6             |
++--------------------+
+
+&gt; show tables;
++-----------------------+
+| Tables_in_n9e_v6      |
++-----------------------+
+| alert_aggr_view       |
+| alert_cur_event       |
+| alert_his_event       |
+| alert_mute            |
+| alert_rule            |
+| alert_subscribe       |
+| alerting_engines      |
+| board                 |
+| board_busigroup       |
+| board_payload         |
+| builtin_cate          |
+| builtin_components    |
+| builtin_metrics       |
+······<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="修改夜莺配置文件"><a href="#修改夜莺配置文件" class="headerlink" title="修改夜莺配置文件"></a>修改夜莺配置文件</h4><p>你需要修改夜莺的配置文件，进行 Prometheus 数据源的设置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">vim &#x2F;home&#x2F;flashcat&#x2F;etc&#x2F;config.toml
+
+# 修改 [[Pushgw.Writers]] 部分的内容为
+[[Pushgw.Writers]]
+# Url &#x3D; &quot;http:&#x2F;&#x2F;127.0.0.1:8480&#x2F;insert&#x2F;0&#x2F;prometheus&#x2F;api&#x2F;v1&#x2F;write&quot;
+Url &#x3D; &quot;http:&#x2F;&#x2F;&#123;client_ip&#125;:9090&#x2F;api&#x2F;v1&#x2F;write&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="启动夜莺"><a href="#启动夜莺" class="headerlink" title="启动夜莺"></a>启动夜莺</h4><p>在夜莺的根目录 <code>/home/flashcat</code>下执行：<code>./n9e</code>。成功启动后，可在浏览器中访问 <code>http://&#123;client_ip&#125;:17000</code>，默认的登录账号和密码为：</p>
+<ul>
+<li><p>账号：<code>root</code></p>
+</li>
+<li><p>密码：<code>root.2020</code></p>
+</li>
+</ul>
+<p><img src="/images/start'.png"></p>
+<h4 id="接入-Prometheus-数据源"><a href="#接入-Prometheus-数据源" class="headerlink" title="接入 Prometheus 数据源"></a>接入 Prometheus 数据源</h4><p>左侧边栏集成 -&gt; 数据源 -&gt; Prometheus。</p>
+<p><img src="/images/datasource-1.png"></p>
+<p>至此，我们的夜莺监控就部署结束了。</p>
+<h2 id="夜莺监控-AutoMQ-集群状态"><a href="#夜莺监控-AutoMQ-集群状态" class="headerlink" title="夜莺监控 AutoMQ 集群状态"></a>夜莺监控 AutoMQ 集群状态</h2><p>接下来，我将介绍夜莺监控提供的一部分功能，帮助你更好地了解夜莺与 AutoMQ 集成的可用功能。</p>
+<h3 id="即时查询"><a href="#即时查询" class="headerlink" title="即时查询"></a>即时查询</h3><p>选择内置的 AutoMQ 指标：</p>
+<p><img src="/images/query1.png"></p>
+<p>可以尝试查询一些数据，比如Fetch请求处理时间的平均值 <code>kafka_request_time_50p_milliseconds</code>:</p>
+<p><img src="/images/avg.png"></p>
+<p><img src="/images/avg2.png"></p>
+<p>同时你也可以自定义一些指标，并利用表达式对指标进行聚合：</p>
+<p><img src="/images/%E8%81%9A%E5%90%88.png"></p>
+<h3 id="警报功能"><a href="#警报功能" class="headerlink" title="警报功能"></a>警报功能</h3><p>选择左侧边栏警报 -&gt; 警报规则 -&gt; 新建规则。比如我们可以给 <code>kafka_network_io_bytes_total</code>设置报警，这个指标的意义是 Kafka Broker 节点通过网络发送或接收的字节总数，通过对这个指标设置表达式，就能够计算 Kafka Broker 节点的入站网络 I&#x2F;O 速率。表达式为：</p>
+<pre class="line-numbers language-none"><code class="language-none">sum by(job, instance) (rate(kafka_network_io_bytes_total&#123;direction&#x3D;&quot;in&quot;&#125;[1m]))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>设置警报规则：</p>
+<p><img src="/images/alertrule.png"></p>
+<p>Data preview：</p>
+<p><img src="/images/preview.png"></p>
+<p>同时你也可以设置发生警报时会通知到的群组：</p>
+<p><img src="/images/group.png"></p>
+<p>创建完告警后，让我们来模拟高并发的消息处理场景：短时间内总共<code>2500000</code>条消息被发送到 AutoMQ 节点，我采用的方式是通过 Kafka SDK 的方式进行消息发送，一次共 50 个 Topic ，给每个 Topic 发送 500 条消息，共 100 次。示例如下：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class KafkaTest &#123;
+
+    private static final String BOOTSTRAP_SERVERS &#x3D; &quot;http:&#x2F;&#x2F;&#123;&#125;:9092&quot;; &#x2F;&#x2F; your automq broker ip
+    private static final int NUM_TOPICS &#x3D; 50;
+    private static final int NUM_MESSAGES &#x3D; 500;
+
+    public static void main(String[] args) throws Exception &#123;
+        KafkaTest test &#x3D; new KafkaTest();
+        &#x2F;&#x2F; test.createTopics();    &#x2F;&#x2F; create 50 topics
+        for(int i &#x3D; 0; i &lt; 100; i++)&#123;
+            test.sendMessages();   &#x2F;&#x2F; 25,000 messages will be sent each time, and 500 messages will be sent to each of 50 topics.
+        &#125;
+    &#125;
+    
+    public void createTopics() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+
+        try (AdminClient adminClient &#x3D; AdminClient.create(props)) &#123;
+            List&lt;NewTopic&gt; topics &#x3D; new ArrayList&lt;&gt;();
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                topics.add(new NewTopic(&quot;Topic-&quot; + i, 1, (short) 1));
+            &#125;
+            adminClient.createTopics(topics).all().get();
+            System.out.println(&quot;Topics created successfully&quot;);
+        &#125; catch (InterruptedException | ExecutionException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+
+    public void sendMessages() &#123;
+        Properties props &#x3D; new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        try (KafkaProducer&lt;String, String&gt; producer &#x3D; new KafkaProducer&lt;&gt;(props)) &#123;
+            for (int i &#x3D; 1; i &lt;&#x3D; NUM_TOPICS; i++) &#123;
+                String topic &#x3D; &quot;Topic-&quot; + i;
+                for (int j &#x3D; 1; j &lt;&#x3D; NUM_MESSAGES; j++) &#123;
+                    String key &#x3D; &quot;key-&quot; + j;
+                    String value &#x3D; &quot;&#123;\&quot;userId\&quot;: &quot; + j + &quot;, \&quot;action\&quot;: \&quot;visit\&quot;, \&quot;timestamp\&quot;: &quot; + System.currentTimeMillis() + &quot;&#125;&quot;;
+                    ProducerRecord&lt;String, String&gt; record &#x3D; new ProducerRecord&lt;&gt;(topic, key, value);
+                    producer.send(record, (RecordMetadata metadata, Exception exception) -&gt; &#123;
+                        if (exception &#x3D;&#x3D; null) &#123;
+                            System.out.printf(&quot;Sent message to topic %s partition %d with offset %d%n&quot;, metadata.topic(), metadata.partition(), metadata.offset());
+                        &#125; else &#123;
+                            exception.printStackTrace();
+                        &#125;
+                    &#125;);
+                &#125;
+            &#125;
+            System.out.println(&quot;Messages sent successfully&quot;);
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>随后我们可以在夜莺控制台看到报警信息：</p>
+<p><img src="/images/alert2.png"></p>
+<p>告警详细信息：</p>
+<p><img src="/images/alertinfo.png"></p>
+<h3 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h3><p>首先我们可以利用已知的指标建立自己的仪表盘，如下所示是对 AutoMQ 消息请求处理时间，消息总数，网络 IO 比特数进行的统计仪表盘：</p>
+<p><img src="/images/board.png"></p>
+<p>同时，我们也可以利用官方内置的仪表盘进行监测。左侧边栏 -&gt; 聚合 -&gt; 模板中心：</p>
+<p><img src="/images/template.png"></p>
+<p>选择 AutoMQ，可以看到有几个 DashBoard 可以选用:</p>
+<p><img src="/images/dashboard.png"></p>
+<p>我们选择 Topic Metrics 仪表盘，展示内容如下：</p>
+<p><img src="/images/metrics.png"></p>
+<p>这里展示了 AutoMQ 集群在最近一段时间内的消息输入和输出的占用情况、消息输入和请求的速率、消息大小等。这些指标用于监控和优化 AutoMQ 集群的性能和稳定性：通过消息输入和输出的占用情况，可以评估生产者和消费者的负载，确保集群能正常处理消息流量；消息输入速率用于实时监控生产者发送消息的速率，从而识别潜在的瓶颈或突发流量；请求速率帮助了解客户端请求的频率，以便优化资源分配和处理能力；消息大小指标则用于分析消息的平均大小，从而调整配置以优化存储和网络传输效率。通过监控这些指标，能够及时发现并解决性能问题，确保 AutoMQ 集群的高效和稳定运行。</p>
+<p>至此，我们的集成过程已完成。关于更多的使用方式，你可以参考夜莺的<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/overview/">官方文档</a> [10] 进行体验。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过本文的介绍，我们详细阐述了如何使用夜莺监控系统（Nightingale）对 AutoMQ 集群进行全面监控。我们从AutoMQ 和夜莺的基本概念入手，逐步讲解了如何部署 AutoMQ、Prometheus 和夜莺，并配置监控和告警规则。通过这种集成，企业可以实时掌握 AutoMQ 集群的运行状态，及时发现和解决潜在问题，优化系统性能，确保业务的连续性和稳定性。夜莺监控系统以其强大的数据采集能力、灵活的告警机制和丰富的可视化功能，成为企业监控复杂分布式系统的理想选择。希望本文能为您在实际应用中提供有价值的参考，助力您的系统运维更加高效和稳定。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>[1] AutoMQ：<a target="_blank" rel="noopener" href="https://www.automq.com/zh">https://www.automq.com/zh</a></p>
+<p>[2] 夜莺监控：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/introduction/">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/introduction/</a></p>
+<p>[3] 夜莺架构：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/introduction/">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/introduction/</a></p>
+<p>[4] Prometheus：<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/getting_started/">https://prometheus.io/docs/prometheus/latest/getting_started/</a></p>
+<p>[5] 集群方式部署 | AutoMQ：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/IyXrw3lHriVPdQkQLDvcPGQdnNh">https://docs.automq.com/zh/docs/automq-opensource/IyXrw3lHriVPdQkQLDvcPGQdnNh</a></p>
+<p>[6] Metrics | AutoMQ：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/docs/automq-opensource/ArHpwR9zsiLbqwkecNzcqOzXn4b">https://docs.automq.com/zh/docs/automq-opensource/ArHpwR9zsiLbqwkecNzcqOzXn4b</a></p>
+<p>[7] 将 Metrics 集成到 Prometheus：<a target="_blank" rel="noopener" href="https://docs.automq.com/zh/automq/observability/integrating-metrics-with-prometheus">https://docs.automq.com/zh/automq/observability/integrating-metrics-with-prometheus</a></p>
+<p>[8] 部署说明：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/install/intro/">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/install/intro/</a></p>
+<p>[9] 夜莺 Github releases：<a target="_blank" rel="noopener" href="https://github.com/ccfos/nightingale">https://github.com/ccfos/nightingale</a></p>
+<p>[10] 夜莺官方文档：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/overview/">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/overview/</a></p>
+ 
+      </div>
+      <hr />
+
+      
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">KTpro</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://example.com/2024/07/19/automq-kai-yuan-ke-guan-ce-xing-fang-an-ye-ying-flashcat/">http://example.com/2024/07/19/automq-kai-yuan-ke-guan-ce-xing-fang-an-ye-ying-flashcat/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">KTpro</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/AutoMQ/">
+              <span class="chip bg-color">AutoMQ</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+        </div>
+      </div>
+       <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的认可是我前进的动力！</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+ 
+    </div>
+  </div>
+
+       <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '10qGqhzFmq9j8dAQmPyXKA0M-gzGzoHsz',
+        appKey: 'E4NvM3qSDAgTYtSIx2yMBOzF',
+        serverURLs: '',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'any commits！'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+       
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2024/07/19/automq-kai-yuan-ke-guan-ce-xing-fang-an-ye-ying-flashcat/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="AutoMQ 开源可观测性方案：夜莺 Flashcat">
+                        
+                        <span class="card-title">AutoMQ 开源可观测性方案：夜莺 Flashcat</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/AutoMQ/" class="post-category">
+                                    AutoMQ
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/AutoMQ/">
+                        <span class="chip bg-color">AutoMQ</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2024/07/18/ri-chang-pr/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="日常 PR">
+                        
+                        <span class="card-title">日常 PR</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-18
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            KTpro
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/push/">
+                        <span class="chip bg-color">push</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+ <!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+   
+    <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8785731632"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script> 
+  
+
+  <div class="container row center-align" style="margin-bottom: 15px !important;">
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year">2021-2024</span>
+      
+      <a href="/about" target="_blank">KTpro</a>
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+
+      <br />
+       
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">70.4k</span>
+       
+       
+      
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+          <span id="busuanzi_container_site_pv" style="display: inline" class="white-color">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+         
+        
+          <span id="busuanzi_container_site_uv" style="display: inline" class="white-color">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+         
+      
+      <br />
+
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(startYear, startMonth - 1, startDate, startHour, startMinute, startSecond); // 修正月份减1
+          var t2 = Date.UTC(todayYear, todayMonth - 1, todayDate, todayHour, todayMinute, todaySecond); // 修正月份减1
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor((diff % years) / days); // 修正天数计算
+
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip = "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+            var yearsAndDaysTip = "This site has been running for " + diffYears + " years and " + diffDays + " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip = "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip = "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
+    <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:3185633428@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3185633428" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 3185633428" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+
+</html>

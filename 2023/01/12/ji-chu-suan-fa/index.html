@@ -1,0 +1,2401 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="ACWing基础算法模块, KTpro">
+    <meta name="description" content="ACWing模板链接
+基础算法[基础算法](常用代码模板1——基础算法 - AcWing)    
+数据结构[数据结构](常用代码模板2——数据结构 - AcWing) 
+搜索与图论[搜索与图论](常用代码模板3——搜索与图论 - AcWi">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>ACWing基础算法模块 | KTpro</title>
+    <link rel="icon" type="image/png" href="/medias/logoofmine.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logoofmine.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">KTpro</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logoofmine.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">KTpro</div>
+        <div class="logo-desc">
+            
+            你好呀！欢迎访问我的小破站
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ACWing基础算法模块</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+  <div class="card">
+    <div class="card-content article-info">
+      <div class="row tag-cate">
+        <div class="col s7">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E7%AE%97%E6%B3%95/">
+              <span class="chip bg-color">算法</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div class="col s5 right-align">
+          
+          <div class="post-cate">
+            <i class="fas fa-bookmark fa-fw icon-category"></i>
+            
+            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+              算法
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="post-info">
+        
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp; 2023-01-12
+        </div>
+         
+        <div class="post-date info-break-policy">
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2023-09-11
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp; 9.5k
+        </div>
+         
+        <div class="info-break-policy">
+          <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+          44 分
+        </div>
+         
+        <div
+          id="busuanzi_container_page_pv"
+          class="info-break-policy"
+          style="display: inline"
+        >
+          <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+          <span id="busuanzi_value_page_pv"></span>
+        </div>
+        
+      </div>
+    </div>
+    <hr class="clearfix" />
+
+    
+    <!-- 是否加载使用自带的 prismjs. -->
+    <link
+      rel="stylesheet"
+      href="/libs/prism/prism.min.css"
+    />
+     
+
+    <div class="card-content article-card-content">
+      <div id="articleContent">
+        <h3 id="ACWing模板链接"><a href="#ACWing模板链接" class="headerlink" title="ACWing模板链接"></a>ACWing模板链接</h3><blockquote>
+<p>基础算法[基础算法](<a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/277/">常用代码模板1——基础算法 - AcWing</a>)    </p>
+<p>数据结构[数据结构](<a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/404/">常用代码模板2——数据结构 - AcWing</a>) </p>
+<p>搜索与图论[搜索与图论](<a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/405/">常用代码模板3——搜索与图论 - AcWing</a>) </p>
+<p>数学知识[数学知识](<a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/406/">常用代码模板4——数学知识 - AcWing</a>) </p>
+</blockquote>
+<h1 id="AC模板"><a href="#AC模板" class="headerlink" title="AC模板"></a>AC模板</h1><h2 id="一-基础算法"><a href="#一-基础算法" class="headerlink" title="一.基础算法"></a>一.基础算法</h2><h3 id="1-快速排序"><a href="#1-快速排序" class="headerlink" title="1.快速排序"></a>1.快速排序</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N&#x3D;100010;
+int n;
+int q[N];
+void quick_sort(int q[],int l,int r)&#123;
+    if(l&gt;&#x3D;r)return ;
+    int i&#x3D;l-1;
+    int j&#x3D;r+1;
+    int x&#x3D;q[l+r&gt;&gt;1];       &#x2F;&#x2F;相当于(l+r)&#x2F;2;
+
+    while(i&lt;j)&#123;
+        do i++;while(q[i]&lt;x);    &#x2F;&#x2F;找到左区间中大于x的元素
+        do j--;while(q[j]&gt;x);    &#x2F;&#x2F;找到右区间中小于x的元素
+        if(i&lt;j)&#123;
+            swap(q[i],q[j]);     &#x2F;&#x2F;将这两个元素交换
+        &#125;
+    &#125;
+   &#x2F;&#x2F;递归遍历左右区间
+    quick_sort(q,l,j);    
+    quick_sort(q,j+1,r);
+&#125;
+int main()&#123;
+    cin&gt;&gt;n;
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        scanf(&quot;%d&quot;,&amp;q[i]);
+    &#125; 
+    quick_sort(q,0,n-1);     &#x2F;&#x2F;此处元素从0开始存的，所以区间这样
+                             &#x2F;&#x2F;如果从有开始存就是(q,1,n);
+
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        cout&lt;&lt;q[i]&lt;&lt;&quot; &quot;;
+    &#125;
+    cout&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="归并排序-二路合并"><a href="#归并排序-二路合并" class="headerlink" title="归并排序      二路合并"></a>归并排序      二路合并</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+
+const int N &#x3D;100010;
+int n;
+int q[N];
+int ans[N];&#x2F;&#x2F;辅助数组  
+
+void merge_sort(int q[],int l, int r)&#123;
+    if(l&gt;&#x3D;r)return ;
+    &#x2F;&#x2F;1.找分界点
+    int mid&#x3D;l+r&gt;&gt;1;
+
+    &#x2F;&#x2F;递归左右区间 
+    merge_sort(q,l,mid);  merge_sort(q,mid+1,r);
+
+    int k&#x3D;0;&#x2F;&#x2F;表示辅助数组中的元素下标
+    int i&#x3D;l;
+    int j&#x3D;mid+1;   &#x2F;&#x2F;分别表示两区间的起始点 
+
+    while(i&lt;&#x3D;mid&amp;&amp;j&lt;&#x3D;r)&#123;
+        &#x2F;&#x2F;将较小者放入辅助数组中 
+        if(q[i]&lt;&#x3D;q[j]) ans[k++]&#x3D;q[i++];
+        else ans[k++]&#x3D;q[j++];
+    &#125;
+
+    &#x2F;&#x2F;将两数组中剩余的部分加入到辅助数组中
+     while(i&lt;&#x3D;mid)  ans[k++]&#x3D;q[i++];
+     while(j&lt;&#x3D;r) ans[k++]&#x3D;q[j++];
+
+     &#x2F;&#x2F;最后要把辅助数组中元素复制回来
+      for(i&#x3D;l,j&#x3D;0;i&lt;&#x3D;r;i++,j++) q[i]&#x3D;ans[j];
+
+&#125;
+int main()&#123;
+    cin&gt;&gt;n;
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        scanf(&quot;%d&quot;,&amp;q[i]);
+    &#125;
+    merge_sort(q,0,n-1);
+
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        printf(&quot;%d &quot;,q[i]);
+    &#125;
+
+    cout&lt;&lt;endl;
+    return 0;
+
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="二分"><a href="#二分" class="headerlink" title="二分"></a>二分</h3><blockquote>
+<p>这里以数的范围为例（题目链接[数的范围](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/description/791/">789. 数的范围 - AcWing题库</a>)），查找一个有序数组中目标值x的所在范围；</p>
+<p>二分的思想是：能够将整体根据某种性质分成两个部分，通过使用l&#x3D;mid和r&#x3D;mid两个是否加1的模板，对数的范围左或右边界进行缩小和查找。</p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+
+const int N &#x3D;100010;
+int n,m;
+int q[N];
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    for(int i&#x3D;0; i&lt;n; i++) &#123;
+        scanf(&quot;%d&quot;,&amp;q[i]);
+    &#125;
+
+    &#x2F;&#x2F;m次询问
+    while(m--) &#123;
+        int x;
+        scanf(&quot;%d&quot;,&amp;x);
+
+        int l&#x3D;0,r&#x3D;n-1; &#x2F;&#x2F;定义边界
+
+        while(l&lt;r) &#123;
+            int mid&#x3D;l+r&gt;&gt;1;    &#x2F;&#x2F;刚开始不知道要不要加一，r&#x3D;mid则不用加1
+            if(q[mid]&gt;&#x3D;x) r&#x3D;mid;  &#x2F;&#x2F;如果中间值大于目标值，说明去区间在mid左边，缩小右边界
+            else l&#x3D;mid+1;
+        &#125;
+
+        &#x2F;&#x2F;注意：如果不存在目标值，即区间端点值不等于目标值，输出-1 -1&quot;
+        if(q[l]!&#x3D;x) cout&lt;&lt;&quot;-1 -1&quot;&lt;&lt;endl;
+        else &#123;    
+            cout&lt;&lt;l&lt;&lt;&quot; &quot;; &#x2F;&#x2F;打印其中一个边界(右边界(根据首先要找的mid范围判断))
+            l&#x3D;0; r&#x3D;n-1;
+            while(l&lt;r) &#123;
+                int mid&#x3D;l+r+1&gt;&gt;1;     &#x2F;&#x2F;需要加1，l&#x3D;mid
+                if(q[mid]&lt;&#x3D;x) l&#x3D;mid;   &#x2F;&#x2F;中间值小于目标值，说明区间在mid右边，缩小左边界
+                else  r&#x3D;mid-1;
+            &#125;
+            cout&lt;&lt;l&lt;&lt;endl;  &#x2F;&#x2F;打印哪个都一样
+        &#125;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="浮点数二分"><a href="#浮点数二分" class="headerlink" title="浮点数二分"></a>浮点数二分</h4><blockquote>
+<p>保证答案一定在区间里面，直到区间非常小时可以当作答案就为端点值；</p>
+<p>浮点数二分不需要考虑整除时的取整问题，因此更简单；</p>
+<p>这里以开平方根为例   <strong>check是判断答案应在区间的函数</strong> </p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">bool check(double x) &#123;&#x2F;* ... *&#x2F;&#125; &#x2F;&#x2F; 检查x是否满足某种性质
+
+double bsearch_3(double l, double r)
+&#123;
+    const double eps &#x3D; 1e-6;   &#x2F;&#x2F; eps 表示精度，取决于题目对精度的要求
+    while (r - l &gt; eps)
+    &#123;
+        double mid &#x3D; (l + r) &#x2F; 2;
+        if (check(mid)) r &#x3D; mid;
+        else l &#x3D; mid;
+    &#125;
+    return l;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="数的三次方根"><a href="#数的三次方根" class="headerlink" title="数的三次方根"></a>数的三次方根</h4><blockquote>
+<p>题目链接[数的三次方根](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/792/">790. 数的三次方根 - AcWing题库</a>) </p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+int main()&#123;
+    double x;
+    cin&gt;&gt;x;
+    double l&#x3D;-10000,r&#x3D;10000;
+    &#x2F;&#x2F;两边界之差小于1e-8说明最终结果在两数之间，在误差范围之内
+    &#x2F;&#x2F;同时注意题目要求保留多少小数位，要多加两位，如保留6位，则1e-8，保留八位，最后按6位输出
+    while(r-l&gt;1e-8)
+    &#123;
+        &#x2F;&#x2F;确定mid
+        double mid&#x3D;(l+r)&#x2F;2;
+        if(mid*mid*mid&gt;&#x3D;x)
+        r&#x3D;mid; &#x2F;&#x2F;大于等于x，说明mid对应数的三次方大于了目标值，则缩小右边界
+        else l&#x3D;mid;
+    &#125;
+    printf(&quot;%lf\n&quot;,l);&#x2F;&#x2F;l或r都可，两者相差在误差内,而lf默认为6位小数输出，%.4lf则4位小数
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="高精度算法"><a href="#高精度算法" class="headerlink" title="高精度算法"></a>高精度算法</h3><h4 id="高精度加法"><a href="#高精度加法" class="headerlink" title="高精度加法"></a>高精度加法</h4><blockquote>
+<p>利用数组对位数过长的数（长度可达到1e6位）进行求和   题目链接[链接](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/description/793/">791. 高精度加法 - AcWing题库</a>) </p>
+<p>注意存储两个数时用字符串读入，再按逆序拆分（有进位的情况）后对两个数分别存储。</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+const int N &#x3D;1e6+10;
+
+vector&lt;int&gt; add(vector&lt;int&gt; &amp;v,vector&lt;int&gt; &amp;vs) &#123;
+    vector&lt;int&gt; ans;
+    int t&#x3D;0; &#x2F;&#x2F; 保存进位
+    for(int i&#x3D;0; i&lt;v.size()||i&lt;vs.size(); i++) &#123;
+        if(i&lt;v.size())  t+&#x3D;v[i];
+        if(i&lt;vs.size()) t+&#x3D;vs[i];  &#x2F;&#x2F;t每步将两个数加一起，将个位数保留入组，10位数作为进位 
+        ans.push_back(t%10);
+        t&#x2F;&#x3D;10;
+    &#125;
+
+    if(t) ans.push_back(1); &#x2F;&#x2F;如果还有进位，需要补上
+     return ans;
+&#125;
+void printvec(vector&lt;int&gt; &amp;ans) &#123;
+    for(vector&lt;int&gt;::iterator it&#x3D;ans.end()-1; it!&#x3D;ans.begin()-1; it--) &#123;
+        printf(&quot;%d&quot;,*it);
+    &#125;
+    cout&lt;&lt;endl;
+&#125;
+int main() &#123;
+    vector&lt;int&gt; v,vs;
+    string a,b;
+    cin&gt;&gt;a&gt;&gt;b;
+    &#x2F;&#x2F;位数太多，要用字符串读入
+    for(int i&#x3D;a.size()-1; i&gt;&#x3D;0; i--) &#123;
+        v.push_back(a[i]-&#39;0&#39;);
+    &#125;
+    for(int i&#x3D;b.size()-1; i&gt;&#x3D;0; i--) &#123;
+        vs.push_back(b[i]-&#39;0&#39;);
+    &#125;
+
+    vector&lt;int&gt; ans&#x3D;add(v,vs);
+&#x2F;&#x2F;    for(int i&#x3D;ans.size()-1;i&gt;&#x3D;0;i--)
+&#x2F;&#x2F;    printf(&quot;%d&quot;,ans[i]);
+&#x2F;&#x2F;    
+&#x2F;&#x2F;    cout&lt;&lt;endl;
+    printvec(ans);  &#x2F;&#x2F;倒着输出 
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="高精度减法"><a href="#高精度减法" class="headerlink" title="高精度减法"></a>高精度减法</h4><blockquote>
+<p>将减法过程加个判断，当某个位数相减大于等于0时，直接减并减去上一位的借位，当小于0时需要借1位10，同时需要减去上一位的借位 t</p>
+<p>一般是A大于B，如果小于，就反过来减，再加个符号</p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+const int N &#x3D;1e6+10;
+
+vector&lt;int&gt; sub(vector&lt;int&gt; &amp;v,vector&lt;int&gt; &amp;vs) &#123;
+    vector&lt;int&gt; ans;
+    int t&#x3D;0; &#x2F;&#x2F; 保存借位
+    for(int i&#x3D;0;i&lt;v.size();i++)&#123;    &#x2F;&#x2F;A一定大于B了 
+        t&#x3D;v[i]-t;
+        if(i&lt;vs.size()) t-&#x3D;vs[i];           &#x2F;&#x2F;如果B当前位数存在才减去，相当于A-B-t 
+        ans.push_back((t+10)%10);           &#x2F;&#x2F;两者相减小于0，则加10再模10，且t为1,否则为0
+        if(t&lt;0) t&#x3D;1;
+        else t&#x3D;0; 
+    &#125;
+
+    &#x2F;&#x2F;最后如果前导位为0，则需要弹出
+    while(ans.size()&gt;1&amp;&amp;ans.back()&#x3D;&#x3D;0)  ans.pop_back(); 
+    return ans;
+&#125;
+
+&#x2F;&#x2F;判断v是不是&gt;&#x3D;vs 即A&gt;&#x3D;B 
+bool cmp(vector&lt;int&gt; &amp;v,vector&lt;int&gt; &amp;vs)&#123;
+    if(v.size()!&#x3D;vs.size()) return v.size()&gt;vs.size();
+    for(int i&#x3D;v.size()-1;i&gt;&#x3D;0;i--)&#123;      &#x2F;&#x2F;注意我们是倒着存的数，但需要从高位依次判断大小 
+        if(v[i]!&#x3D;vs[i])
+            return v[i]&gt;vs[i];    &#x2F;&#x2F;相同位数下，只要A有一位数大于B的话就说明A较大了
+    &#125;
+    return true;        &#x2F;&#x2F;如果都相同，则说明A&#x3D;&#x3D;B 
+&#125; 
+void printvec(vector&lt;int&gt; &amp;ans) &#123;
+    for(vector&lt;int&gt;::iterator it&#x3D;ans.end()-1; it!&#x3D;ans.begin()-1; it--) &#123;
+        printf(&quot;%d&quot;,*it);
+    &#125;
+    cout&lt;&lt;endl;
+&#125;
+int main() &#123;
+    vector&lt;int&gt; v,vs;
+    string a,b;
+    cin&gt;&gt;a&gt;&gt;b;
+    &#x2F;&#x2F;位数太多，要用字符串读入
+    for(int i&#x3D;a.size()-1; i&gt;&#x3D;0; i--) &#123;
+        v.push_back(a[i]-&#39;0&#39;);
+    &#125;
+    for(int i&#x3D;b.size()-1; i&gt;&#x3D;0; i--) &#123;
+        vs.push_back(b[i]-&#39;0&#39;);
+    &#125;
+    if(cmp(v,vs)) &#123;
+        vector&lt;int&gt; ans&#x3D;sub(v,vs);
+        printvec(ans); 
+    &#125;
+    else &#123;
+        vector&lt;int&gt; ans&#x3D;sub(vs,v);
+        cout&lt;&lt;&quot;-&quot;;    &#x2F;&#x2F;A小于B时需要加负号 
+        printvec(ans);
+    &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="高精度乘法（高精度-低精度）"><a href="#高精度乘法（高精度-低精度）" class="headerlink" title="高精度乘法（高精度*低精度）"></a>高精度乘法（高精度*低精度）</h4><blockquote>
+<p>按照模板背住就行，具体思路就是：从低位开始，每一位与低精度数相乘，将进位记录下来，将进位 %10 放入res，后 t&#x2F;10作为下一位的进位 ，最后需要扫尾。题目链接[高精度乘法](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/795/">793. 高精度乘法 - AcWing题库</a>) </p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+using namespace std;
+vector&lt;int&gt; A;
+int a;
+vector&lt;int&gt; mul(vector&lt;int&gt; &amp;A,int a)&#123;
+    vector&lt;int&gt; res;
+    int t&#x3D;0;
+    for(int i&#x3D;0;i&lt;A.size()||t;i++)&#123;
+        if(i&lt;A.size()) t+&#x3D;A[i]*a;
+        res.push_back(t%10);
+        t&#x2F;&#x3D;10;
+    &#125;
+&#x2F;&#x2F;    while(t)&#123;
+&#x2F;&#x2F;        res.push_back(t%10);
+&#x2F;&#x2F;        t&#x2F;&#x3D;10;
+&#x2F;&#x2F;    &#125;
+    while(res.size()&gt;1&amp;&amp;res.back()&#x3D;&#x3D;0) res.pop_back();
+    return res;
+&#125;
+int main()&#123;
+    string s;
+    cin&gt;&gt;s&gt;&gt;a;
+    for(int i&#x3D;s.size()-1;i&gt;&#x3D;0;i--)&#123;
+        A.push_back(s[i]-&#39;0&#39;);
+    &#125;
+    vector&lt;int&gt; ans;
+    ans&#x3D;mul(A,a);
+    for(int i&#x3D;ans.size()-1;i&gt;&#x3D;0;i--)&#123;
+        printf(&quot;%d&quot;,ans[i]);
+    &#125;
+    cout&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="高精度除法（高精度-x2F-低精度）"><a href="#高精度除法（高精度-x2F-低精度）" class="headerlink" title="高精度除法（高精度&#x2F;低精度）"></a>高精度除法（高精度&#x2F;低精度）</h4><blockquote>
+<p>高精度除法与其他三种不太相同，是由高位开始进行除的，并且多了一个余数r，最后为了保持一致性，将res翻转了一下，这样在输出的时候也保证了一致（逆序输出）。最后也别忘了消去前导0。</p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+using namespace std;
+vector&lt;int&gt; A;
+int a;
+vector&lt;int&gt; div(vector&lt;int&gt; &amp;A,int a,int &amp;r)&#123;
+    vector&lt;int&gt; res;
+    r&#x3D;0;  &#x2F;&#x2F;存放余数 
+
+    &#x2F;&#x2F;除法与其他三种运算不同，需要从高位开始运算 
+    for(int i&#x3D;A.size()-1;i&gt;&#x3D;0;i--)&#123;
+        r&#x3D;r*10+A[i];
+        res.push_back(r&#x2F;a);
+        r%&#x3D;a;
+    &#125;
+    &#x2F;&#x2F;存放的商的顺序是从高位到低位的，即顺序的，为了统一模板需要倒置一下 
+    reverse(res.begin(),res.end());
+
+    &#x2F;&#x2F;仍然需要将前置0删去 
+    while(res.size()&gt;1&amp;&amp;res.back()&#x3D;&#x3D;0) res.pop_back();
+    return res;
+&#125;
+int main()&#123;
+    string s;
+    cin&gt;&gt;s&gt;&gt;a;
+    for(int i&#x3D;s.size()-1;i&gt;&#x3D;0;i--)&#123;
+        A.push_back(s[i]-&#39;0&#39;);
+    &#125;
+    vector&lt;int&gt; ans;
+    int r&#x3D;0;
+    ans&#x3D;div(A,a,r);
+    for(int i&#x3D;ans.size()-1;i&gt;&#x3D;0;i--)&#123;
+        printf(&quot;%d&quot;,ans[i]);
+    &#125;
+    cout&lt;&lt;endl&lt;&lt;r;
+    cout&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="前缀和"><a href="#前缀和" class="headerlink" title="前缀和"></a>前缀和</h3><h4 id="一维前缀和"><a href="#一维前缀和" class="headerlink" title="一维前缀和"></a>一维前缀和</h4><blockquote>
+<p>    快速求一个数组中一段区间内的数的和，解决在某些数据范围很大的情况下会超时的问题</p>
+<p>    思路：利用公式si&#x3D;a1+a2+~~ai;         在录入数组时，初始化前缀和数组s，每个位置存放前i个数的和</p>
+<p>    实现求和时结果是线性的O(1)        </p>
+<p>    特殊：s数组第一个位置存放0 从1开始存，因为s[i]&#x3D;s[i-1]+a[i];  不会越界</p>
+<p>    有时需要注意数据范围，可能需要用long long</p>
+<p>公式：</p>
+<p>    &lt;S[i] &#x3D; a[1] + a[2] + … a[i]&gt;<br>    &lt;a[l] + … + a[r] &#x3D; S[r] - S[l - 1]&gt;</p>
+<p>例：求[l,r]内的数的和，则可以得s[r]-s[l-1] ;    [题目链接](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/797/">795. 前缀和 - AcWing题库</a>) </p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+const int N &#x3D;1e5+10;
+int n,m;
+int q[N];
+int s[N];
+
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)
+&#123;
+    scanf(&quot;%d&quot;,&amp;q[i]);
+    s[i]&#x3D;s[i-1]+q[i];
+&#125;
+    while(m--)&#123;
+        int l,r;
+        scanf(&quot;%d%d&quot;,&amp;l,&amp;r);
+        printf(&quot;%d\n&quot;,s[r]-s[l-1]);
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="子矩阵的和（二维前缀和）"><a href="#子矩阵的和（二维前缀和）" class="headerlink" title="子矩阵的和（二维前缀和）"></a>子矩阵的和（二维前缀和）</h4><blockquote>
+<p>子矩阵的和也是公式重要，思路是容斥原理吗，即面积的相加相减，最后得到两点之间组成的区域和，录入前缀和数组以及输出区域和配图如下。题目链接[子矩阵的和](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/798/">796. 子矩阵的和 - AcWing题库</a>) </p>
+<p>公式： </p>
+<p>    录入：&lt;s[i][j]&#x3D;s[i-1][j]+s[i][j-1]-s[i-1][j-1]+a[i][j];&gt;</p>
+<p>    输出:  &lt;s[x2][y2]-s[x1-1][y2]-s[x2][y1-1]+s[x1-1][y1-1];&gt;</p>
+</blockquote>
+<p>图一前缀和数组录入：<img title="" src="file:///C:/Users/Lenovo/Desktop/pic/录入前缀和数组.png" alt="前缀和录入" width="680"></p>
+<p>图二目标区域和输出:<img src="C:\Users\Lenovo\Desktop\pic\输出目标区域矩阵和.png" alt="链接"></p>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+using namespace std;
+
+const int N &#x3D;1010;
+int n,m,q;
+int a[N][N];
+int s[N][N];
+
+int main()&#123;
+    cin&gt;&gt;n&gt;&gt;m&gt;&gt;q;
+    &#x2F;&#x2F;读入矩阵，从11开始存 
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;
+        for(int j&#x3D;1;j&lt;&#x3D;m;j++)&#123;
+            scanf(&quot;%d&quot;,&amp;a[i][j]);
+        &#125;
+    &#125;
+    &#x2F;&#x2F;前缀和数组，可以合并这两步，以防万一分开 
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++)&#123;
+        for(int j&#x3D;1;j&lt;&#x3D;m;j++)&#123;
+            s[i][j]&#x3D;s[i-1][j]+s[i][j-1]-s[i-1][j-1]+a[i][j];
+        &#125;
+    &#125;
+    &#x2F;&#x2F;q次询问 
+    while(q--)&#123;
+        int x1,y1,x2,y2;
+        scanf(&quot;%d%d%d%d&quot;,&amp;x1,&amp;y1,&amp;x2,&amp;y2);
+        printf(&quot;%d\n&quot;,s[x2][y2]-s[x1-1][y2]-s[x2][y1-1]+s[x1-1][y1-1]);
+    &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="差分"><a href="#差分" class="headerlink" title="差分"></a>差分</h3><h4 id="一维差分"><a href="#一维差分" class="headerlink" title="一维差分"></a>一维差分</h4><blockquote>
+<p>    就是前缀和的逆运算，即构造数组b，使得原数组a是b数组的前缀和数组。</p>
+<p>即：b(n)&#x3D;a(n)-a(n-1);  如 a2&#x3D;b1+b2&#x3D;a1+(a2-a1)&#x3D;a2;</p>
+<p>    目的：让数组中n个子区间[l,r]每个数都加上一个数C，可以用O(n)一个循环，</p>
+<p>但是用差分可以实现O(1)。</p>
+<p>    过程：bi加上C后，对应的ai也会加上一个C（因为：a2&#x3D;b1+b2;），且其后面的剩余数也会加上C，</p>
+<p>    最后再将br+1减去一个C，这样其后的所有数就相当于不加C，最后根据b数组求原数组即可得到。</p>
+<p>    主要是公式：</p>
+<p>       &lt;b[l]+&#x3D;c;  b[r+1]-&#x3D;c;&gt;</p>
+</blockquote>
+<p>大佬的总结：</p>
+<p><img src="C:\Users\Lenovo\Desktop\pic\前缀和与差分理解.png" alt="图"></p>
+<p><img src="C:\Users\Lenovo\Desktop\pic\差分代码详解.png"></p>
+<p>最后代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;100010;
+int a[N],b[N];
+int n,m;
+
+void insert(int l,int r,int c) &#123;
+    b[l]+&#x3D;c;
+    b[r+1]-&#x3D;c;
+&#125;
+
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++) &#123;
+        scanf(&quot;%d&quot;,&amp;a[i]);
+        insert(i,i,a[i]);     &#x2F;&#x2F;看作数组是空的，然后在每个单位区间上加上了一个a[i]
+    &#125;
+    while(m--) &#123;
+        int l,r,c;
+        scanf(&quot;%d%d%d&quot;,&amp;l,&amp;r,&amp;c);
+        insert(l,r,c);
+    &#125;
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++) &#123;
+&#x2F;&#x2F;        b[i]+&#x3D;b[i-1];           &#x2F;&#x2F;直接用b[i]作为还原后的前缀和数组 
+        a[i]&#x3D;a[i-1]+b[i];      &#x2F;&#x2F;得到加过的前缀和数组，这样更容易理解，因为a数组是b的前缀和数组 
+    &#125;
+    for(int i&#x3D;1;i&lt;&#x3D;n;i++) printf(&quot;%d &quot;,a[i]);    &#x2F;&#x2F;如果用b[i]存储前缀和数组，那就输出b[i] 
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="二维差分"><a href="#二维差分" class="headerlink" title="二维差分"></a>二维差分</h4><blockquote>
+<p>与一维差分差不多，都是容斥原理，主要是公式的应用</p>
+<p>[子矩阵差分](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/description/800/">798. 差分矩阵 - AcWing题库</a>) </p>
+<p>公式如下：</p>
+<p>    &lt;**b[x1][y1]+&#x3D;c;**&gt;</p>
+<p>    &lt;**b[x2+1][y1]-&#x3D;c;**&gt;</p>
+<p>    &lt;**b[x1][y2+1]-&#x3D;c;**&gt;</p>
+<p>    &lt;**b[x2+1][y2+1]+&#x3D;c;**&gt;</p>
+<p>最后由b数组按前缀和公式求出答案数组即可，此处用差分数组b代替前缀和数组</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;1010;
+
+int n,m,q;
+int a[N][N];
+int b[N][N];
+
+void insert(int x1,int y1,int x2,int y2,int c) &#123;
+    b[x1][y1]+&#x3D;c;
+    b[x2+1][y1]-&#x3D;c;
+    b[x1][y2+1]-&#x3D;c;
+    b[x2+1][y2+1]+&#x3D;c;
+&#125;
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m&gt;&gt;q;
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++)
+        for(int j&#x3D;1; j&lt;&#x3D;m; j++)
+            scanf(&quot;%d&quot;,&amp;a[i][j]);
+
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++)
+        for(int j&#x3D;1; j&lt;&#x3D;m; j++)
+            insert(i,j,i,j,a[i][j]);
+
+    while(q--) &#123;
+        int x1,y1,x2,y2,c;
+        scanf(&quot;%d%d%d%d%d&quot;,&amp;x1,&amp;y1,&amp;x2,&amp;y2,&amp;c);
+        insert(x1,y1,x2,y2,c);
+    &#125;
+
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++)
+        for(int j&#x3D;1; j&lt;&#x3D;m; j++)
+        b[i][j]+&#x3D;b[i-1][j]+b[i][j-1]-b[i-1][j-1];
+
+    for(int i&#x3D;1; i&lt;&#x3D;n; i++)
+        &#123;
+            for(int j&#x3D;1; j&lt;&#x3D;m; j++)
+              printf(&quot;%d &quot;,b[i][j]);
+            printf(&quot;\n&quot;);
+        &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h3><blockquote>
+<p>核心思想：根据某种性质，将双层循环O(n^2)优化为 O(n);</p>
+<p>背双指针模板，根据题目要求改写check。</p>
+<p>    (check不一定是函数，可以是某个判断条件)</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">for(int i&#x3D;0,j&#x3D;0;i&lt;n;i++)&#123;
+   while(j &lt; i &amp;&amp; check(i,j) j++;
+    &#x2F;&#x2F;根据题目确定
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<h4 id="换行输出单词"><a href="#换行输出单词" class="headerlink" title="换行输出单词"></a>换行输出单词</h4><p>例：给定一个由一个空格隔开的几个单词组成的字符串，请换行输出每个单词。</p>
+<blockquote>
+<p>运用双指针算法，可以将两层循环得到单词后的空格的操作时间复杂度缩小为O(n)</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;string.h&gt;
+using namespace std;
+const int N &#x3D;10010;
+&#x2F;&#x2F;将几个相隔一个空格的单词，分别换行输出 
+int main() &#123;
+    char str[1000];
+    gets(str);
+    int len&#x3D;strlen(str);  &#x2F;&#x2F;得到字符串数组的长度  &lt;string.h&gt;
+
+    for(int i&#x3D;0;i&lt;len;i++)&#123;
+        int j&#x3D;i; 
+        while(j&lt;len&amp;&amp;str[j]!&#x3D;&#39; &#39;) j++;     &#x2F;&#x2F;如果j指向的不是空格，则继续后移，等遇到空格后输出i到j的这一段即可 
+        &#x2F;&#x2F;输出当前区间的单词 
+        for(int k&#x3D;i;k&lt;j;k++)&#123;
+            cout&lt;&lt;str[k];
+        &#125;
+        puts(&quot;&quot;);
+        &#x2F;&#x2F;
+        i&#x3D;j;  &#x2F;&#x2F;将i指向j所指的当前空格，随后循环结束一次i++即可进行下一个单词的获取 
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="最长连续不重复子区间"><a href="#最长连续不重复子区间" class="headerlink" title="最长连续不重复子区间"></a>最长连续不重复子区间</h4><blockquote>
+<p>做双指针的思路，先像一个双层循环的暴力做法，再通过双指针优化。</p>
+<p>[题目链接](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/801/">799. 最长连续不重复子序列 - AcWing题库</a>) </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">朴素做法：
+for(int i&#x3D;0;i&lt;n;i++)&#123;
+&#x2F;&#x2F;每次j从头开始判断i，j区间是否满足不重复条件
+    for(int j&#x3D;0;j&lt;&#x3D;i;j++)&#123;
+        if(check(i,j))      &#x2F;&#x2F;不完整
+    &#123;
+    res&#x3D;max(res,i-j+1);  &#x2F;&#x2F;子区间长度 
+    &#125;
+  &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<p>双指针代码优化如下：</p>
+<blockquote>
+<p>其中while部分的删去思路：</p>
+<p>    &#x2F;&#x2F;如果当i所指的元素个数大于1时，则当前区间不满足条件，则需要将区间中从第一个数开始进行删除(实际上是减去出现次数，因为没说是有序数组啊，所以要依次删去，直到区间没有重复元素了，i 再往后继续走)，反之如果不重复，i则可以一直往后走，然后更新一下当前的最大长度不重复子区间长度。</p>
+</blockquote>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;set&gt;
+using namespace std;
+const int N &#x3D;100010;
+int n;
+int a[N],s[N];
+&#x2F;&#x2F;s[N]用于判断当前i，j区间是否有重复元素
+int res;
+int main()&#123;
+    cin&gt;&gt;n;
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        scanf(&quot;%d&quot;,&amp;a[i]);
+    &#125;
+    for(int i&#x3D;0,j&#x3D;0;i&lt;n;i++)&#123;
+        s[a[i]]++; &#x2F;&#x2F;i后移过程中不断更新当前数字的个数
+        while(s[a[i]]&gt;1)&#123;
+            s[a[j]]--;
+            j++;   
+        &#125;
+        &#x2F;&#x2F;更新区间长度
+        res&#x3D;max(res,i-j+1);
+    &#125;
+    cout&lt;&lt;res&lt;&lt;endl;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="数组元素目标和"><a href="#数组元素目标和" class="headerlink" title="数组元素目标和"></a>数组元素目标和</h4><blockquote>
+<p>[数组元素目标和](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/802/">800. 数组元素的目标和 - AcWing题库</a>) </p>
+<p>目的是求两个有序数组中哪两个数的和为目标值x，输出两个下标。</p>
+<p>以传统的双层循环进行判断没问题，但是O(n^2)，对于数据量过大会超限，所以用双指针进行优化，<strong>和纯暴力的O(n^2^)算法的区别就在于j指针不会回退</strong> ，这样就节省了时间和内存。</p>
+<p>记录：第一次提交爆了，换long long 还是爆，确实没想到 j 指针回溯的问题，实际上KMP算法也是 j 不回溯的优化，所以将 j 指针从后往前依次判断即可快速得到两下标，而且 j 不用回溯.</p>
+</blockquote>
+<p>tips： 多画过程就好理解了</p>
+<p>            注意上面加粗的 j 指针不会回溯</p>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;100010;
+typedef long long LL;
+int n,m,x;
+int a[N],b[N];
+
+int main()&#123;
+    cin&gt;&gt;n&gt;&gt;m&gt;&gt;x;
+
+    for(int i&#x3D;0;i&lt;n;i++) scanf(&quot;%d&quot;,&amp;a[i]);
+    for(int i&#x3D;0;i&lt;m;i++) scanf(&quot;%d&quot;,&amp;b[i]);
+
+    for(int i&#x3D;0,j&#x3D;m-1;i&lt;n;i++)&#123;          &#x2F;&#x2F;双指针移动过程可以画一画，很好理解    
+       while(j&gt;&#x3D;0&amp;&amp;(a[i]+b[j])&gt;x) j--;
+        &#x2F;&#x2F;这样的j就可以移动到第二个数组中能与第一个数组中某元素和为x的元素，
+        &#x2F;&#x2F;随后i往后移，由于有序数组，便可以找到两个元素
+        if(j&gt;&#x3D;0&amp;&amp;(a[i]+b[j])&#x3D;&#x3D;x) cout&lt;&lt;i&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;endl;    
+    &#125;
+
+    return 0;
+&#125;
+&#x2F;*
+第一次提交：wa    好像是int爆了,不清楚哎
+ &#x2F;&#x2F;每次遍历完第二个数组后，j要从第一个位置重新开始匹配 和双层循环没区别了
+*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="判断子序列"><a href="#判断子序列" class="headerlink" title="判断子序列"></a>判断子序列</h4><blockquote>
+<p>判断a数组是不是b数组的子序列，并不是连续的子序列，但是需要满足原顺序相同</p>
+<p>如1，3，5 是1，2，3，4，5的子序列，其中数组元素可以为重复的</p>
+<p>    刚开始试了下，用双指针，移动的话感觉没问题，样例能过几个，原因有两个：</p>
+<p>1.当是重复元素时，我的 j 指针由于是a[i]!&#x3D;b[j]时才移动，如果a中有重复的话，j就一直不动了，然后当a数组的指针 i 走完，j还是没动（a数组全相同的情况下），所以一定还是输出Yes。解决方法，就算想同了 j 也后移一个，这样可以防止重复元素时的错误，并且可以少一次while判断。</p>
+<p>2.当b数组是逆序时，即1,3,5对应5,4,3,2,1；这时候 j 指针由于一直不等于 i 指向的元素1，直到 j 指向第五个元素5时，j停止移动，i++，然后a中元素肯定不可能与j指向元素相同了，j就++，此时j&gt;m-1(元素从0开始存的话),while就一直不执行了，结果输出的不对。</p>
+<p> 根据2中的错误，可以在移动完j后（while结束），判断此时j是不是大于m-1，是的话就输出No然后ret，如果不是，那就再次j++，开始找下一个相同元素，只要j不越界就说明可以找到与 i 相同的元素，for循环外层输出Yes即可。</p>
+<p>当然，可以记录相同元素的个数，如果等于a的长度，也说明是子序列</p>
+<p>代码给出第二种,但是这个人是 j 作为外层循环，而判断条件是a[i]&#x3D;&#x3D;b[j]时移动 i 而不是 j，循环结束后i到头了，说明匹配成功</p>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+using namespace std;
+const int N &#x3D;1e5+10;
+int n,m;
+int a[N],b[N];
+
+int main()&#123;
+  cin&gt;&gt;n&gt;&gt;m;
+  for(int i&#x3D;0;i&lt;n;i++) scanf(&quot;%d&quot;,&amp;a[i]);
+  for(int i&#x3D;0;i&lt;m;i++) scanf(&quot;%d&quot;,&amp;b[i]);
+int cnt&#x3D;0;
+  for(int i&#x3D;0,j&#x3D;0;i&lt;n;i++)
+&#123;
+    while(j&lt;m&amp;&amp;a[i]!&#x3D;b[j]) j++;
+
+    if(j&gt;m-1) &#123;
+        cout&lt;&lt;&quot;No&quot;&lt;&lt;endl;
+        return 0;
+    &#125;
+    j++;        &#x2F;&#x2F;很重要，用来跳过重复元素
+&#125;
+  cout&lt;&lt;&quot;Yes&quot;&lt;&lt;endl;
+  return 0;
+&#125;
+
+
+&#x2F;&#x2F;第二种
+#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+using namespace std;
+const int N&#x3D;1e5+10;
+int a[N],b[N];
+int main()
+&#123;
+    int n,m;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    for(int i &#x3D; 0;i &lt; n; i++) scanf(&quot;%d&quot;,&amp;a[i]);
+    for(int j &#x3D; 0;j &lt; m; j++) scanf(&quot;%d&quot;,&amp;b[j]);
+
+    int i &#x3D; 0;
+    for(int j &#x3D; 0;j &lt; m; j++)
+    &#123;
+        if(i &lt; n&amp;&amp;a[i] &#x3D;&#x3D; b[j])  i++;
+    &#125;
+    if(i &#x3D;&#x3D; n) puts(&quot;Yes&quot;);
+    else puts(&quot;No&quot;);
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h3><blockquote>
+<p>两个常用的位运算你操作    </p>
+<ol>
+<li><p><strong><mark>n&gt;&gt;k&amp;1</mark></strong>    得到n的二进制数的第k位是多少，注意此处的位次是由最右边开始往左边计数，从0开始  即：0101 对应序号3,2,1,0位, 而&amp;1是得到最后一位，则完成上述操作</p>
+<p>例：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">int n&#x3D;10;
+for(int k&#x3D;3;k&gt;&#x3D;0;k--) cout&lt;&lt;(n&gt;&gt;k&amp;1);  得到10的二进制<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p><strong>lowbit(x)</strong> 操作：返回x的最后一位 1 以及 它后面的数</p>
+<p>如：x&#x3D;1010  lowbit(x)返回 10</p>
+<p>x&#x3D;10100   返回100</p>
+<p>注意lowbit并非是一个内置函数，其内部实现为<mark>x&amp;(~x+1) </mark>或 <mark>x&amp;-x ;</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">int lowbit(int x)&#123;
+    return x &amp;-x;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>int x&#x3D;10;<br>x-&#x3D;lowbit(x); &#x2F;&#x2F;二进制减去最后一个1以及以后的数，得到10（2进制）</p>
+</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none"><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;100010;
+int n;
+int lwbit(int x) &#123;
+    return x&amp;-x;
+&#125;
+int main() &#123;
+    cin&gt;&gt;n;
+    while(n--) &#123;
+        int x;
+        cin&gt;&gt;x;
+        int ans&#x3D;0;
+        while(x) &#123;
+            x-&#x3D;lowbit(x);     &#x2F;&#x2F;每次删去最后一个1 
+            ans++;
+        &#125;
+        cout&lt;&lt;ans&lt;&lt;&quot; &quot;;
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="离散化"><a href="#离散化" class="headerlink" title="离散化"></a>离散化</h3><blockquote>
+<p>特指整数的离散化。</p>
+<p>离散化的含义：10^5个大小在(0–10^9)范围内的数，有些时候需要用这些数作为下标，就需要开辟很大的数组空间，所以进行映射使序列进行重新连续，大大减少空间浪费和效率，这个映射的过程就是离散化。</p>
+<p>    解决离散化的两个主要问题：</p>
+<p>1.<strong>数组a[]中可能有重复元素，如何进行映射呢    （需要进行去重操作，使用库函数unique……）</strong> </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">vector&lt;int&gt; v;
+sort(v.begin(),v.end());
+v.erase(unique(v.begin(),v.end()),v.end());
+
+unique函数返回的尾地址，到end()迭代器之间的区间erase即可<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>    关于unique函数</p>
+<blockquote>
+<p>该函数的作用是“去除”容器或者数组中相邻元素的重复出现的元素<br>(1) 这里的去除并非真正意义的erase，而是将重复的元素放到容器的末尾，返回值是去重之后的尾地址（迭代器）。<br>(2) unique针对的是相邻元素，所以对于顺序顺序错乱的数组成员，或者容器成员，需要先进行排序，可以调用std::sort()函数</p>
+</blockquote>
+<p>2.<strong>如何算出各个元素对应的离散值（使用二分）</strong> </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">int find(int x)&#123;        &#x2F;&#x2F;查找x所在位置O(nlogn)
+    int l&#x3D;0,r&#x3D;v.size()-1;
+    while(l&lt;r)&#123;
+        int mid&#x3D;l+r&gt;&gt;1;
+        if(v[mid]&gt;&#x3D;x) r&#x3D;mid;
+        else l&#x3D;mid+1;
+  &#125;
+    return r+1;  
+    1.如果加1说明映射到1，2，3，4，……
+    2.如果不加说明映射到0，1，2，3，……
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>题目[链接](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/804/">802. 区间和 - AcWing题库</a>) ：</p>
+<p>    假定有一个无限长的数轴，数轴上每个坐标上的数都是 0。</p>
+<p>现在，我们首先进行 n 次操作，每次操作将某一位置 x 上的数加 c。</p>
+<p>接下来，进行 m 次询问，每个询问包含两个整数 l 和 r，你需要求出在区间 [l,r] 之间的所有数的和。</p>
+<p>    其中各个数据的范围为：  由x，l，r可以看出需要离散化</p>
+<img title="" src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-08-22-18-38-image.png" alt="" width="235">
+
+<p>分析：需要对x以及l，r都进行离散化，因为它们范围太大了，映射后可以对$a[k]+&#x3D;c$,其中k为x映射后的下标，随后求出离散化后的 l，r，对在$[kl,kr]$ 区间内的k进行求和即可。求和可以用前缀和进行快速计算。</p>
+</blockquote>
+</blockquote>
+<p>代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;3e5+10;  &#x2F;&#x2F;n+2m个下标会被用到，因此需要开300010
+#define endl &#39;\n&#39;
+
+int n,m;
+vector&lt;int&gt; v; &#x2F;&#x2F;存放所有需要离散化的下标x,l,r
+int a[N];
+int s[N];&#x2F;&#x2F;前缀和数组
+vector&lt;pair&lt;int,int&gt;&gt; add,que;     &#x2F;&#x2F;add存放n次在x位置添加的元素值与该位置
+                                   &#x2F;&#x2F;que存放待求和的l，r
+&#x2F;&#x2F;求离散化后的结果k
+int find(int x) &#123;
+    int l&#x3D;0,r&#x3D;v.size()-1;
+    while(l&lt;r) &#123;
+        int mid&#x3D;l+r&gt;&gt;1;
+        if(v[mid]&gt;&#x3D;x) r&#x3D;mid;
+        else l&#x3D;mid+1;
+    &#125;
+    return r+1;  &#x2F;&#x2F;映射为1，2，3，4……  映射到1因为前缀和求解从1开始较方便
+&#125;
+
+int main() &#123;
+    cin&gt;&gt;n&gt;&gt;m;
+    for(int i&#x3D;0; i&lt;n; i++) &#123;
+        int x,c;
+        scanf(&quot;%d%d&quot;,&amp;x,&amp;c);
+        add.push_back(&#123;x,c&#125;);    &#x2F;&#x2F;加
+        v.push_back(x); &#x2F;&#x2F;待离散化下标
+    &#125;
+    for(int i&#x3D;0; i&lt;m; i++) &#123;
+        int l,r;
+        scanf(&quot;%d%d&quot;,&amp;l,&amp;r);
+        que.push_back(&#123;l,r&#125;);   &#x2F;&#x2F;求
+        v.push_back(l);
+        v.push_back(r);  &#x2F;&#x2F;待处理下标
+    &#125;
+    &#x2F;&#x2F;去重
+    sort(v.begin(),v.end());
+    v.erase(unique(v.begin(),v.end()),v.end());
+
+    for(pair&lt;int,int&gt; c:add) &#123;
+        int x&#x3D;find(c.first); &#x2F;&#x2F;离散化添加的下标
+        a[x]+&#x3D;c.second;  &#x2F;&#x2F;对应位置加上c
+    &#125;
+
+    &#x2F;&#x2F;预处理前缀和数组 ,经上一步操作，已经将对应的映射位置添加好元素
+    for(int i&#x3D;1; i&lt;&#x3D;v.size(); i++) &#123;    &#x2F;&#x2F;去重后的v的长度已经是现存元素的个数了
+        s[i]&#x3D;s[i-1]+a[i];
+    &#125;
+
+    &#x2F;&#x2F;求解区间和
+    for(pair&lt;int,int&gt; c:que) &#123;
+        int l&#x3D;find(c.first);
+        int r&#x3D;find(c.second);
+        cout&lt;&lt;s[r]-s[l-1]&lt;&lt;endl;  &#x2F;&#x2F;得到映射后的l到r的元素区间和
+    &#125;
+
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="区间合并"><a href="#区间合并" class="headerlink" title="区间合并"></a>区间合并</h3><blockquote>
+<p>[区间合并](<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/805/">803. 区间合并 - AcWing题库</a>) </p>
+<blockquote>
+<p> 给定 n 个区间 [li,ri]，要求合并所有有交集的区间。</p>
+<p>注意如果在端点处相交，也算有交集。</p>
+<p>输出合并完成后的区间个数。</p>
+<p>例如：[1,3] 和 [2,6] 可以合并为一个区间 [1,6]。</p>
+</blockquote>
+<p>         类似贪心的做法（贪心专题中的区间分组，覆盖，选点等问题）</p>
+<p>1.步骤 将区间按左端点进行排序   (可以重载运算operator或者写仿函数)</p>
+<p>2.排序后可能的情况  </p>
+<img title="" src="file:///C:/Users/Lenovo/AppData/Roaming/marktext/images/2023-01-09-10-01-05-image.png" alt="" width="272">
+
+<blockquote>
+<p>第一种：包含，区间端点值st，ed不变</p>
+<p>第二种：有交集，ed 更新为该区间的右端点</p>
+<p>第三种：无交集，将之前的区间ans++。目标区间更新成这个无交集的区间。重复操作。</p>
+</blockquote>
+<p>根据每种情况，更新st和ed ，并在第三种情况下加入答案数组{st,ed};</p>
+</blockquote>
+<p>实现代码如下：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+const int N &#x3D;100010;
+int n;
+vector&lt;pair&lt;int,int&gt;&gt; v;
+
+void merge(vector&lt;pair&lt;int,int&gt;&gt; &amp;v)&#123;
+    vector&lt;pair&lt;int,int&gt;&gt; res;
+    &#x2F;&#x2F;sort默认按pair的first值进行升序排序
+    sort(v.begin(),v.end());
+
+    int st&#x3D;-2e9,ed&#x3D;-2e9;            &#x2F;&#x2F;包括最大区间的范围
+    &#x2F;&#x2F;遍历每个区间
+    for(pair&lt;int,int&gt; c:v)&#123;
+        if(ed&lt;c.first)&#123;           &#x2F;&#x2F;第三种情况
+            if(st!&#x3D;-2e9) res.push_back(&#123;st,ed&#125;);  &#x2F;&#x2F;不包括初始的超长区间
+
+            st&#x3D;c.first; ed&#x3D;c.second;  &#x2F;&#x2F;更新待处理区间为当前区间
+        &#125;else &#123;
+            &#x2F;&#x2F;区间有交集的情况,取并集 （包含关系或相重合关系，取两区间的右端点最大值即可）
+            ed&#x3D;max(ed,c.second);  
+        &#125;
+    &#125;
+
+    &#x2F;&#x2F;特判,最后一个区间并没有小于的左端点，因此不会加入到res中，需要在数组不为空的情况下加一个区间
+    if(st!&#x3D;-2e9) res.push_back(&#123;st,ed&#125;);
+
+    v&#x3D;res; &#x2F;&#x2F;更新数组
+&#125;
+
+int main()&#123;
+    cin&gt;&gt;n;
+    for(int i&#x3D;0;i&lt;n;i++)&#123;
+        int l,r;
+        scanf(&quot;%d%d&quot;,&amp;l,&amp;r);
+        v.push_back(&#123;l,r&#125;);
+    &#125;
+
+    merge(v);
+    cout&lt;&lt;v.size()&lt;&lt;endl;  &#x2F;&#x2F;区间合并后被更新了
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>另一个大佬写的带注释代码：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std ;
+typedef pair&lt;int,int&gt; pii ;
+vector&lt;pii&gt; nums,res ;
+int main()
+&#123;
+    int st&#x3D;-2e9,ed&#x3D;-2e9 ;                           &#x2F;&#x2F;ed代表区间结尾，st代表区间开头
+    int n ;
+    scanf(&quot;%d&quot;,&amp;n) ; 
+    while(n--)
+    &#123;
+        int l,r ; 
+        scanf(&quot;%d%d&quot;,&amp;l,&amp;r) ;
+        nums.push_back(&#123;l,r&#125;) ;
+    &#125;
+    sort(nums.begin(),nums.end()) ;                 &#x2F;&#x2F;按左端点排序
+    for(auto num:nums)                   
+    &#123;
+        if(ed&lt;num.first)                            &#x2F;&#x2F;情况1：两个区间无法合并
+        &#123;
+            if(ed!&#x3D;-2e9) res.push_back(&#123;st,ed&#125;) ;   &#x2F;&#x2F;区间1放进res数组
+            st&#x3D;num.first,ed&#x3D;num.second ;            &#x2F;&#x2F;维护区间2
+        &#125;
+        &#x2F;&#x2F;情况2：两个区间可以合并，且区间1不包含区间2，区间2不包含区间1
+        else if(ed&lt;num.second)  
+            ed&#x3D;num.second ;                         &#x2F;&#x2F;区间合并
+    &#125;  
+    &#x2F;&#x2F;(实际上也有情况3：区间1包含区间2，此时不需要任何操作，可以省略)
+
+    &#x2F;&#x2F;注：排过序之后，不可能有区间2包含区间1
+
+    res.push_back(&#123;st,ed&#125;);
+
+    &#x2F;&#x2F;考虑循环结束时的st,ed变量，此时的st,ed变量不需要继续维护，只需要放进res数组即可。
+    &#x2F;&#x2F;因为这是最后的一个序列，所以不可能继续进行合并。
+
+    &#x2F;*
+    for(auto r:res)
+        printf(&quot;%d %d\n&quot;,r.first,r.second) ;
+    puts(&quot;&quot;) ;
+    *&#x2F;
+
+    &#x2F;&#x2F;(把上面的注释去掉，可以在调试时用)
+
+    printf(&quot;%d&quot;,res.size()) ;           &#x2F;&#x2F;输出答案
+    return 0 ;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="第一部分就到此结束了……"><a href="#第一部分就到此结束了……" class="headerlink" title="第一部分就到此结束了……"></a>第一部分就到此结束了……</h3><h3 id="STL"><a href="#STL" class="headerlink" title="STL"></a>STL</h3><blockquote>
+<p>C++ STL简介<br>vector, 变长数组，倍增的思想<br>    size()  返回元素个数<br>    empty()  返回是否为空<br>    clear()  清空<br>    front()&#x2F;back()<br>    push_back()&#x2F;pop_back()<br>    begin()&#x2F;end()<br>    []<br>    支持比较运算，按字典序</p>
+<p>pair&lt;int, int&gt;<br>    first, 第一个元素<br>    second, 第二个元素<br>    支持比较运算，以first为第一关键字，以second为第二关键字（字典序）</p>
+<p>string，字符串<br>    size()&#x2F;length()  返回字符串长度<br>    empty()<br>    clear()<br>    substr(起始下标，(子串长度))  返回子串<br>    c_str()  返回字符串所在字符数组的起始地址</p>
+<p>queue, 队列<br>    size()<br>    empty()<br>    push()  向队尾插入一个元素<br>    front()  返回队头元素<br>    back()  返回队尾元素<br>    pop()  弹出队头元素</p>
+<p>priority_queue, 优先队列，默认是大根堆<br>    size()<br>    empty()<br>    push()  插入一个元素<br>    top()  返回堆顶元素<br>    pop()  弹出堆顶元素<br>    定义成小根堆的方式：priority_queue&lt;int, vector<int>, greater<int>&gt; q;</p>
+<p>stack, 栈<br>    size()<br>    empty()<br>    push()  向栈顶插入一个元素<br>    top()  返回栈顶元素<br>    pop()  弹出栈顶元素</p>
+<p>deque, 双端队列<br>    size()<br>    empty()<br>    clear()<br>    front()&#x2F;back()<br>    push_back()&#x2F;pop_back()<br>    push_front()&#x2F;pop_front()<br>    begin()&#x2F;end()<br>    []</p>
+<p>set, map, multiset, multimap, 基于平衡二叉树（红黑树），动态维护有序序列<br>    size()<br>    empty()<br>    clear()<br>    begin()&#x2F;end()<br>    ++, – 返回前驱和后继，时间复杂度 O(logn)</p>
+<pre><code>set/multiset
+    insert()  插入一个数
+    find()  查找一个数
+    count()  返回某一个数的个数
+    erase()
+        (1) 输入是一个数x，删除所有x   O(k + logn)
+        (2) 输入一个迭代器，删除这个迭代器
+    lower_bound()/upper_bound()
+        lower_bound(x)  返回大于等于x的最小的数的迭代器
+        upper_bound(x)  返回大于x的最小的数的迭代器
+map/multimap
+    insert()  插入的数是一个pair
+    erase()  输入的参数是pair或者迭代器
+    find()
+    []  注意multimap不支持此操作。 时间复杂度是 O(logn)
+    lower_bound()/upper_bound()
+</code></pre>
+<p>unordered_set, unordered_map, unordered_multiset, unordered_multimap, 哈希表<br>    和上面类似，增删改查的时间复杂度是 O(1)<br>    不支持 lower_bound()&#x2F;upper_bound()， 迭代器的++，–</p>
+<p>bitset, 圧位<br>    bitset&lt;10000&gt; s;<br>    ~, &amp;, |, ^<br>    &gt;&gt;, &lt;&lt;<br>    &#x3D;&#x3D;, !&#x3D;<br>    []</p>
+<pre><code>count()  返回有多少个1
+
+any()  判断是否至少有一个1
+none()  判断是否全为0
+
+set()  把所有位置成1
+set(k, v)  将第k位变成v
+reset()  把所有位变成0
+flip()  等价于~
+flip(k) 把第k位取反
+</code></pre>
+<p>作者：yxc<br>链接：<a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/404/">https://www.acwing.com/blog/content/404/</a><br>来源：AcWing<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+</blockquote>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1> 
+      </div>
+      <hr />
+
+      
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">KTpro</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://example.com/2023/01/12/ji-chu-suan-fa/">http://example.com/2023/01/12/ji-chu-suan-fa/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">KTpro</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+      <div class="tag_share" style="display: block">
+        <div class="post-meta__tag-list" style="display: inline-block">
+          
+          <div class="article-tag">
+            
+            <a href="/tags/%E7%AE%97%E6%B3%95/">
+              <span class="chip bg-color">算法</span>
+            </a>
+            
+          </div>
+          
+        </div>
+        <div
+          class="post_share"
+          style="
+            zoom: 80%;
+            width: fit-content;
+            display: inline-block;
+            float: right;
+            margin: -0.15rem 0;
+          "
+        >
+          <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+        </div>
+      </div>
+       <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的认可是我前进的动力！</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+ 
+    </div>
+  </div>
+
+       <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '10qGqhzFmq9j8dAQmPyXKA0M-gzGzoHsz',
+        appKey: 'E4NvM3qSDAgTYtSIx2yMBOzF',
+        serverURLs: '',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'mm',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: 'any commits！'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+       
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2023/09/10/tuo-bu-xu-lie/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="拓扑排序">
+                        
+                        <span class="card-title">拓扑排序</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-09-10
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/08/04/shu-ju-jie-gou/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="ACWing数据结构">
+                        
+                        <span class="card-title">ACWing数据结构</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-category">
+                                    数据结构
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+ <!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+   
+    <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8785731632"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script> 
+  
+
+  <div class="container row center-align" style="margin-bottom: 15px !important;">
+    <div class="col s12 m8 l8 copy-right">
+      Copyright&nbsp;&copy; 
+      <span id="year">2021-2024</span>
+      
+      <a href="/about" target="_blank">KTpro</a>
+      |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+      |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+
+      <br />
+       
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">70.4k</span>
+       
+       
+      
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+          <span id="busuanzi_container_site_pv" style="display: inline" class="white-color">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+         
+        
+          <span id="busuanzi_container_site_uv" style="display: inline" class="white-color">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+         
+      
+      <br />
+
+      <!-- 运行天数提醒. -->
+      
+      <span id="sitetime"> Loading ...</span>
+      <script>
+        var calcSiteTime = function () {
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var startYear = "2021";
+          var startMonth = "7";
+          var startDate = "21";
+          var startHour = "9";
+          var startMinute = "7";
+          var startSecond = "26";
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth() + 1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          var t1 = Date.UTC(startYear, startMonth - 1, startDate, startHour, startMinute, startSecond); // 修正月份减1
+          var t2 = Date.UTC(todayYear, todayMonth - 1, todayDate, todayHour, todayMinute, todaySecond); // 修正月份减1
+          var diff = t2 - t1;
+          var diffYears = Math.floor(diff / years);
+          var diffDays = Math.floor((diff % years) / days); // 修正天数计算
+
+          var language = "zh-CN";
+          if (startYear === String(todayYear)) {
+            document.getElementById("year").innerHTML = todayYear;
+            var daysTip = "This site has been running for " + diffDays + " days";
+            if (language === "zh-CN") {
+              daysTip = "本站已运行 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              daysTip = "本站已運行 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = daysTip;
+          } else {
+            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+            var yearsAndDaysTip = "This site has been running for " + diffYears + " years and " + diffDays + " days";
+            if (language === "zh-CN") {
+              yearsAndDaysTip = "本站已运行 " + diffYears + " 年 " + diffDays + " 天";
+            } else if (language === "zh-HK") {
+              yearsAndDaysTip = "本站已運行 " + diffYears + " 年 " + diffDays + " 天";
+            }
+            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+          }
+        };
+
+        calcSiteTime();
+      </script>
+      
+      <br />
+      
+    </div>
+    <div class="col s12 m4 l4 social-link ">
+      
+    <a href="https://github.com/Kris20030907" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:3185633428@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=3185633428" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 3185633428" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+
+</html>
