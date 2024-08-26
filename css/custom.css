@@ -2,3 +2,40 @@
 可以用css样式修改一下属性 如果还不变说明其他地方定义过了，就加一个“ !important”，如果需要加新东西则修改layout的内容，应该是动态生成html文件*/
 
 /*语法格式是 css选择器，id，class等选择器 最好使用id选择器，防止误改*/
+
+/* 自定义 Giscus 评论系统的样式 */
+.giscus {
+    margin: 20px auto 10px 20px; /* 将左边距设置为 20px */
+    padding: 10px;
+    border: 1px solid #e1e4e8;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: 800px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.giscus-frame {
+    border: none; /* 去掉内嵌框架的边框 */
+    width: 100%; /* 使内嵌框架宽度自适应 */
+}
+
+/* 确保 Giscus 容器与文章内容对齐 */
+.post-container .giscus {
+    max-width: calc(100% - 365px); /* 减去目录区域的宽度和一些间距 */
+}
+
+/* 更多自定义样式 */
+.giscus .giscus-comment {
+    font-size: 14px;
+    color: #333;
+}
+
+.giscus .giscus-header {
+    background-color: #fafbfc;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.giscus .giscus-footer {
+    border-top: 1px solid #e1e4e8;
+    background-color: #fafbfc;
+}
