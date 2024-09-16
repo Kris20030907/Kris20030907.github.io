@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>分布式事务之 CAP 和 BASE 理论基础</title>
+      <link href="/2024/09/16/fen-bu-shi-shi-wu-zhi-cap-he-base-li-lun-ji-chu/"/>
+      <url>/2024/09/16/fen-bu-shi-shi-wu-zhi-cap-he-base-li-lun-ji-chu/</url>
+      
+        <content type="html"><![CDATA[<p>#CAP理论</p><h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><p>如果存在跨数据库的数据一致性保证时，就需要用到分布式事务，比如分库。</p><p>比较常见的场景是，商城业务，如果项目体量比较大，那肯定需要进行分库分表，因为<u>单库和单表的性能有瓶颈，而且数据安全无法保证</u>。</p><p>由于数据库事务只能限制在当前数据库内，所以无法实现跨数据库事务保证。</p><p><mark style="background: #FFFF00;">分布式事务的目标是：多个相关的数据库之间能保证数据一致性</mark>。</p><blockquote><p>举个例子：银行业务，有俩人进行转账，A 扣钱，B 收到钱，这个存钱的账户信息放到一个数据库 <code>D1</code>，然后相应的交易记录放到数据库 <code>D2</code>。如果这个过程中，一部分完成了（扣钱和收钱完成），但是订单存储失败，那在年终对账的时候就要吃牢饭了。</p></blockquote><p>那么，我们继续来探讨一下如何实现分布式事务。</p><h2 id="分布式事务理论基础"><a href="#分布式事务理论基础" class="headerlink" title="分布式事务理论基础"></a>分布式事务理论基础</h2><p>先谈理论，是为了让我们知道我们最终实现的系统能变成什么样的。是不是类似 MySQL 的 ACID 特性的事务？先给出结论，接下来将根据这个主题探讨：</p><p><mark style="background: #FFFF00;">ACID 是数据库事务完整性的理论，CAP 是分布式系统设计理论，BASE 是 CAP 理论中 AP 方案的延伸。</mark></p><h3 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h3><p>CAP 代表的是：</p><ul><li><code>一致性（Consistence）</code> : 所有节点访问同一份最新的数据副本  </li><li><code>可用性（Availability）</code>: 非故障的节点在合理的时间内返回合理的响应（不是错误或者超时的响应）。  </li><li><code>分区容错性（Partition tolerance）</code> : 分布式系统出现网络分区的时候，仍然能够对外提供服务。</li></ul><p>其中网络分区，指的是<u>因为某些故障，导致一部分节点脱离了整个系统所在的网络，节点之间网络无法通信，形成了分区</u>。</p><hr><ol><li><mark style="background: #FFFF00;">我们实现的系统是否能完美的实现这三个特点呢</mark>？ans：No！</li></ol><p>首要的一点是，<strong>这个分区容错 P，必须要有</strong>。因为在实际情况中，<u>网络延迟，节点故障，或者节点通信故障</u>等问题是经常发生的，如果不保证在这种情况下的容错，那系统的数据大概率是乱掉的。</p><ol start="2"><li><mark style="background: #FFFF00;">既然 P 一定要有，CA 能共存吗</mark>？ans：也不能</li></ol><p><strong>为啥无同时保证 CA 呢？</strong><br>举个例子：若系统出现“分区”，系统中的某个节点在进行写操作。为了保证 C，必须要禁止其他节点的读写操作，这就和 A 发生冲突了（可用性）。如果为了保证 A，其他节点的读写操作正常的话，那就和 C 发生冲突了（多节点同时操作数据导致不一致）。</p><ol start="3"><li><mark style="background: #FFFF00;">保证 P 的特点，那就衍生出了两种系统，CP 和 AP</mark></li></ol><p>CP 就是强一致性的系统，比较适合银行这种，哪怕你请求失败也不能把数据的一致性抛弃了，必须强一致，避免数据异常。</p><p>AP 就是高可用优先，也就是说，两个节点的数据可能是不一致的，适合对数据的要求不这么敏感的场景，可以接受”暂时的误差”。</p><blockquote><ul><li>比如社区服务：你这次没获取到最新的帖子有问题吗，没问题，我可以给你返还旧数据，等一段时间你刷新了最新帖子就有了，完全没问题。</li><li>比如社交媒体平台：用户发布一条状态，系统立即返回成功响应，其他用户可能暂时看不到这条状态，但经过一段时间的后台同步，所有用户最终都能看到该状态。</li></ul></blockquote><p>假设我们有一个分布式系统，使用了 AP 优先的策略，但通过后台数据同步机制实现最终一致性，那么它的数据流向可以是这样的：<br><img src="/images/AP.png"></p><ol><li><strong>写操作</strong>：<ul><li>客户端 A 向节点 1 写入数据。</li><li>节点 1 立即返回成功响应，<strong>保证可用性</strong>。</li><li>节点 1 将数据变更记录到日志，并异步地将变更同步到其他节点。</li></ul></li><li><strong>读操作</strong>：<ul><li>客户端 B 向节点 2 读取数据。</li><li>如果节点 2 尚未收到同步的最新数据，可能会返回旧数据。</li><li>在后台数据同步完成后，节点 2 的数据将与节点 1 一致，最终达到一致性。</li></ul></li></ol><h3 id="BASE"><a href="#BASE" class="headerlink" title="BASE"></a>BASE</h3><p>BASE 理论代表的是：</p><ul><li><code>基本可用（Basically Available）</code>：系统在分布式环境中，允许在部分节点故障的情况下，仍然能提供基本的可用性。</li><li><code>软状态（Soft State）</code>：系统允许存在中间状态，即数据在不同节点之间的副本不必时刻保持强一致性。</li><li><code>最终一致性（Eventual Consistency）</code>：系统保证在没有新的更新操作后，所有的数据副本最终会达到一致性。</li></ul><p>其中，基本可用指的是<u>系统在部分功能失效或性能下降的情况下，仍然能对外提供服务</u>。</p><hr><ol><li><mark style="background: #FFFF00;">我们实现的系统是否能完美的实现 BASE 理论的三个特点呢</mark>？ans：No！</li></ol><p>首要的一点是，<strong>基本可用性 BA 和最终一致性 EC 需要在软状态 SS 的支持下才能实现</strong>。因为在实际情况中，<u>网络延迟、节点故障、数据同步延迟</u>等问题是经常发生的，如果不允许存在软状态，那系统的数据一致性和可用性就无法同时实现。</p><ol start="2"><li><mark style="background: #FFFF00;">既然 SS 是必要的，BA 和 EC 能共存吗</mark>？ans：可以</li></ol><p><strong>为啥能同时保证 BA 和 EC 呢？</strong><br>举个例子：若系统出现“分区”，系统中的某个节点在进行写操作。为了保证基本可用性（BA），节点可以立即返回成功响应而不等待其他节点的确认，这样用户体验不受影响。而为了保证最终一致性（EC），系统可以在后台异步进行数据同步，确保所有节点最终达到一致状态。</p><ol start="3"><li><mark style="background: #FFFF00;">保证 SS 的特点，那就衍生出了 BASE 系统的应用场景</mark></li></ol><p>BASE 更适合那些对数据一致性要求不高，但对系统可用性和响应速度要求较高的场景。通过牺牲强一致性，系统可以在高并发、分布式环境中提供更好的可用性和性能。</p><p>可以看到和 AP 极其相似，也符合我们的主题思想，<u>BASE 是 AP 的理论延伸</u>。</p><p>关于分布式事务的实现方式还有很多，敬请期待下部分内容！</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 分布式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 分布式事务 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>扫码登录流程</title>
       <link href="/2024/08/19/sao-ma-deng-lu-liu-cheng/"/>
       <url>/2024/08/19/sao-ma-deng-lu-liu-cheng/</url>
