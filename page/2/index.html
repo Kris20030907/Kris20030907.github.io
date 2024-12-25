@@ -50,7 +50,8 @@
     <link rel="stylesheet" href="/css/custom.css">
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
-<meta name="generator" content="Hexo 6.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="KTpro" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 <body>
@@ -323,6 +324,58 @@
     <!-- 所有文章卡片 -->
     <article id="articles" class="container articles">
         <div class="row article-row">
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2024/04/10/guan-yu-threadlocal-guan-li-zi-yuan-chu-xian-nei-cun-xie-lou-wen-ti-de-bu-chong/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="关于ThreadLocal管理资源出现内存泄漏问题的补充">
+                            
+                            <span class="card-title">关于ThreadLocal管理资源出现内存泄漏问题的补充</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+之前没想过这个问题，这里带着一些小疑问整理一下。
+
+ThreadLocal 内存泄漏问题
+Tip：2024-04-10
+
+为什么会发生内存泄漏问题？
+首先我们都知道 ThreadLocal 是通过把自身对象作为 key，要管理的资源作为 
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-10
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                KTpro
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/ThreadLocal/">
+                            <span class="chip bg-color">ThreadLocal</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
             
              <!-- 隐藏某个文章 -->
             <div class="article col s12 m6 l4" data-aos="zoom-in">
@@ -867,63 +920,6 @@ Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级�
             </div>
               <!-- 隐藏某个文章 -->
             
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2024/01/30/mysql-tan-tan-zi-ji-dui-suo-yin-de-li-jie/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Mysql--谈谈自己对索引的理解">
-                            
-                            <span class="card-title">Mysql--谈谈自己对索引的理解</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                从下面几点回答：
-
-索引是什么？ （是单独存储在磁盘上的一种数据库结构。能加快数据查询的速度）
-索引的底层数据结构包括 B+树索引，B 树索引，还有哈希索引等。在不同的存储引擎中的存储形式是不同的。而且存储引擎也不一定支持所有的索引类型。
-
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-01-30
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Mysql/" class="post-category">
-                                    Mysql
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93-%E7%B4%A2%E5%BC%95/">
-                            <span class="chip bg-color">数据库/索引</span>
-                        </a>
-                        
-                        <a href="/tags/%E7%B4%A2%E5%BC%95%E6%98%AF%E4%BB%80%E4%B9%88/">
-                            <span class="chip bg-color">索引是什么</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-              <!-- 隐藏某个文章 -->
-            
         </div>
     </article>
 
@@ -1024,7 +1020,7 @@ Synchronized 锁状态共分为无锁、偏向锁、轻量级锁以及重量级�
 
       <br />
        
-        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">78.5k</span>
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">86.1k</span>
        
        
       
