@@ -5,8 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="RocketMQ 引入 RocksDB 实现千万队列, KTpro">
-    <meta name="description" content="
-全网仅有!!，这个方案全网都没有什么参考资料。最近写了一篇 RocketMQ 引入 RocksDB 的设计方案，在写这个的过程中我对 RocketMQ 的底层存储和架构更加清晰了，原本只熟悉 kafka，而 RocketMQ 只停留在使用">
+    <meta name="description" content="最近写了一篇 RocketMQ 引入 RocksDB 的设计方案，在写这个的过程中我对 RocketMQ 的底层存储和架构更加清晰了，原本 RocketMQ 只停留在使用以及存储的应用层面，现在趁这个机会，好好的学习总结，周会上分享给大家！">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -331,7 +330,7 @@
         </div>
          
         <div class="post-date info-break-policy">
-          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2024-12-25
+          <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp; 2025-02-15
         </div>
          
         <div class="info-break-policy">
@@ -366,8 +365,9 @@
 
     <div class="card-content article-card-content">
       <div id="articleContent">
-        <blockquote>
-<p>全网仅有!!，这个方案全网都没有什么参考资料。最近写了一篇 RocketMQ 引入 RocksDB 的设计方案，在写这个的过程中我对 RocketMQ 的底层存储和架构更加清晰了，原本只熟悉 kafka，而 RocketMQ 只停留在使用以及存储的应用层面，现在趁这个机会，好好的学习总结，周会上分享给大家！</p>
+        <p>最近写了一篇 RocketMQ 引入 RocksDB 的设计方案，在写这个的过程中我对 RocketMQ 的底层存储和架构更加清晰了，原本 RocketMQ 只停留在使用以及存储的应用层面，现在趁这个机会，好好的学习总结，周会上分享给大家！</p>
+<blockquote>
+<p>全网仅有! 这个方案全网都没有什么参考资料，只能自己分析源码和学习并不完善的 [RIP 66 ]( <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq/wiki/RIP-66-Support-KV">https://github.com/apache/rocketmq/wiki/RIP-66-Support-KV</a> (Rocksdb)-Storage)和 Apache 大会上阿里赵福建老师的简要介绍。</p>
 </blockquote>
 <p>后续有可能会录个讲解视频放到这里！</p>
 <p>那么，现在就开始吧！</p>
@@ -411,7 +411,7 @@
 <p>引用官方的一张图：<img src="/images/2-4.png"></p>
 <h2 id="存储瓶颈"><a href="#存储瓶颈" class="headerlink" title="存储瓶颈"></a>存储瓶颈</h2><p>在一些生产环境中，随着消息队列规模的扩展，RocketMQ 的存储架构逐渐暴露出以下问题：</p>
 <ol>
-<li><p><strong>ConsumeQueue 文件管理成本高****：</strong></p>
+<li><p><strong>ConsumeQueue 文件管理成本高</strong>：</p>
 <ol>
 <li><p>每个 Topic 的每个队列都对应一个 ConsumeQueue 文件。ConsumeQueue 索引是基于 mmap 实现的，在百万级 Topic 场景下，会产生数百万个小文件，这些小文件的随机写入破坏了 RocketMQ 一直依赖的 CommitLog 顺序写性能，随机读写瓶颈显现（文件内部顺序写，但是多文件是随机写）、性能急剧下降，极大地增加了文件系统的管理开销。</p>
 </li>
@@ -991,7 +991,7 @@ private ByteBuffer buildDeleteCQKey(final boolean start, final byte[] topicBytes
 <h2 id="性能提升"><a href="#性能提升" class="headerlink" title="性能提升"></a>性能提升</h2><p>ref: <a target="_blank" rel="noopener" href="https://xiaomi.f.mioffice.cn/wiki/UTZMw0JjIiwVonkX6emkrOAA4Tc">RocketMQ 引入 RocksDB</a></p>
 <h2 id="稳定性分析"><a href="#稳定性分析" class="headerlink" title="稳定性分析"></a>稳定性分析</h2><p>RocksDB 开启后只对 CQ 文件的读写有影响，不再采用独立 CQ 文件的方式进行管理，并且 RocksDB 提供了更高的扩展性，我们可以自定义压缩策略等配置，这样在高并发场景下，不需要频繁的对 CQ 文件进行操作，并且减少了 CommitLog 写入时对 CQ 的更新占用，能够提供更加稳定可靠的消费环境。</p>
 <h2 id="成本分析"><a href="#成本分析" class="headerlink" title="成本分析"></a>成本分析</h2><p>引入了新的组件，成本会如何变化。因为是嵌入式的数据库，且是单机的，我们是不是可以把它当做一个本机的文件操作和存储系统？并且本质上还是写到磁盘，可能变化是不大的，但是对于内存的要求更高。</p>
-<p>同等规模的 CQ 数据存储，RocksDB 由于自身的数据压缩，以及设计好的表和数据格式，RocksDB 占用相对极少。</p>
+<p>同等规模的 CQ 数据存储，RocksDB 由于自身的数据压缩，以及设计好的表和数据格式，RocksDB 占用相对减少了 2&#x2F;3 的存储占用，且性能更优。</p>
 <table>
 <thead>
 <tr>
@@ -1002,12 +1002,12 @@ private ByteBuffer buildDeleteCQKey(final boolean start, final byte[] topicBytes
 </thead>
 <tbody><tr>
 <td>2w</td>
-<td>40 MB</td>
+<td>40 GB</td>
 <td>113 GB</td>
 </tr>
 <tr>
 <td>10w</td>
-<td>100 MB</td>
+<td>100 GB</td>
 <td>566 GB</td>
 </tr>
 </tbody></table>
@@ -1457,7 +1457,7 @@ private ByteBuffer buildDeleteCQKey(final boolean start, final byte[] topicBytes
   <div class="container row center-align" style="margin-bottom: 15px !important;">
     <div class="col s12 m8 l8 copy-right">
       Copyright&nbsp;&copy; 
-      <span id="year">2021-2024</span>
+      <span id="year">2021-2025</span>
       
       <a href="/about" target="_blank">KTpro</a>
       |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
@@ -1465,7 +1465,7 @@ private ByteBuffer buildDeleteCQKey(final boolean start, final byte[] topicBytes
 
       <br />
        
-        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">86.1k</span>
+        &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span class="white-color">86.2k</span>
        
        
       
